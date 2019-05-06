@@ -34,5 +34,8 @@ RUN ./9-1-install-ssh.sh
 COPY ./9-2-install-7z.sh ./
 RUN ./9-2-install-7z.sh
 
+COPY ./9-3-install-puppeteer-dep.sh ./
+RUN ./9-3-install-puppeteer-dep.sh
+
 # restore path
 WORKDIR /root/
