@@ -3,7 +3,7 @@
 source ./0-0-base.sh
 
 # use cn source
-if [[ "${DOCKER_BUILD_IS_CN_MIRROR}" = "true" ]] ; then
+if [[ "${DOCKER_BUILD_MIRROR}" = "CN" ]] ; then
 cat > /etc/apt/sources.list <<- 'EOM'
   # https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/
   # 18.04 LTS

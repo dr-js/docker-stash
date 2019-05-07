@@ -3,6 +3,7 @@
 SHELL [ "/bin/bash", "-c" ]
 
 RUN set -ex
+
 RUN apt-get update -yq
 
 RUN apt-get install -yq --no-install-recommends \

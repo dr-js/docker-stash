@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 source ./0-0-base.sh
+source ./2-0-node-base.sh
 
 apt-update
 apt-install curl
@@ -18,3 +19,7 @@ apt-remove curl
 apt-remove lsb-release # auto-installed by node setup script
 
 apt-clear
+
+npm config set update-notifier false
+npm-install-global npm
+npm-clear
