@@ -62,8 +62,21 @@ RUN apt-get install -yq --no-install-recommends \\
 RUN apt-get autoremove -yq --purge \\
   -o APT::AutoRemove::RecommendsImportant=false
 
+# reset dpkg file filter # https://askubuntu.com/a/628410
+RUN echo '# dpkg file filter'                                 > /etc/dpkg/dpkg.cfg.d/excludes
+RUN echo 'path-exclude=/usr/share/man/*'                      >> /etc/dpkg/dpkg.cfg.d/excludes
+RUN echo 'path-exclude=/usr/share/locale/*/LC_MESSAGES/*.mo'  >> /etc/dpkg/dpkg.cfg.d/excludes
+RUN echo 'path-exclude=/usr/share/info/*'                     >> /etc/dpkg/dpkg.cfg.d/excludes
+RUN echo 'path-exclude=/usr/share/doc/*'                      >> /etc/dpkg/dpkg.cfg.d/excludes
+RUN echo 'path-include=/usr/share/doc/*/copyright'            >> /etc/dpkg/dpkg.cfg.d/excludes
+
 # clear left over files
 RUN shopt -s nullglob \\
   && find /var/cache/apt/archives /var/lib/apt/lists /var/log /var/lib/dpkg/*-old /var/cache/debconf/*-old -not -name lock -type f -delete \\
+  && rm -rf /usr/share/man/* \\
+  && rm -rf /usr/share/info/* \\
+  && find /usr/share/doc -not -name copyright -type f -delete \\
+  && find /usr/share/doc -not -name copyright -type l -delete \\
+  && find /usr/share/doc -type d -empty -delete \\
   && shopt -u nullglob
 `
