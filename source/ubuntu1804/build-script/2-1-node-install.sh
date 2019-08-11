@@ -9,7 +9,7 @@ apt-install curl
 shell-ex-off
 # https://nodejs.org/en/download/package-manager/#debian-and-ubuntu-based-linux-distributions-enterprise-linux-fedora-and-snap-packages
 # https://github.com/nodesource/distributions/blob/master/README.md#debinstall
-curl -sL https://deb.nodesource.com/setup_10.x | bash -
+curl -sL https://deb.nodesource.com/setup_12.x | bash -
 shell-ex-on
 
 apt-update
