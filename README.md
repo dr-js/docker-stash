@@ -18,7 +18,11 @@ First check `source/ubuntu1804/BUILD_REPO.json`
 
 Then run
 ```bash
-npm run build-ubuntu1804
+npm run build-ubuntu1804-core
+
+npm run build-ubuntu1804-layer
+# or for CN mirror
+npm run build-ubuntu1804-layer-cn
 ```
 
 #### build step

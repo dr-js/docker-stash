@@ -29,34 +29,3 @@ rm -rf /usr/lib/node_modules/npm/changelogs/
 rm -rf /usr/lib/node_modules/npm/html/
 rm -rf /usr/lib/node_modules/npm/man/
 rm -rf /usr/lib/node_modules/npm/node_modules/ajv/dist/
-
-# from: https://github.com/tj/node-prune/blob/master/prune.go
-find /usr/lib/node_modules/ \
-  -name ".*" \
-  -o -name "*.md" \
-  -o -name "*.markdown" \
-  -o -name "*.html" \
-  -o -name "*.conf.js" \
-  -o -name "*.config.js" \
-  -o -name "*.config.json" \
-  -o -name "*.js.map" \
-  -o -name "*.ts" \
-  -o -name "*.jst" \
-  -o -name "*.coffee" \
-  -type f \
-  -delete
-find /usr/lib/node_modules/ \
-  -name ".idea" \
-  -o -name ".vscode" \
-  -o -name ".github" \
-  -o -name ".circleci" \
-  -o -name ".nyc_output" \
-  -o -name "test" \
-  -o -name "tests" \
-  -o -name "doc" \
-  -o -name "docs" \
-  -o -name "example" \
-  -o -name "examples" \
-  -o -name "coverage" \
-  -type d \
-  -exec rm -rf {} +

@@ -17,6 +17,11 @@ const { name: PACKAGE_NAME } = require(fromRoot('package.json'))
 
 const COMMAND_DOCKER = process.platform === 'win32' ? 'docker' : 'sudo docker'
 
+const resetDirectory = async (path) => {
+  await modify.delete(path).catch(() => {})
+  await createDirectory(path)
+}
+
 const runWithTee = async (logFile, { command, argList, option }) => { // output to both stdout and log file
   await createDirectory(dirname(logFile))
   const { promise, subProcess } = run({ command, argList, option: { stdio: [ "ignore", "pipe", "pipe" ], ...option } })
@@ -71,6 +76,7 @@ const fetchGitHubBufferListWithLocalCache = async (urlList, urlHash, pathCache) 
 
 module.exports = {
   fromRoot, fromCache, fromOutput,
+  resetDirectory,
   COMMAND_DOCKER, runWithTee,
   fetchGitHubBufferListWithLocalCache
 }

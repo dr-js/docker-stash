@@ -15,7 +15,6 @@ EOM
 fi
 
 apt-update
-apt-install tar gzip
-apt-install less htop nano
+apt-install tar gzip less htop nano
 # apt-install zip p7zip-full # not so common
 apt-clear
