@@ -3,7 +3,7 @@ const { resolve, dirname } = require('path')
 const { readFileAsync, writeFileAsync, createWriteStream } = require('dr-js/library/node/file/function')
 const { createDirectory } = require('dr-js/library/node/file/File')
 const { modify } = require('dr-js/library/node/file/Modify')
-const { run } = require('dr-js/library/node/system/Run')
+const { run, runQuiet } = require('dr-js/library/node/system/Run')
 const { fetchWithJump } = require('dr-js/bin/function')
 
 const PATH_ROOT = resolve(__dirname, '../')
@@ -74,9 +74,33 @@ const fetchGitHubBufferListWithLocalCache = async (urlList, urlHash, pathCache) 
   return bufferList
 }
 
+const getIsDockerImageExist = async (imageRepo, imageTag) => {
+  { // check local
+    const { promise, stdoutBufferPromise } = runQuiet({ command: COMMAND_DOCKER, argList: [ 'image', 'ls', `${imageRepo}:${imageTag}` ] })
+    await promise
+    const stdoutString = String(await stdoutBufferPromise)
+    if (stdoutString.includes(imageRepo) && stdoutString.includes(imageTag)) return true
+  }
+  try { // check pull
+    const { promise } = run({ command: COMMAND_DOCKER, argList: [ 'pull', `${imageRepo}:${imageTag}` ] })
+    await promise
+    { // check local again
+      const { promise, stdoutBufferPromise } = runQuiet({ command: COMMAND_DOCKER, argList: [ 'image', 'ls', `${imageRepo}:${imageTag}` ] })
+      await promise
+      const stdoutString = String(await stdoutBufferPromise)
+      if (stdoutString.includes(imageRepo) && stdoutString.includes(imageTag)) return true
+    }
+  } catch (error) {}
+  return false
+}
+
+const saveTagCoreAsync = (path, tag) => writeFileAsync(fromRoot(path, 'TAG_CORE.json'), JSON.stringify(tag))
+const loadTagCoreAsync = (path) => readFileAsync(fromRoot(path, 'TAG_CORE.json')).then((buffer) => JSON.parse(buffer))
+
 module.exports = {
   fromRoot, fromCache, fromOutput,
   resetDirectory,
   COMMAND_DOCKER, runWithTee,
-  fetchGitHubBufferListWithLocalCache
+  fetchGitHubBufferListWithLocalCache,
+  getIsDockerImageExist, saveTagCoreAsync, loadTagCoreAsync
 }

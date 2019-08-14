@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.0.4-dev.1",
+  "version": "0.0.4-dev.2",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
@@ -19,6 +19,7 @@
     "build-ubuntu1804-layer-bin-cn": "node source/ubuntu1804/build-layer.js bin CN",
     "build-ubuntu1804-layer-full-cn": "node source/ubuntu1804/build-layer.js full CN",
     "// =============================": "",
+    "win32-filemode-fix": "git update-index --chmod=+x ./source/ubuntu1804/build-script/*",
     "docker-clear": "node source/docker-clear.js",
     "docker-ls": "node source/docker-ls.js",
     "prepack": "echo \"Error: do not pack this package\" && exit 1"

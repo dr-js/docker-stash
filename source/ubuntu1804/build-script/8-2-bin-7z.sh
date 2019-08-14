@@ -3,5 +3,5 @@
 source ./0-0-base.sh
 
 apt-update
-apt-install p7zip-full
+  apt-install p7zip-full
 apt-clear

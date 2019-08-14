@@ -5,7 +5,8 @@ const { runMain } = require('dr-dev/library/main')
 const {
   fromRoot, fromOutput,
   resetDirectory,
-  COMMAND_DOCKER, runWithTee
+  COMMAND_DOCKER, runWithTee,
+  loadTagCoreAsync
 } = require('../function')
 
 const { version: BUILD_VERSION } = require(fromRoot('package.json'))
@@ -31,9 +32,7 @@ runMain(async (logger) => {
 
   logger.padLog('assemble build directory')
   await resetDirectory(PATH_BUILD)
-  await writeFileAsync(fromOutput(PATH_BUILD, 'Dockerfile'), getLayerDockerfileString({
-    BUILD_REPO,
-    BUILD_VERSION,
+  await writeFileAsync(fromOutput(PATH_BUILD, 'Dockerfile'), await getLayerDockerfileString({
     DOCKER_BUILD_MIRROR,
     isNodeLayer: BUILD_FLAVOR === 'node',
     isBinLayer: BUILD_FLAVOR === 'bin'
@@ -56,9 +55,7 @@ runMain(async (logger) => {
   })
 }, `build-${BUILD_FLAVOR}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR}`}`)
 
-const getLayerDockerfileString = ({
-  BUILD_REPO,
-  BUILD_VERSION,
+const getLayerDockerfileString = async ({
   DOCKER_BUILD_MIRROR = '',
 
   isNodeLayer = false,
@@ -67,7 +64,7 @@ const getLayerDockerfileString = ({
   mask0 = isNodeLayer ? '# ' : '',
   mask1 = mask0 || isBinLayer ? '# ' : ''
 }) => `
-FROM ${BUILD_REPO}:${BUILD_VERSION}-1804-core
+FROM ${await loadTagCoreAsync(__dirname)}
 
 LABEL arg.DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
 ENV DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
@@ -91,8 +88,8 @@ ${mask0}RUN               ./8-1-bin-git.sh
 ${mask0}COPY ./build-script/8-2-bin-7z.sh ./
 ${mask0}RUN               ./8-2-bin-7z.sh
 
-${mask1}COPY ./build-script/9-0-dep-puppeteer.sh ./
-${mask1}RUN               ./9-0-dep-puppeteer.sh
+${mask1}COPY ./build-script/9-0-dep-node.sh ./
+${mask1}RUN               ./9-0-dep-node.sh
 
 # restore path
 WORKDIR /root/
