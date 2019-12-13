@@ -1,9 +1,9 @@
 const { createHash } = require('crypto')
-const { writeFileAsync } = require('dr-js/library/node/file/function')
-const { runMain } = require('dr-dev/library/main')
+const { writeFileAsync } = require('@dr-js/core/library/node/file/function')
+const { runMain } = require('@dr-js/dev/library/main')
 const {
-  fromCache, fromOutput,
   resetDirectory,
+  fromCache, fromOutput,
   COMMAND_DOCKER, runWithTee,
   fetchGitHubBufferListWithLocalCache,
   getIsDockerImageExist, saveTagCoreAsync

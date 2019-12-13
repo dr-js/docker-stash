@@ -1,4 +1,4 @@
-const { runSync } = require('dr-js/library/node/system/Run')
+const { runSync } = require('@dr-js/core/library/node/system/Run')
 const { COMMAND_DOCKER } = require('./function')
 
 console.log('\n[container] '.padEnd(64, '='))

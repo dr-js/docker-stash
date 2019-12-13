@@ -1,10 +1,10 @@
-const { oneOf } = require('dr-js/library/common/verify')
-const { writeFileAsync } = require('dr-js/library/node/file/function')
-const { modify } = require('dr-js/library/node/file/Modify')
-const { runMain } = require('dr-dev/library/main')
+const { oneOf } = require('@dr-js/core/library/common/verify')
+const { writeFileAsync } = require('@dr-js/core/library/node/file/function')
+const { modifyCopy } = require('@dr-js/core/library/node/file/Modify')
+const { runMain } = require('@dr-js/dev/library/main')
 const {
-  fromRoot, fromOutput,
   resetDirectory,
+  fromRoot, fromOutput,
   COMMAND_DOCKER, runWithTee,
   loadTagCoreAsync
 } = require('../function')
@@ -37,7 +37,7 @@ runMain(async (logger) => {
     isNodeLayer: BUILD_FLAVOR === 'node',
     isBinLayer: BUILD_FLAVOR === 'bin'
   }))
-  await modify.copy(
+  await modifyCopy(
     fromRoot(__dirname, `build-script/`),
     fromOutput(PATH_BUILD, 'build-script/')
   )

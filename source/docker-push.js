@@ -1,5 +1,5 @@
-const { runSync } = require('dr-js/library/node/system/Run')
-const { runMain } = require('dr-dev/library/main')
+const { runSync } = require('@dr-js/core/library/node/system/Run')
+const { runMain } = require('@dr-js/dev/library/main')
 const { fromRoot, COMMAND_DOCKER, loadTagCoreAsync } = require('./function')
 
 runMain(async (logger) => {
@@ -15,7 +15,7 @@ runMain(async (logger) => {
     `${BUILD_REPO}:${BUILD_VERSION}-1804-full`,
     `${BUILD_REPO}:${BUILD_VERSION}-1804-node-cn`,
     `${BUILD_REPO}:${BUILD_VERSION}-1804-bin-cn`,
-    `${BUILD_REPO}:${BUILD_VERSION}-1804-full-cn`,
+    `${BUILD_REPO}:${BUILD_VERSION}-1804-full-cn`
   ]
 
   for (const tag of tagList) {
