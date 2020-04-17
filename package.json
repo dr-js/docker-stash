@@ -1,14 +1,14 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.0.4-dev.4",
+  "version": "0.0.4-dev.5",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
   "repository": "github:dr-js/docker-stash",
   "scripts": {
     "// build =======================": "",
-    "build-ubuntu1804": "npm-parse --rl build-ubuntu1804-core build-ubuntu1804-layer build-ubuntu1804-layer-cn",
+    "build-ubuntu1804": "dr-dev --rsl build-ubuntu1804-core build-ubuntu1804-layer build-ubuntu1804-layer-cn",
     "build-ubuntu1804-core": "node source/ubuntu1804/build-core.js",
     "build-ubuntu1804-layer": "npm run build-ubuntu1804-layer-node && npm run build-ubuntu1804-layer-bin && npm run build-ubuntu1804-layer-full",
     "build-ubuntu1804-layer-node": "node source/ubuntu1804/build-layer.js node",
@@ -30,8 +30,7 @@
     "npm": ">=6.12"
   },
   "devDependencies": {
-    "@dr-js/core": "0.2.0-dev.6",
-    "@dr-js/dev": "0.2.0-dev.1",
-    "npm-parse": "^0.0.4"
+    "@dr-js/core": "0.3.0-dev.5",
+    "@dr-js/dev": "0.3.0-dev.4"
   }
 }
