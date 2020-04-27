@@ -1,6 +1,7 @@
 const { resolve, dirname } = require('path')
+const { readFileSync, writeFileSync, createWriteStream } = require('fs')
 
-const { readFileAsync, writeFileAsync, createWriteStream } = require('@dr-js/core/library/node/file/function')
+const { catchSync } = require('@dr-js/core/library/common/error')
 const { createDirectory } = require('@dr-js/core/library/node/file/Directory')
 const { run } = require('@dr-js/core/library/node/system/Run')
 const { resetDirectory } = require('@dr-js/dev/library/node/file')
@@ -16,11 +17,15 @@ const fromOutput = (...args) => resolve(PATH_OUTPUT, ...args)
 
 const { name: PACKAGE_NAME } = require(fromRoot('package.json'))
 
-const COMMAND_DOCKER = process.platform === 'win32' ? 'docker' : 'sudo docker'
+const toRunDockerConfig = ({ argList = [], ...extra }) => (
+  process.platform === 'win32'
+    ? { ...extra, command: 'docker.exe', argList }
+    : { ...extra, command: 'sudo', argList: [ 'docker', ...argList ] }
+)
 
 const runWithTee = async (logFile, { command, argList, option }) => { // output to both stdout and log file
   await createDirectory(dirname(logFile))
-  const { promise, subProcess } = run({ command, argList, option: { stdio: [ "ignore", "pipe", "pipe" ], ...option } })
+  const { promise, subProcess } = run({ command, argList, option: { stdio: [ 'ignore', 'pipe', 'pipe' ], ...option } })
   const logStream = createWriteStream(logFile)
   subProcess.stdout.pipe(process.stdout, { end: false })
   subProcess.stderr.pipe(process.stderr, { end: false })
@@ -48,37 +53,37 @@ const filenameFromUrl = (url) => String(url).replace(/[^\w-]/g, '_')
 const fetchGitHubBufferListWithLocalCache = async (urlList, urlHash, pathCache) => {
   const fileCacheHash = resolve(pathCache, filenameFromUrl(urlHash))
   const hashBuffer = await fetchGitHubBuffer(urlHash) // download hash
-  const hashCacheBuffer = await readFileAsync(fileCacheHash).catch(() => null)
+  const hashCacheBuffer = catchSync(readFileSync, fileCacheHash).result
   const isCacheValid = hashCacheBuffer && Buffer.compare(hashBuffer, hashCacheBuffer) === 0
   if (isCacheValid) console.log(' - cache valid:', urlHash)
   else await resetDirectory(pathCache)
   const bufferList = []
   for (const url of urlList) {
     const fileCacheBuffer = resolve(pathCache, filenameFromUrl(url))
-    let buffer = isCacheValid && await readFileAsync(fileCacheBuffer).catch(() => null) // download buffer
+    let buffer = isCacheValid && catchSync(readFileSync, fileCacheBuffer).result // download buffer
     if (buffer) console.log(' - cache hit:', url)
     else {
       buffer = await fetchGitHubBuffer(url)
-      await writeFileAsync(fileCacheBuffer, buffer)
+      writeFileSync(fileCacheBuffer, buffer)
     }
     bufferList.push(buffer)
   }
-  await writeFileAsync(fileCacheHash, hashBuffer) // save cache hash last
+  writeFileSync(fileCacheHash, hashBuffer) // save cache hash last
   return bufferList
 }
 
 const getIsDockerImageExist = async (imageRepo, imageTag) => {
   { // check local
-    const { promise, stdoutPromise } = run({ command: COMMAND_DOCKER, argList: [ 'image', 'ls', `${imageRepo}:${imageTag}` ], quiet: true })
+    const { promise, stdoutPromise } = run(toRunDockerConfig({ argList: [ 'image', 'ls', `${imageRepo}:${imageTag}` ], quiet: true }))
     await promise
     const stdoutString = String(await stdoutPromise)
     if (stdoutString.includes(imageRepo) && stdoutString.includes(imageTag)) return true
   }
   try { // check pull
-    const { promise } = run({ command: COMMAND_DOCKER, argList: [ 'pull', `${imageRepo}:${imageTag}` ] })
+    const { promise } = run(toRunDockerConfig({ argList: [ 'pull', `${imageRepo}:${imageTag}` ] }))
     await promise
     { // check local again
-      const { promise, stdoutPromise } = run({ command: COMMAND_DOCKER, argList: [ 'image', 'ls', `${imageRepo}:${imageTag}` ], quiet: true })
+      const { promise, stdoutPromise } = run(toRunDockerConfig({ argList: [ 'image', 'ls', `${imageRepo}:${imageTag}` ], quiet: true }))
       await promise
       const stdoutString = String(await stdoutPromise)
       if (stdoutString.includes(imageRepo) && stdoutString.includes(imageTag)) return true
@@ -87,13 +92,13 @@ const getIsDockerImageExist = async (imageRepo, imageTag) => {
   return false
 }
 
-const saveTagCoreAsync = (path, tag) => writeFileAsync(fromRoot(path, 'TAG_CORE.json'), JSON.stringify(tag))
-const loadTagCoreAsync = (path) => readFileAsync(fromRoot(path, 'TAG_CORE.json')).then((buffer) => JSON.parse(String(buffer)))
+const saveTagCore = (path, tag) => writeFileSync(fromRoot(path, 'TAG_CORE.json'), JSON.stringify(tag))
+const loadTagCore = (path) => JSON.parse(String(readFileSync(fromRoot(path, 'TAG_CORE.json'))))
 
 module.exports = {
   resetDirectory,
   fromRoot, fromCache, fromOutput,
-  COMMAND_DOCKER, runWithTee,
+  toRunDockerConfig, runWithTee,
   fetchGitHubBufferListWithLocalCache,
-  getIsDockerImageExist, saveTagCoreAsync, loadTagCoreAsync
+  getIsDockerImageExist, saveTagCore, loadTagCore
 }

@@ -1,12 +1,12 @@
 const { createHash } = require('crypto')
-const { writeFileAsync } = require('@dr-js/core/library/node/file/function')
+const { writeFileSync } = require('fs')
 const { runMain } = require('@dr-js/dev/library/main')
 const {
   resetDirectory,
   fromCache, fromOutput,
-  COMMAND_DOCKER, runWithTee,
+  toRunDockerConfig, runWithTee,
   fetchGitHubBufferListWithLocalCache,
-  getIsDockerImageExist, saveTagCoreAsync
+  getIsDockerImageExist, saveTagCore
 } = require('../function')
 
 const BUILD_REPO = require('./BUILD_REPO.json')
@@ -34,12 +34,11 @@ runMain(async (logger) => {
   else { // build new
     logger.padLog('assemble build directory (context)')
     await resetDirectory(PATH_BUILD)
-    await writeFileAsync(fromOutput(PATH_BUILD, 'Dockerfile'), dockerfileBuffer) // concat Dockerfile config
-    await writeFileAsync(fromOutput(PATH_BUILD, 'ubuntu-bionic-core-cloudimg-amd64-root.tar.gz'), ubuntuCoreImageBuffer)
+    writeFileSync(fromOutput(PATH_BUILD, 'Dockerfile'), dockerfileBuffer) // concat Dockerfile config
+    writeFileSync(fromOutput(PATH_BUILD, 'ubuntu-bionic-core-cloudimg-amd64-root.tar.gz'), ubuntuCoreImageBuffer)
 
     logger.padLog('build image')
-    await runWithTee(fromOutput(`${BUILD_TAG}.log`), {
-      command: COMMAND_DOCKER,
+    await runWithTee(fromOutput(`${BUILD_TAG}.log`), toRunDockerConfig({
       argList: [
         'image', 'build',
         '--tag', `${BUILD_REPO}:${BUILD_TAG}`,
@@ -48,11 +47,11 @@ runMain(async (logger) => {
         '.' // context is always CWD
       ],
       option: { cwd: PATH_BUILD }
-    })
+    }))
   }
 
   logger.padLog('save core image tag')
-  await saveTagCoreAsync(__dirname, `${BUILD_REPO}:${BUILD_TAG}`)
+  saveTagCore(__dirname, `${BUILD_REPO}:${BUILD_TAG}`)
 }, 'build-core')
 
 const extraDockerfileString = `

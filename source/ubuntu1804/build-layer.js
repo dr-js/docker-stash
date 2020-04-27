@@ -1,12 +1,12 @@
+const { writeFileSync } = require('fs')
 const { oneOf } = require('@dr-js/core/library/common/verify')
-const { writeFileAsync } = require('@dr-js/core/library/node/file/function')
 const { modifyCopy } = require('@dr-js/core/library/node/file/Modify')
 const { runMain } = require('@dr-js/dev/library/main')
 const {
   resetDirectory,
   fromRoot, fromOutput,
-  COMMAND_DOCKER, runWithTee,
-  loadTagCoreAsync
+  toRunDockerConfig, runWithTee,
+  loadTagCore
 } = require('../function')
 
 const { version: BUILD_VERSION } = require(fromRoot('package.json'))
@@ -32,19 +32,18 @@ runMain(async (logger) => {
 
   logger.padLog('assemble build directory')
   await resetDirectory(PATH_BUILD)
-  await writeFileAsync(fromOutput(PATH_BUILD, 'Dockerfile'), await getLayerDockerfileString({
+  writeFileSync(fromOutput(PATH_BUILD, 'Dockerfile'), getLayerDockerfileString({
     DOCKER_BUILD_MIRROR,
     isNodeLayer: BUILD_FLAVOR === 'node',
     isBinLayer: BUILD_FLAVOR === 'bin'
   }))
   await modifyCopy(
-    fromRoot(__dirname, `build-script/`),
+    fromRoot(__dirname, 'build-script/'),
     fromOutput(PATH_BUILD, 'build-script/')
   )
 
   logger.padLog('build image')
-  await runWithTee(fromOutput(`${BUILD_TAG}.log`), {
-    command: COMMAND_DOCKER,
+  await runWithTee(fromOutput(`${BUILD_TAG}.log`), toRunDockerConfig({
     argList: [
       'image', 'build',
       '--tag', `${BUILD_REPO}:${BUILD_TAG}`,
@@ -52,10 +51,10 @@ runMain(async (logger) => {
       '.' // context is always CWD
     ],
     option: { cwd: PATH_BUILD }
-  })
+  }))
 }, `build-${BUILD_FLAVOR}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR}`}`)
 
-const getLayerDockerfileString = async ({
+const getLayerDockerfileString = ({
   DOCKER_BUILD_MIRROR = '',
 
   isNodeLayer = false,
@@ -64,7 +63,7 @@ const getLayerDockerfileString = async ({
   mask0 = isNodeLayer ? '# ' : '',
   mask1 = mask0 || isBinLayer ? '# ' : ''
 }) => `
-FROM ${await loadTagCoreAsync(__dirname)}
+FROM ${loadTagCore(__dirname)}
 
 LABEL arg.DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
 ENV DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}

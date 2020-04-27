@@ -1,6 +1,6 @@
 const { runSync } = require('@dr-js/core/library/node/system/Run')
 const { runMain } = require('@dr-js/dev/library/main')
-const { fromRoot, COMMAND_DOCKER, loadTagCoreAsync } = require('./function')
+const { fromRoot, toRunDockerConfig, loadTagCore } = require('./function')
 
 runMain(async (logger) => {
   logger.padLog('push')
@@ -9,7 +9,7 @@ runMain(async (logger) => {
   const BUILD_REPO = require('./ubuntu1804/BUILD_REPO.json')
 
   const tagList = [
-    await loadTagCoreAsync(fromRoot(__dirname, 'ubuntu1804/')),
+    loadTagCore(fromRoot(__dirname, 'ubuntu1804/')),
     `${BUILD_REPO}:${BUILD_VERSION}-1804-node`,
     `${BUILD_REPO}:${BUILD_VERSION}-1804-bin`,
     `${BUILD_REPO}:${BUILD_VERSION}-1804-full`,
@@ -20,6 +20,6 @@ runMain(async (logger) => {
 
   for (const tag of tagList) {
     logger.log(`push tag: ${tag}`)
-    runSync({ command: COMMAND_DOCKER, argList: [ 'push', tag ] })
+    runSync(toRunDockerConfig({ argList: [ 'push', tag ] }))
   }
 }, 'docker-push')
