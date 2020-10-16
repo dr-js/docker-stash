@@ -23,9 +23,9 @@ oneOf(BUILD_FLAVOR, [ 'node', 'bin', 'full' ])
 oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
 
 runMain(async (logger) => {
-  const BUILD_TAG = `${BUILD_VERSION}-1804-${BUILD_FLAVOR}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR.toLowerCase()}`}`
-  const PATH_BUILD = fromOutput('ubuntu', BUILD_TAG)
-  const PATH_LOG = fromOutput('ubuntu', `${BUILD_TAG}.log`)
+  const BUILD_TAG = `${BUILD_VERSION}-10-${BUILD_FLAVOR}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR.toLowerCase()}`}`
+  const PATH_BUILD = fromOutput('debian', BUILD_TAG)
+  const PATH_LOG = fromOutput('debian', `${BUILD_TAG}.log`)
 
   logger.padLog('build config')
   logger.log('BUILD_TAG:', BUILD_TAG)

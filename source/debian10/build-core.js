@@ -12,19 +12,19 @@ const {
 const BUILD_REPO = require('./BUILD_REPO.json')
 const BUILD_FLAVOR = 'core'
 
-const URL_HASH = 'https://api.github.com/repos/tianon/docker-brew-ubuntu-core/git/refs/heads/dist-amd64' // branch info
-const URL_DOCKERFILE = 'https://github.com/tianon/docker-brew-ubuntu-core/raw/dist-amd64/bionic/Dockerfile'
-const URL_CORE_IMAGE = 'https://github.com/tianon/docker-brew-ubuntu-core/raw/dist-amd64/bionic/ubuntu-bionic-core-cloudimg-amd64-root.tar.gz' // or: https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-amd64-root.tar.gz
+const URL_HASH = 'https://api.github.com/repos/debuerreotype/docker-debian-artifacts/git/refs/heads/dist-amd64' // branch info
+const URL_DOCKERFILE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/Dockerfile'
+const URL_CORE_IMAGE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/rootfs.tar.xz'
 
 runMain(async (logger) => {
-  logger.padLog('borrow file from github:tianon/docker-brew-ubuntu-core')
-  const [ coreDockerfileBuffer, coreImageBuffer ] = await fetchGitHubBufferListWithLocalCache([ URL_DOCKERFILE, URL_CORE_IMAGE ], URL_HASH, fromCache('ubuntu', `1804-${BUILD_FLAVOR}`))
+  logger.padLog('borrow file from github:debuerreotype/docker-debian-artifacts')
+  const [ coreDockerfileBuffer, coreImageBuffer ] = await fetchGitHubBufferListWithLocalCache([ URL_DOCKERFILE, URL_CORE_IMAGE ], URL_HASH, fromCache('debian', `10-${BUILD_FLAVOR}`))
   const dockerfileBuffer = Buffer.concat([ coreDockerfileBuffer, Buffer.from(extraDockerfileString) ])
 
   const SOURCE_HASH = createHash('sha1').update(dockerfileBuffer).update(coreImageBuffer).digest('base64').replace(/\W/g, '')
-  const BUILD_TAG = `1804-${BUILD_FLAVOR}-${SOURCE_HASH}`
-  const PATH_BUILD = fromOutput('ubuntu', BUILD_TAG)
-  const PATH_LOG = fromOutput('ubuntu', `${BUILD_TAG}.log`)
+  const BUILD_TAG = `10-${BUILD_FLAVOR}-${SOURCE_HASH}`
+  const PATH_BUILD = fromOutput('debian', BUILD_TAG)
+  const PATH_LOG = fromOutput('debian', `${BUILD_TAG}.log`)
 
   logger.padLog('build config')
   logger.log('BUILD_TAG:', BUILD_TAG)
