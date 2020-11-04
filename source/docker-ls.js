@@ -1,8 +1,9 @@
-const { runSync } = require('@dr-js/core/library/node/system/Run')
-const { toRunDockerConfig } = require('./function')
+const { runMain, toRunDockerConfig, run } = require('./function')
 
-console.log('\n[container] '.padEnd(64, '='))
-runSync(toRunDockerConfig({ argList: [ 'container', 'ls', '--all' ] }))
+runMain(async (logger) => {
+  logger.padLog('container')
+  await run(toRunDockerConfig({ argList: [ 'container', 'ls', '--all' ] })).promise
 
-console.log('\n[image] '.padEnd(64, '='))
-runSync(toRunDockerConfig({ argList: [ 'image', 'ls' ] }))
+  logger.padLog('image')
+  await run(toRunDockerConfig({ argList: [ 'image', 'ls' ] })).promise
+}, 'docker-ls')

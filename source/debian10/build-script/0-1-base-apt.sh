@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-alias shell-ex-on='set -xe'
-alias shell-ex-off='set +xe'
+source ./0-0-base.sh
 
 # https://github.com/moby/moby/issues/16058#issuecomment-334370727
 # http://www.microhowto.info/howto/perform_an_unattended_installation_of_a_debian_package.html
@@ -29,7 +28,3 @@ alias apt-clear='apt-get autoremove -yq --purge \
   && rm -rf /usr/share/man/* \
   && rm -rf /usr/share/info/* \
   && shopt -u nullglob'
-
-shopt -s expand_aliases # or alias won't work # https://askubuntu.com/questions/98782/how-to-run-an-alias-in-a-shell-script
-
-shell-ex-on # enable shell command log & exit on error

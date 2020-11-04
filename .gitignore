@@ -12,6 +12,9 @@ logs
 .idea
 .vscode
 
+# Ignore local or CI ".npmrc"
+.npmrc
+
 # Dependency directory
 node_modules
 
@@ -21,3 +24,6 @@ node_modules
 # Ignore folder of file with `-gitignore`
 **/*-gitignore/**
 **/*-gitignore*
+
+# Ignore TAG_CORE.json
+source/*/TAG_CORE*.json

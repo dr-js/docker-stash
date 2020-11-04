@@ -4,7 +4,7 @@ A collection of strange docker scripts
 
 DockerHub:
 - [drjs/debian](https://hub.docker.com/r/drjs/debian)
-- [drjs/ubuntu](https://hub.docker.com/r/drjs/ubuntu)
+- [drjs/ubuntu](https://hub.docker.com/r/drjs/ubuntu) [depecated]
 
 Image layer is checked with [dive](https://github.com/wagoodman/dive)
 
@@ -31,21 +31,8 @@ First check `source/debian10/BUILD_REPO.json`
 Then run
 ```bash
 npm run build-debian10-core
-
 npm run build-debian10-layer
 # or for CN mirror
+npm run build-debian10-core-cn 
 npm run build-debian10-layer-cn
-```
-
-#### build `ubuntu1804`
-
-First check `source/ubuntu1804/BUILD_REPO.json`
-
-Then run
-```bash
-npm run build-ubuntu1804-core
-
-npm run build-ubuntu1804-layer
-# or for CN mirror
-npm run build-ubuntu1804-layer-cn
 ```

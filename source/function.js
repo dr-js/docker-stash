@@ -1,12 +1,18 @@
 const { resolve, dirname } = require('path')
 const { readFileSync, writeFileSync, createWriteStream } = require('fs')
+const { createHash } = require('crypto')
 
 const { catchSync } = require('@dr-js/core/library/common/error')
+const { oneOf } = require('@dr-js/core/library/common/verify')
+const { modifyCopy } = require('@dr-js/core/library/node/file/Modify')
 const { createDirectory } = require('@dr-js/core/library/node/file/Directory')
 const { run } = require('@dr-js/core/library/node/system/Run')
-const { resetDirectory } = require('@dr-js/dev/library/node/file')
-
 const { fetchWithJump } = require('@dr-js/core/library/node/net')
+
+const { fetchLikeRequestWithProxy } = require('@dr-js/node/library/module/Software/npm')
+
+const { runMain } = require('@dr-js/dev/library/main')
+const { resetDirectory } = require('@dr-js/dev/library/node/file')
 
 const PATH_ROOT = resolve(__dirname, '../')
 const PATH_CACHE = resolve(__dirname, PATH_ROOT, 'cache-gitignore/')
@@ -39,22 +45,29 @@ const runWithTee = async (logFile, { command, argList, option }) => { // output 
   logStream.end()
 }
 
-const fetchGitHubBuffer = async (url) => {
+const fetchBuffer = async (url) => {
   console.log(' - fetch:', url)
   return (await fetchWithJump(url, {
-    jumpMax: 8,
+    jumpMax: 4,
     timeout: 10 * 60 * 1000,
-    headers: { 'accept': '*/*', 'user-agent': PACKAGE_NAME }
+    headers: { 'accept': '*/*', 'user-agent': PACKAGE_NAME },
+    fetch: fetchLikeRequestWithProxy
   })).buffer()
 }
 
 const filenameFromUrl = (url) => String(url).replace(/[^\w-]/g, '_')
 
-const fetchGitHubBufferListWithLocalCache = async (urlList, urlHash, pathCache) => {
+const __DEV_SKIP_FETCH__ = false
+
+const fetchGitHubBufferListWithLocalCache = async (
+  urlList,
+  urlHash, // use this fetch result as hash to decide cache valid or not
+  pathCache
+) => {
   const fileCacheHash = resolve(pathCache, filenameFromUrl(urlHash))
-  const hashBuffer = await fetchGitHubBuffer(urlHash) // download hash
+  const hashBuffer = __DEV_SKIP_FETCH__ ? undefined : await fetchBuffer(urlHash) // download hash
   const hashCacheBuffer = catchSync(readFileSync, fileCacheHash).result
-  const isCacheValid = hashCacheBuffer && Buffer.compare(hashBuffer, hashCacheBuffer) === 0
+  const isCacheValid = __DEV_SKIP_FETCH__ || (hashCacheBuffer && Buffer.compare(hashBuffer, hashCacheBuffer) === 0)
   if (isCacheValid) console.log(' - cache valid:', urlHash)
   else await resetDirectory(pathCache)
   const bufferList = []
@@ -63,12 +76,33 @@ const fetchGitHubBufferListWithLocalCache = async (urlList, urlHash, pathCache) 
     let buffer = isCacheValid && catchSync(readFileSync, fileCacheBuffer).result // download buffer
     if (buffer) console.log(' - cache hit:', url)
     else {
-      buffer = await fetchGitHubBuffer(url)
+      console.log(' - cache fetch as:', fileCacheBuffer)
+      buffer = await fetchBuffer(url)
       writeFileSync(fileCacheBuffer, buffer)
     }
     bufferList.push(buffer)
   }
-  writeFileSync(fileCacheHash, hashBuffer) // save cache hash last
+  !__DEV_SKIP_FETCH__ && writeFileSync(fileCacheHash, hashBuffer) // save cache hash last
+  return bufferList
+}
+
+const fetchUrlWithLocalCache = async (
+  urlList, // will cache the url result, so url should contain some sort of hash
+  pathCache
+) => {
+  await createDirectory(pathCache)
+  const bufferList = []
+  for (const url of urlList) {
+    const fileCacheBuffer = resolve(pathCache, filenameFromUrl(url))
+    let buffer = catchSync(readFileSync, fileCacheBuffer).result // download buffer
+    if (buffer) console.log(' - cache hit:', url)
+    else {
+      console.log(' - cache fetch as:', fileCacheBuffer)
+      buffer = await fetchBuffer(url)
+      writeFileSync(fileCacheBuffer, buffer)
+    }
+    bufferList.push(buffer)
+  }
   return bufferList
 }
 
@@ -92,13 +126,15 @@ const getIsDockerImageExist = async (imageRepo, imageTag) => {
   return false
 }
 
-const saveTagCore = (path, tag) => writeFileSync(fromRoot(path, 'TAG_CORE.json'), JSON.stringify(tag))
-const loadTagCore = (path) => JSON.parse(String(readFileSync(fromRoot(path, 'TAG_CORE.json'))))
+const saveTagCore = (path, DOCKER_BUILD_MIRROR = '', tag) => writeFileSync(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`), JSON.stringify(tag))
+const loadTagCore = (path, DOCKER_BUILD_MIRROR = '') => JSON.parse(String(readFileSync(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`))))
 
 module.exports = {
-  resetDirectory,
+  writeFileSync, createHash,
+  oneOf, modifyCopy,
+  runMain, resetDirectory,
   fromRoot, fromCache, fromOutput,
-  toRunDockerConfig, runWithTee,
-  fetchGitHubBufferListWithLocalCache,
+  toRunDockerConfig, run, runWithTee,
+  fetchGitHubBufferListWithLocalCache, fetchUrlWithLocalCache,
   getIsDockerImageExist, saveTagCore, loadTagCore
 }

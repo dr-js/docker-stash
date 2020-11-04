@@ -1,11 +1,10 @@
-const { writeFileSync } = require('fs')
-const { oneOf } = require('@dr-js/core/library/common/verify')
-const { modifyCopy } = require('@dr-js/core/library/node/file/Modify')
-const { runMain } = require('@dr-js/dev/library/main')
 const {
-  resetDirectory,
-  fromRoot, fromOutput,
+  writeFileSync,
+  oneOf, modifyCopy,
+  runMain, resetDirectory,
+  fromRoot, fromCache, fromOutput,
   toRunDockerConfig, runWithTee,
+  fetchUrlWithLocalCache,
   loadTagCore
 } = require('../function')
 
@@ -22,6 +21,9 @@ const [
 oneOf(BUILD_FLAVOR, [ 'node', 'bin', 'full' ])
 oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
 
+// update at 2020/11/06, to find download from: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
+const URL_DEB_NODEJS = 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.15.0-1nodesource1_amd64.deb'
+
 runMain(async (logger) => {
   const BUILD_TAG = `${BUILD_VERSION}-10-${BUILD_FLAVOR}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR.toLowerCase()}`}`
   const PATH_BUILD = fromOutput('debian', BUILD_TAG)
@@ -31,17 +33,22 @@ runMain(async (logger) => {
   logger.log('BUILD_TAG:', BUILD_TAG)
   logger.log('PATH_BUILD:', PATH_BUILD)
 
-  logger.padLog('assemble build directory')
+  logger.padLog('assemble "/" (context)')
   await resetDirectory(PATH_BUILD)
   writeFileSync(fromOutput(PATH_BUILD, 'Dockerfile'), getLayerDockerfileString({
     DOCKER_BUILD_MIRROR,
-    isNodeLayer: BUILD_FLAVOR === 'node',
-    isBinLayer: BUILD_FLAVOR === 'bin'
+    isBinCommonLayer: BUILD_FLAVOR === 'bin' || BUILD_FLAVOR === 'full',
+    isBinGitLayer: BUILD_FLAVOR === 'full'
   }))
-  await modifyCopy(
-    fromRoot(__dirname, 'build-script/'),
-    fromOutput(PATH_BUILD, 'build-script/')
-  )
+
+  logger.padLog('assemble "build-script/"')
+  await resetDirectory(fromOutput(PATH_BUILD, 'build-script/'))
+  await modifyCopy(fromRoot(__dirname, 'build-script/'), fromOutput(PATH_BUILD, 'build-script/'))
+
+  logger.padLog('assemble "build-deb-node/"')
+  await resetDirectory(fromOutput(PATH_BUILD, 'build-deb-node/'))
+  const [ debNodejs ] = await fetchUrlWithLocalCache([ URL_DEB_NODEJS ], fromCache('debian', `10-layer-deb`))
+  writeFileSync(fromOutput(PATH_BUILD, 'build-deb-node/', URL_DEB_NODEJS.split('/').pop()), debNodejs)
 
   logger.padLog('build image')
   await runWithTee(PATH_LOG, toRunDockerConfig({
@@ -56,15 +63,15 @@ runMain(async (logger) => {
 }, `build-${BUILD_FLAVOR}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR}`}`)
 
 const getLayerDockerfileString = ({
-  DOCKER_BUILD_MIRROR = '',
+  DOCKER_BUILD_MIRROR = '', // TODO: for most build, move the ENV to last line and reuse most non-CN layer? but this will be slow when actually build in CN
 
-  isNodeLayer = false,
-  isBinLayer = false,
+  isBinCommonLayer = false,
+  isBinGitLayer = false,
 
-  mask0 = isNodeLayer ? '# ' : '',
-  mask1 = mask0 || isBinLayer ? '# ' : ''
+  mask0 = isBinCommonLayer ? '' : '# ',
+  mask1 = mask0 || (isBinGitLayer ? '' : '# ')
 }) => `
-FROM ${loadTagCore(__dirname)}
+FROM ${loadTagCore(__dirname, DOCKER_BUILD_MIRROR)}
 
 LABEL arg.DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
 ENV DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
@@ -73,23 +80,18 @@ ENV DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
 WORKDIR /root/.build-script/
 
 COPY ./build-script/0-0-base.sh ./
+COPY ./build-script/0-1-base-apt.sh ./
+COPY ./build-script/0-2-base-node.sh ./
 
-COPY ./build-script/1-0-apt-setup.sh ./
-RUN               ./1-0-apt-setup.sh
+COPY ./build-script/1-0-node-install.sh ./
+COPY ./build-deb-node/ ./build-deb-node/
+RUN               ./1-0-node-install.sh
 
-COPY ./build-script/2-0-node-base.sh ./
-COPY ./build-script/2-1-node-install.sh ./
-RUN               ./2-1-node-install.sh
+${mask0}COPY ./build-script/5-0-bin-common.sh ./
+${mask0}RUN               ./5-0-bin-common.sh
 
-${mask0}COPY ./build-script/8-0-bin-ssh.sh ./
-${mask0}RUN               ./8-0-bin-ssh.sh
-${mask0}COPY ./build-script/8-1-bin-git.sh ./
-${mask0}RUN               ./8-1-bin-git.sh
-${mask0}COPY ./build-script/8-2-bin-7z.sh ./
-${mask0}RUN               ./8-2-bin-7z.sh
-
-${mask1}COPY ./build-script/9-0-dep-node.sh ./
-${mask1}RUN               ./9-0-dep-node.sh
+${mask1}COPY ./build-script/5-1-bin-git.sh ./
+${mask1}RUN               ./5-1-bin-git.sh
 
 # restore path
 WORKDIR /root/

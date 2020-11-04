@@ -1,8 +1,9 @@
-const { runSync } = require('@dr-js/core/library/node/system/Run')
-const { toRunDockerConfig } = require('./function')
+const { runMain, toRunDockerConfig, run } = require('./function')
 
-console.log('\n[system] '.padEnd(64, '='))
-runSync(toRunDockerConfig({ argList: [ 'system', 'prune', '--force' ] }))
+runMain(async (logger) => {
+  logger.padLog('system')
+  await run(toRunDockerConfig({ argList: [ 'system', 'prune', '--force' ] })).promise
+}, 'docker-prune')
 
 // console.log('\n[container] '.padEnd(64, '='))
 // runSync(toRunDockerConfig({ argList: [ 'container', 'prune' ] }))
