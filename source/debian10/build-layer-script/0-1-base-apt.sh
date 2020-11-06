@@ -21,7 +21,7 @@ alias apt-remove='DEBIAN_FRONTEND=noninteractive \
 alias apt-clear='apt-get autoremove -yq --purge \
     -o APT::AutoRemove::RecommendsImportant=false \
   && shopt -s nullglob \
-  && find /var/cache/apt/archives /var/lib/apt/lists /var/log /var/lib/dpkg/*-old /var/cache/debconf/*-old -not -name lock -type f -delete \
+  && find /var/lib/dpkg/*-old -not -name lock -type f -delete \
   && find /usr/share/doc -not -name copyright -type f -delete \
   && find /usr/share/doc -not -name copyright -type l -delete \
   && find /usr/share/doc -type d -empty -delete \

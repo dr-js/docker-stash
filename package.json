@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.0.5-dev.0",
+  "version": "0.0.5-dev.1",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
@@ -22,8 +22,9 @@
     "build-proxy": "DRD --EE \"HTTP_PROXY=http://127.0.0.1:1080&HTTPS_PROXY=http://127.0.0.1:1080&NO_PROXY=127.0.0.1,localhost\" -E --",
     "build-debian10-core-cn-proxy": "npm run build-proxy -- npm run build-debian10-core-cn",
     "build-debian10-layer-cn-proxy": "npm run build-proxy -- npm run build-debian10-layer-cn",
+    "build-debian10-layer-node-cn-proxy": "npm run build-proxy -- npm run build-debian10-layer-node-cn",
     "// =============================": "",
-    "git-fix-win32-filemode": "git update-index --chmod=+x ./source/debian10/build-script/*",
+    "git-fix-win32-filemode": "git update-index --chmod=+x ./source/debian10/build-layer-script/*",
     "docker-ls": "node source/docker-ls.js",
     "docker-push-all": "node source/docker-push.js ALL",
     "docker-push": "node source/docker-push.js",
@@ -38,8 +39,8 @@
   },
   "devDependencies": {
     "@dr-js/core": "0.4.1-dev.4",
-    "@dr-js/node": "0.4.1-dev.1",
     "@dr-js/dev": "0.4.1-dev.0",
-    "@dr-js/dev-eslint": "0.4.1-dev.0"
+    "@dr-js/dev-eslint": "0.4.1-dev.0",
+    "@dr-js/node": "0.4.1-dev.1"
   }
 }

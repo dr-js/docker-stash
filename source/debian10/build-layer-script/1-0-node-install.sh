@@ -14,12 +14,15 @@ apt-update
   # apt-remove curl
   # apt-remove lsb-release # auto-installed by node setup script
 
-  dpkg -i build-deb-node/nodejs*.deb || apt-install -f # fix missing dependencies
-  rm -rf build-deb-node/
+  dpkg -i ../build-layer-node/nodejs*.deb || apt-install -f # fix missing dependencies like "python2"
 
-  # update & mute npm
-  npm-install-global npm
-  npm config set update-notifier false
+  # mute npm
+  mkdir -p ~/.config/configstore/
+  echo "{\"optOut\":true}" > ~/.config/configstore/update-notifier-npm.json
+  echo "update-notifier=false" > ~/.npmrc
+
+  # update npm
+  npm install --global ../build-layer-node/npm*.tgz
 
   # trim npm files
   rm -rf /usr/lib/node_modules/npm/changelogs/
@@ -28,3 +31,8 @@ apt-update
   rm -rf /usr/lib/node_modules/npm/node_modules/ajv/dist/
   npm-clear
 apt-clear
+
+# log version & info
+node --version
+npm --version
+npm config get cache # should be "/root/.npm/"
