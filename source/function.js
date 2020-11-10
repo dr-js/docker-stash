@@ -1,6 +1,7 @@
 const { resolve, dirname } = require('path')
 const { readFileSync, writeFileSync, createWriteStream } = require('fs')
 const { createHash } = require('crypto')
+const { strictEqual } = require('assert')
 
 const { catchSync } = require('@dr-js/core/library/common/error')
 const { oneOf } = require('@dr-js/core/library/common/verify')
@@ -86,13 +87,12 @@ const fetchGitHubBufferListWithLocalCache = async (
   return bufferList
 }
 
-const fetchUrlWithLocalCache = async (
-  urlList, // will cache the url result, so url should contain some sort of hash
+const fetchFileWithLocalCache = async (
+  fetchList, // [ url, hash, pathOutput, filename = 'last part of url' ], will cache the url result, so url should contain some sort of hash
   pathCache
 ) => {
   await createDirectory(pathCache)
-  const bufferList = []
-  for (const url of urlList) {
+  for (const [ url, hash, pathOutput, filename = url.split('/').pop() ] of fetchList) {
     const fileCacheBuffer = resolve(pathCache, filenameFromUrl(url))
     let buffer = catchSync(readFileSync, fileCacheBuffer).result // download buffer
     if (buffer) console.log(' - cache hit:', url)
@@ -101,9 +101,12 @@ const fetchUrlWithLocalCache = async (
       buffer = await fetchBuffer(url)
       writeFileSync(fileCacheBuffer, buffer)
     }
-    bufferList.push(buffer)
+    const [ hashString, hashAlgo = 'sha256', hashDigest = 'hex' ] = hash.split(':')
+    strictEqual(createHash(hashAlgo).update(buffer).digest(hashDigest), hashString, `hash mismatch for: ${url}`)
+
+    await createDirectory(pathOutput)
+    writeFileSync(resolve(pathOutput, filename), buffer)
   }
-  return bufferList
 }
 
 const getIsDockerImageExist = async (imageRepo, imageTag) => {
@@ -135,6 +138,6 @@ module.exports = {
   runMain, resetDirectory,
   fromRoot, fromCache, fromOutput,
   toRunDockerConfig, run, runWithTee,
-  fetchGitHubBufferListWithLocalCache, fetchUrlWithLocalCache,
+  fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
   getIsDockerImageExist, saveTagCore, loadTagCore
 }

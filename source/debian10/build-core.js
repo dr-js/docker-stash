@@ -4,7 +4,7 @@ const {
   runMain, resetDirectory,
   fromCache, fromOutput,
   toRunDockerConfig, runWithTee,
-  fetchGitHubBufferListWithLocalCache, fetchUrlWithLocalCache,
+  fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
   getIsDockerImageExist, saveTagCore
 } = require('../function')
 
@@ -25,13 +25,17 @@ const URL_DOCKERFILE = 'https://github.com/debuerreotype/docker-debian-artifacts
 const URL_CORE_IMAGE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/rootfs.tar.xz'
 
 // update at 2020/11/05, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
-const URL_DEB_CA_CERTIFICATES = 'http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20200601~deb10u1_all.deb'
-const URL_DEB_OPENSSL = 'http://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1d-0+deb10u3_amd64.deb'
-const URL_DEB_LIBSSL = 'http://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1d-0+deb10u3_amd64.deb'
+const DEB_CA_CERTIFICATES = [ 'http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20200601~deb10u1_all.deb', '794bd3ffa0fc268dc8363f8924b2ab7cf831ab151574a6c1584790ce9945cbb2' ]
+const DEB_OPENSSL = [ 'http://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1d-0+deb10u3_amd64.deb', '03a133833154325c731291c8a87daef5962dcfb75dee7cdb11f7fb923de2db82' ]
+const DEB_LIBSSL = [ 'http://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1d-0+deb10u3_amd64.deb', 'b293309a892730986e779aea48e97ea94cd58f34f07fefbd432c210ee4a427e2' ]
 
 runMain(async (logger) => {
   logger.padLog('borrow file from github:debuerreotype/docker-debian-artifacts')
-  const [ coreDockerfileBuffer, coreImageBuffer ] = await fetchGitHubBufferListWithLocalCache([ URL_DOCKERFILE, URL_CORE_IMAGE ], URL_HASH, fromCache('debian', '10-core-github'))
+  const [
+    coreDockerfileBuffer, coreImageBuffer
+  ] = await fetchGitHubBufferListWithLocalCache([
+    URL_DOCKERFILE, URL_CORE_IMAGE
+  ], URL_HASH, fromCache('debian', '10-core-github'))
   const dockerfileBuffer = Buffer.concat([
     Buffer.from(`# syntax = ${BUILDKIT_SYNTAX}\n\n`),
     coreDockerfileBuffer,
@@ -54,26 +58,22 @@ runMain(async (logger) => {
 
     logger.padLog('assemble "/" (context)')
     await resetDirectory(PATH_BUILD)
-    writeFileSync(fromOutput(PATH_BUILD, URL_DOCKERFILE.split('/').pop()), dockerfileBuffer) // concat Dockerfile config
+    writeFileSync(fromOutput(PATH_BUILD, 'Dockerfile'), dockerfileBuffer)
     writeFileSync(fromOutput(PATH_BUILD, URL_CORE_IMAGE.split('/').pop()), coreImageBuffer)
 
     logger.padLog('assemble "build-core/"')
-    await resetDirectory(fromOutput(PATH_BUILD, 'build-core/'))
-    const [
-      debCaCertificatesBuffer, debOpensslBuffer, debLibsslBuffer
-    ] = await fetchUrlWithLocalCache([
-      URL_DEB_CA_CERTIFICATES, URL_DEB_OPENSSL, URL_DEB_LIBSSL
+    await fetchFileWithLocalCache([
+      [ ...DEB_CA_CERTIFICATES, fromOutput(PATH_BUILD, 'build-core/') ],
+      [ ...DEB_OPENSSL, fromOutput(PATH_BUILD, 'build-core/') ],
+      [ ...DEB_LIBSSL, fromOutput(PATH_BUILD, 'build-core/') ]
     ], fromCache('debian', '10-core-url'))
-    writeFileSync(fromOutput(PATH_BUILD, 'build-core/', URL_DEB_CA_CERTIFICATES.split('/').pop()), debCaCertificatesBuffer)
-    writeFileSync(fromOutput(PATH_BUILD, 'build-core/', URL_DEB_OPENSSL.split('/').pop()), debOpensslBuffer)
-    writeFileSync(fromOutput(PATH_BUILD, 'build-core/', URL_DEB_LIBSSL.split('/').pop()), debLibsslBuffer)
 
     logger.padLog('build image')
     await runWithTee(PATH_LOG, toRunDockerConfig({
       argList: [
         'image', 'build',
         '--tag', `${BUILD_REPO}:${BUILD_TAG}`,
-        '--file', 'Dockerfile',
+        '--file', './Dockerfile',
         '--progress=plain', // https://docs.docker.com/develop/develop-images/build_enhancements/#new-docker-build-command-line-build-output
         '--squash', // merge layer // TODO: NOTE: this is a experimental Docker feature, need to manually enable
         '.' // context is always CWD
@@ -101,22 +101,28 @@ WORKDIR /root/
 RUN set -ex
 
 # reset apt source list with buster-backports
-RUN echo 'deb ${debianMirror}/debian buster main'                   >  /etc/apt/sources.list \\
- && echo 'deb ${debianMirror}/debian buster-updates main'           >> /etc/apt/sources.list \\
- && echo 'deb ${debianMirror}/debian buster-backports main'         >> /etc/apt/sources.list \\
- && echo 'deb ${debianMirror}/debian-security/ buster/updates main' >> /etc/apt/sources.list
+RUN { \\
+  echo 'deb ${debianMirror}/debian buster main'; \\
+  echo 'deb ${debianMirror}/debian buster-updates main'; \\
+  echo 'deb ${debianMirror}/debian buster-backports main'; \\
+  echo 'deb ${debianMirror}/debian-security/ buster/updates main'; \\
+} > /etc/apt/sources.list
 
 # set apt to use buster-backports by default
-RUN echo 'Package: *'                       >  /etc/apt/preferences.d/backports \\
- && echo 'Pin: release a=buster-backports'  >> /etc/apt/preferences.d/backports \\
- && echo 'Pin-Priority: 800'                >> /etc/apt/preferences.d/backports
+RUN { \\
+  echo 'Package: *'; \\
+  echo 'Pin: release a=buster-backports'; \\
+  echo 'Pin-Priority: 800'; \\
+} > /etc/apt/preferences.d/backports
 
 # reset dpkg file filter # https://askubuntu.com/a/628410
-RUN echo 'path-exclude=/usr/share/doc/*'                      >  /etc/dpkg/dpkg.cfg.d/excludes \\
- && echo 'path-include=/usr/share/doc/*/copyright'            >> /etc/dpkg/dpkg.cfg.d/excludes \\
- && echo 'path-exclude=/usr/share/locale/*/LC_MESSAGES/*.mo'  >> /etc/dpkg/dpkg.cfg.d/excludes \\
- && echo 'path-exclude=/usr/share/man/*'                      >> /etc/dpkg/dpkg.cfg.d/excludes \\
- && echo 'path-exclude=/usr/share/info/*'                     >> /etc/dpkg/dpkg.cfg.d/excludes
+RUN { \\
+  echo 'path-exclude=/usr/share/doc/*'; \\
+  echo 'path-include=/usr/share/doc/*/copyright'; \\
+  echo 'path-exclude=/usr/share/locale/*/LC_MESSAGES/*.mo'; \\
+  echo 'path-exclude=/usr/share/man/*'; \\
+  echo 'path-exclude=/usr/share/info/*'; \\
+} > /etc/dpkg/dpkg.cfg.d/excludes
 
 # prepare apt cache # https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md#example-cache-apt-packages
 RUN shopt -s nullglob \\

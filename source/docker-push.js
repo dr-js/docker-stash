@@ -24,16 +24,16 @@ runMain(async (logger) => {
   const tagList = [
     ...([ 'ALL', '' ].includes(DOCKER_BUILD_MIRROR)) ? [
       loadTagCore(fromRoot(__dirname, 'debian10/'), ''),
-      `${BUILD_REPO_DEBIAN10}:${BUILD_VERSION}-10-node`,
-      `${BUILD_REPO_DEBIAN10}:${BUILD_VERSION}-10-bin`,
-      `${BUILD_REPO_DEBIAN10}:${BUILD_VERSION}-10-full`
+      `${BUILD_REPO_DEBIAN10}:10-node-${BUILD_VERSION}`,
+      `${BUILD_REPO_DEBIAN10}:10-bin-${BUILD_VERSION}`,
+      `${BUILD_REPO_DEBIAN10}:10-full-${BUILD_VERSION}`
     ] : [],
 
     ...([ 'ALL', 'CN' ].includes(DOCKER_BUILD_MIRROR)) ? [
       loadTagCore(fromRoot(__dirname, 'debian10/'), 'CN'),
-      `${BUILD_REPO_DEBIAN10}:${BUILD_VERSION}-10-node-cn`,
-      `${BUILD_REPO_DEBIAN10}:${BUILD_VERSION}-10-bin-cn`,
-      `${BUILD_REPO_DEBIAN10}:${BUILD_VERSION}-10-full-cn`
+      `${BUILD_REPO_DEBIAN10}:10-node-${BUILD_VERSION}-cn`,
+      `${BUILD_REPO_DEBIAN10}:10-bin-${BUILD_VERSION}-cn`,
+      `${BUILD_REPO_DEBIAN10}:10-full-${BUILD_VERSION}-cn`
     ] : []
   ]
 

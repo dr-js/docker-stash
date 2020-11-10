@@ -1,14 +1,13 @@
 const { runMain, toRunDockerConfig, run } = require('./function')
 
 runMain(async (logger) => {
-  logger.padLog('system')
-  await run(toRunDockerConfig({ argList: [ 'system', 'prune', '--force' ] })).promise
+  // TODO: NOTE: this remove too much, build cache should live longer
+  // logger.padLog('system')
+  // await run(toRunDockerConfig({ argList: [ 'system', 'prune', '--force' ] })).promise
+
+  logger.padLog('container')
+  await run(toRunDockerConfig({ argList: [ 'container', 'prune', '--force' ] })).promise
+
+  logger.padLog('image')
+  await run(toRunDockerConfig({ argList: [ 'image', 'prune', '--force' ] })).promise
 }, 'docker-prune')
-
-// console.log('\n[container] '.padEnd(64, '='))
-// runSync(toRunDockerConfig({ argList: [ 'container', 'prune' ] }))
-// console.log('\n[image] '.padEnd(64, '='))
-// runSync(toRunDockerConfig({ argList: [ 'image', 'prune' ] }))
-
-// also check: https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
-// nuke all: `sudo docker system prune -a`

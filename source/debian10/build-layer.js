@@ -4,7 +4,7 @@ const {
   runMain, resetDirectory,
   fromRoot, fromCache, fromOutput,
   toRunDockerConfig, runWithTee,
-  fetchUrlWithLocalCache,
+  fetchFileWithLocalCache,
   loadTagCore
 } = require('../function')
 
@@ -22,13 +22,14 @@ const [
 oneOf(BUILD_FLAVOR, [ 'node', 'bin', 'full' ])
 oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
 
-// update at 2020/11/06, to find download from: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
-const URL_DEB_NODEJS = 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.15.0-1nodesource1_amd64.deb'
+// update at 2020/11/06, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
+// and: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
+const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.15.0-1nodesource1_amd64.deb', '98b6d628de6ba6d0df39134b1c226ffac673d47a78bb928ded8a6c5d5aec604c' ]
 // update at 2020/11/07, to find download from: https://registry.npmjs.org/npm/latest (under `dist.tarball`)
-const URL_TGZ_NPM = 'https://registry.npmjs.org/npm/-/npm-6.14.8.tgz'
+const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.8.tgz', 'HBZVBMYs5blsj94GTeQZel7s9odVuuSUHy1+AlZh7rPVux1os2ashvEGLy/STNK7vUjbrCg5Kq9/GXisJgdf6A==:sha512:base64' ]
 
 runMain(async (logger) => {
-  const BUILD_TAG = `${BUILD_VERSION}-10-${BUILD_FLAVOR}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR.toLowerCase()}`}`
+  const BUILD_TAG = `10-${BUILD_FLAVOR}-${BUILD_VERSION}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR.toLowerCase()}`}`
   const PATH_BUILD = fromOutput('debian', BUILD_TAG)
   const PATH_LOG = fromOutput('debian', `${BUILD_TAG}.log`)
 
@@ -38,28 +39,24 @@ runMain(async (logger) => {
 
   logger.padLog('assemble "/" (context)')
   await resetDirectory(PATH_BUILD)
-  writeFileSync(fromOutput(PATH_BUILD, 'Dockerfile'), getLayerDockerfileString({
-    DOCKER_BUILD_MIRROR,
-    isBinCommonLayer: BUILD_FLAVOR === 'bin' || BUILD_FLAVOR === 'full',
-    isBinGitLayer: BUILD_FLAVOR === 'full'
-  }))
+  writeFileSync(fromOutput(PATH_BUILD, 'Dockerfile'), getLayerDockerfileString({ DOCKER_BUILD_MIRROR }))
 
   logger.padLog('assemble "build-layer-script/"')
   await resetDirectory(fromOutput(PATH_BUILD, 'build-layer-script/'))
   await modifyCopy(fromRoot(__dirname, 'build-layer-script/'), fromOutput(PATH_BUILD, 'build-layer-script/'))
 
   logger.padLog('assemble "build-layer-node/"')
-  await resetDirectory(fromOutput(PATH_BUILD, 'build-layer-node/'))
-  const [ debNodejs, tgzNpm ] = await fetchUrlWithLocalCache([ URL_DEB_NODEJS, URL_TGZ_NPM ], fromCache('debian', '10-layer-url'))
-  writeFileSync(fromOutput(PATH_BUILD, 'build-layer-node/', URL_DEB_NODEJS.split('/').pop()), debNodejs)
-  writeFileSync(fromOutput(PATH_BUILD, 'build-layer-node/', URL_TGZ_NPM.split('/').pop()), tgzNpm)
+  await fetchFileWithLocalCache([
+    [ ...DEB_NODEJS, fromOutput(PATH_BUILD, 'build-layer-node/') ],
+    [ ...TGZ_NPM, fromOutput(PATH_BUILD, 'build-layer-node/') ]
+  ], fromCache('debian', '10-layer-url'))
 
   logger.padLog('build image')
   await runWithTee(PATH_LOG, toRunDockerConfig({
     argList: [
       'image', 'build',
       '--tag', `${BUILD_REPO}:${BUILD_TAG}`,
-      '--file', 'Dockerfile',
+      '--file', './Dockerfile',
       '--target', `stage-${BUILD_FLAVOR}`,
       '--progress=plain', // https://docs.docker.com/develop/develop-images/build_enhancements/#new-docker-build-command-line-build-output
       '.' // context is always CWD
