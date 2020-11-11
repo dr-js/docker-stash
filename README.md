@@ -39,13 +39,11 @@ Try not to frequently rebuild the `core` after `layer` is built,
 First check `source/debian10/BUILD_REPO.json`
 
 Then run:
-```bash
-npm run build-debian10-core
-npm run build-debian10-layer
+```shell script
+npm run build-debian10
 
 # or for CN mirror
-npm run build-debian10-core-cn 
-npm run build-debian10-layer-cn
+npm run build-debian10-cn
 ```
 
 Try edit & use `build-proxy*` if some fetch is slow

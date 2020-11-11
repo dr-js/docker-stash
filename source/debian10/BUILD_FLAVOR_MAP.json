@@ -1,0 +1,5 @@
+{
+  "FLAVOR_NODE": { "NAME": "node", "BASE_IMAGE": "@CORE", "LAYER_SCRIPT": "1-0-node-install.sh" },
+  "FLAVOR_BIN_COMMON": { "NAME": "bin-common", "BASE_IMAGE": "node", "LAYER_SCRIPT": "5-0-bin-common.sh" },
+  "FLAVOR_BIN_GIT": { "NAME": "bin-git", "BASE_IMAGE": "bin-common", "LAYER_SCRIPT": "5-1-bin-git.sh" }
+}

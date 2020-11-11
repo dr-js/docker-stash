@@ -98,77 +98,62 @@ ENV DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
 SHELL [ "/bin/bash", "-c" ]
 WORKDIR /root/
 
-RUN set -ex
-
-# reset apt source list with buster-backports
-RUN { \\
-  echo 'deb ${debianMirror}/debian buster main'; \\
-  echo 'deb ${debianMirror}/debian buster-updates main'; \\
-  echo 'deb ${debianMirror}/debian buster-backports main'; \\
-  echo 'deb ${debianMirror}/debian-security/ buster/updates main'; \\
-} > /etc/apt/sources.list
-
-# set apt to use buster-backports by default
-RUN { \\
-  echo 'Package: *'; \\
-  echo 'Pin: release a=buster-backports'; \\
-  echo 'Pin-Priority: 800'; \\
-} > /etc/apt/preferences.d/backports
-
-# reset dpkg file filter # https://askubuntu.com/a/628410
-RUN { \\
-  echo 'path-exclude=/usr/share/doc/*'; \\
-  echo 'path-include=/usr/share/doc/*/copyright'; \\
-  echo 'path-exclude=/usr/share/locale/*/LC_MESSAGES/*.mo'; \\
-  echo 'path-exclude=/usr/share/man/*'; \\
-  echo 'path-exclude=/usr/share/info/*'; \\
-} > /etc/dpkg/dpkg.cfg.d/excludes
-
-# prepare apt cache # https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md#example-cache-apt-packages
-RUN shopt -s nullglob \\
+RUN set -ex \\
+ && { \\${_ && 'reset apt source list with buster-backports'}
+       echo 'deb ${debianMirror}/debian buster main'; \\
+       echo 'deb ${debianMirror}/debian buster-updates main'; \\
+       echo 'deb ${debianMirror}/debian buster-backports main'; \\
+       echo 'deb ${debianMirror}/debian-security/ buster/updates main'; \\
+    } > /etc/apt/sources.list \\
+ && { \\${_ && 'set apt to use buster-backports by default'}
+      echo 'Package: *'; \\
+      echo 'Pin: release a=buster-backports'; \\
+      echo 'Pin-Priority: 800'; \\
+    } > /etc/apt/preferences.d/backports \\
+ && { \\${_ && 'reset dpkg file filter # https://askubuntu.com/a/628410'}
+      echo 'path-exclude=/usr/share/doc/*'; \\
+      echo 'path-include=/usr/share/doc/*/copyright'; \\
+      echo 'path-exclude=/usr/share/locale/*/LC_MESSAGES/*.mo'; \\
+      echo 'path-exclude=/usr/share/man/*'; \\
+      echo 'path-exclude=/usr/share/info/*'; \\
+    } > /etc/dpkg/dpkg.cfg.d/excludes \\
+\\${_ && 'prepare apt cache # https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md#example-cache-apt-packages'}
+ && shopt -s nullglob \\
  && rm -rf \\
       /etc/apt/apt.conf.d/docker-clean \\
-      /var/log* \\
-      /var/cache* \\
+      /var/log/* \\
+      /var/cache/* \\
       /var/lib/apt/* \\
  && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";'   > /etc/apt/apt.conf.d/keep-cache \\
- && shopt -u nullglob
+ && shopt -u nullglob \\
+\\${_ && 'check system time, apt update will fail if the time is off too much'}
+ && date -uIs
 
-# add ssl & ca for https
 RUN \\
   --mount=type=cache,target=/var/log \\
   --mount=type=cache,target=/var/cache \\
   --mount=type=cache,target=/var/lib/apt \\
   --mount=type=bind,target=/root/.docker-build/,source=. \\
+\\${_ && 'add ssl & ca for https'}
     DEBIAN_FRONTEND=noninteractive dpkg -i /root/.docker-build/build-core/libssl*.deb \\
  && DEBIAN_FRONTEND=noninteractive dpkg -i /root/.docker-build/build-core/openssl*.deb \\
- && DEBIAN_FRONTEND=noninteractive dpkg -i /root/.docker-build/build-core/ca-certificates*.deb
-
-# check system time, apt update will fail if the time is off too much
-RUN date -uIs
-
-# pull update and upgrade if any
-RUN \\
-  --mount=type=cache,target=/var/log \\
-  --mount=type=cache,target=/var/cache \\
-  --mount=type=cache,target=/var/lib/apt \\
-    DEBIAN_FRONTEND=noninteractive apt-get update -yq \\
+ && DEBIAN_FRONTEND=noninteractive dpkg -i /root/.docker-build/build-core/ca-certificates*.deb \\
+\\${_ && 'pull update and upgrade if any'}
+ && DEBIAN_FRONTEND=noninteractive apt-get update -yq \\
  && DEBIAN_FRONTEND=noninteractive apt-get upgrade -yq \\
  && DEBIAN_FRONTEND=noninteractive apt-get autoremove -yq --purge \\
-      -o APT::AutoRemove::RecommendsImportant=false
-
-# clear left over files
-RUN shopt -s nullglob \\
+      -o APT::AutoRemove::RecommendsImportant=false \\
+\\${_ && 'clear left over files'}
+ && shopt -s nullglob \\
  && find /var/lib/dpkg/*-old -not -name lock -type f -delete \\
  && find /usr/share/doc -not -name copyright -type f -delete \\
  && find /usr/share/doc -not -name copyright -type l -delete \\
  && find /usr/share/doc -type d -empty -delete \\
  && rm -rf /usr/share/man/* \\
  && rm -rf /usr/share/info/* \\
- && shopt -u nullglob
-
-# log version & info
-RUN id \\
+ && shopt -u nullglob \\
+\\${_ && 'log version & info'}
+ && id \\
  && env \\
  && uname --all \\
  && bash --version \\
@@ -178,3 +163,4 @@ RUN id \\
  && tar --version \\
  && gzip --version \\
 `
+const _ = '' // HACK: NOTE: hack for adding comment

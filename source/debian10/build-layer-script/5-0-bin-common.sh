@@ -5,11 +5,12 @@ source ./0-1-base-apt.sh
 apt-update
   apt-install \
     less nano htop \
-    p7zip-full
+    xz-utils p7zip-full
 apt-clear
 
 # log version & info
 less --version
 nano --version
 htop --version
+xz --version
 7z --help

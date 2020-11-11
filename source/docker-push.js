@@ -20,20 +20,17 @@ runMain(async (logger) => {
 
   const { version: BUILD_VERSION } = require(fromRoot('package.json'))
   const BUILD_REPO_DEBIAN10 = require('./debian10/BUILD_REPO.json')
+  const BUILD_FLAVOR_LIST_DEBIAN10 = Object.values(require('./debian10/BUILD_FLAVOR_MAP.json')).map(({ NAME }) => NAME)
 
   const tagList = [
     ...([ 'ALL', '' ].includes(DOCKER_BUILD_MIRROR)) ? [
       loadTagCore(fromRoot(__dirname, 'debian10/'), ''),
-      `${BUILD_REPO_DEBIAN10}:10-node-${BUILD_VERSION}`,
-      `${BUILD_REPO_DEBIAN10}:10-bin-${BUILD_VERSION}`,
-      `${BUILD_REPO_DEBIAN10}:10-full-${BUILD_VERSION}`
+      ...BUILD_FLAVOR_LIST_DEBIAN10.map((flavorName) => `${BUILD_REPO_DEBIAN10}:10-${flavorName}-${BUILD_VERSION}`)
     ] : [],
 
     ...([ 'ALL', 'CN' ].includes(DOCKER_BUILD_MIRROR)) ? [
       loadTagCore(fromRoot(__dirname, 'debian10/'), 'CN'),
-      `${BUILD_REPO_DEBIAN10}:10-node-${BUILD_VERSION}-cn`,
-      `${BUILD_REPO_DEBIAN10}:10-bin-${BUILD_VERSION}-cn`,
-      `${BUILD_REPO_DEBIAN10}:10-full-${BUILD_VERSION}-cn`
+      ...BUILD_FLAVOR_LIST_DEBIAN10.map((flavorName) => `${BUILD_REPO_DEBIAN10}:10-${flavorName}-${BUILD_VERSION}-cn`)
     ] : []
   ]
 
