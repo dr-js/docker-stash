@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.0.5-dev.3",
+  "version": "0.0.5-dev.4",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
@@ -23,7 +23,9 @@
     "docker-push": "node source/docker-push.js",
     "docker-push-cn": "node source/docker-push.js CN",
     "docker-prune": "node source/docker-prune.js",
+    "tag-push": "TAG=\"$(node -p \"'v'+require('./package.json').version\")\" && git tag --force \"$TAG\" && git push --force origin \"$TAG\"",
     "lint": "eslint ./source/",
+    "test": "npm run lint",
     "prepack": "echo \"Error: do not pack this package\" && exit 1"
   },
   "engines": {

@@ -1,6 +1,13 @@
 # docker-stash
 
+[![i:ci]][l:ci]
+
 A collection of strange docker scripts
+
+[i:ci]: https://github.com/dr-js/docker-stash/workflows/ci-test/badge.svg
+[l:ci]: https://github.com/dr-js/docker-stash/actions?query=workflow:ci-test
+
+[//]: # (NON_PACKAGE_CONTENT)
 
 DockerHub:
 - [drjs/debian](https://hub.docker.com/r/drjs/debian)
