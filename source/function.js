@@ -7,8 +7,8 @@ const { catchSync } = require('@dr-js/core/library/common/error')
 const { oneOf } = require('@dr-js/core/library/common/verify')
 const { modifyCopy } = require('@dr-js/core/library/node/file/Modify')
 const { createDirectory } = require('@dr-js/core/library/node/file/Directory')
-const { run } = require('@dr-js/core/library/node/system/Run')
 const { fetchWithJump } = require('@dr-js/core/library/node/net')
+const { run, runSync } = require('@dr-js/core/library/node/run')
 
 const { fetchLikeRequestWithProxy } = require('@dr-js/node/library/module/Software/npm')
 
@@ -24,15 +24,9 @@ const fromOutput = (...args) => resolve(PATH_OUTPUT, ...args)
 
 const { name: PACKAGE_NAME } = require(fromRoot('package.json'))
 
-const toRunDockerConfig = ({ argList = [], ...extra }) => (
-  process.platform === 'win32'
-    ? { ...extra, command: 'docker.exe', argList }
-    : { ...extra, command: 'sudo', argList: [ 'docker', ...argList ] }
-)
-
-const runWithTee = async (logFile, { command, argList, option }) => { // output to both stdout and log file
+const runWithTee = async (argList, option = {}, logFile) => { // output to both stdout and log file
   await createDirectory(dirname(logFile))
-  const { promise, subProcess } = run({ command, argList, option: { stdio: [ 'ignore', 'pipe', 'pipe' ], ...option } })
+  const { promise, subProcess } = run(argList, { ...option, quiet: true })
   const logStream = createWriteStream(logFile)
   subProcess.stdout.pipe(process.stdout, { end: false })
   subProcess.stderr.pipe(process.stderr, { end: false })
@@ -45,6 +39,17 @@ const runWithTee = async (logFile, { command, argList, option }) => { // output 
   subProcess.stderr.unpipe(logStream)
   logStream.end()
 }
+
+const COMMAND_DOCKER = [ 'docker' ]
+try {
+  runSync([ 'docker', 'version', '--format', '"{{.Server.Version}}"' ], { quiet: true })
+} catch (error) { COMMAND_DOCKER.unshift('sudo') }
+
+const runDocker = (argList = [], option = {}, teeLogFile) => (teeLogFile ? runWithTee : run)(
+  [ ...COMMAND_DOCKER, ...argList ],
+  { describeError: teeLogFile || !option.quiet, ...option }, // describeError only when output is redirected
+  teeLogFile
+)
 
 const fetchBuffer = async (url) => {
   console.log(' - fetch:', url)
@@ -111,16 +116,16 @@ const fetchFileWithLocalCache = async (
 
 const getIsDockerImageExist = async (imageRepo, imageTag) => {
   { // check local
-    const { promise, stdoutPromise } = run(toRunDockerConfig({ argList: [ 'image', 'ls', `${imageRepo}:${imageTag}` ], quiet: true }))
+    const { promise, stdoutPromise } = runDocker([ 'image', 'ls', `${imageRepo}:${imageTag}` ], { quiet: true })
     await promise
     const stdoutString = String(await stdoutPromise)
     if (stdoutString.includes(imageRepo) && stdoutString.includes(imageTag)) return true
   }
   try { // check pull
-    const { promise } = run(toRunDockerConfig({ argList: [ 'pull', `${imageRepo}:${imageTag}` ] }))
+    const { promise } = runDocker([ 'pull', `${imageRepo}:${imageTag}` ], { quiet: true })
     await promise
     { // check local again
-      const { promise, stdoutPromise } = run(toRunDockerConfig({ argList: [ 'image', 'ls', `${imageRepo}:${imageTag}` ], quiet: true }))
+      const { promise, stdoutPromise } = runDocker([ 'image', 'ls', `${imageRepo}:${imageTag}` ], { quiet: true })
       await promise
       const stdoutString = String(await stdoutPromise)
       if (stdoutString.includes(imageRepo) && stdoutString.includes(imageTag)) return true
@@ -137,7 +142,7 @@ module.exports = {
   oneOf, modifyCopy,
   runMain, resetDirectory,
   fromRoot, fromCache, fromOutput,
-  toRunDockerConfig, run, runWithTee,
+  run, runWithTee, runDocker,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
   getIsDockerImageExist, saveTagCore, loadTagCore
 }

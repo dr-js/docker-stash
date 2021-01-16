@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.0.5-dev.4",
+  "version": "0.0.5-dev.5",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
@@ -12,30 +12,30 @@
     "build-debian10": "node source/debian10/build.js build-layer.js",
     "build-debian10-cn": "node source/debian10/build.js build-layer.js CN",
     "build-proxy": "DRD --EE \"HTTP_PROXY=${npm_config_proxy-http://127.0.0.1:1080}&HTTPS_PROXY=${npm_config_https_proxy-http://127.0.0.1:1080}&NO_PROXY=127.0.0.1,localhost\" -E --",
-    "build-debian10-cn-proxy": "npm run build-proxy -- npm run build-debian10-cn",
-    "build-debian10-core-cn-proxy": "npm run build-proxy -- node source/debian10/build-core.js CN",
-    "build-debian10-layer-node-cn-proxy": "npm run build-proxy -- node source/debian10/build-layer.js node CN",
+    "build-debian10-cn-proxy": "npm run build-proxy -- dr-dev --rsl build-debian10-cn",
+    "build-debian10-dev-core-cn-proxy": "npm run build-proxy -- node source/debian10/build-core.js CN",
+    "build-debian10-dev-layer-cn-proxy": "npm run build-proxy -- node source/debian10/build-layer.js bin-sshd CN",
+    "build-debian10-combo-push-cn-proxy": "npm run build-proxy -- dr-dev --rsl build-debian10-cn docker-push-cn-only",
     "// =============================": "",
-    "git-fix-win32-filemode": "git update-index --chmod=+x ./source/debian10/build-layer-script/*",
+    "fix-script-filemode": "bash -c '(shopt -s globstar && chmod --changes +x source/**/*.sh && ls -al source/**/*.sh)'",
     "docker-pre-pull-buildkit": "sudo docker image pull \"$(node -p \"require('./source/debian10/BUILDKIT_SYNTAX.json')\")\"",
-    "docker-ls": "node source/docker-ls.js",
     "docker-push-all": "node source/docker-push.js ALL",
-    "docker-push": "node source/docker-push.js",
-    "docker-push-cn": "node source/docker-push.js CN",
+    "docker-push-cn-only": "node source/docker-push.js CN-ONLY",
     "docker-prune": "node source/docker-prune.js",
+    "docker-ls": "node source/docker-ls.js",
     "tag-push": "TAG=\"$(node -p \"'v'+require('./package.json').version\")\" && git tag --force \"$TAG\" && git push --force origin \"$TAG\"",
     "lint": "eslint ./source/",
     "test": "npm run lint",
     "prepack": "echo \"Error: do not pack this package\" && exit 1"
   },
   "engines": {
-    "node": ">=12.19",
+    "node": ">=14.15",
     "npm": ">=6.14"
   },
   "devDependencies": {
-    "@dr-js/core": "0.4.1-dev.4",
-    "@dr-js/dev": "0.4.1-dev.0",
-    "@dr-js/dev-eslint": "0.4.1-dev.0",
-    "@dr-js/node": "0.4.1-dev.1"
+    "@dr-js/core": "^0.4.5-dev.2",
+    "@dr-js/dev": "^0.4.3",
+    "@dr-js/dev-eslint": "^0.4.3",
+    "@dr-js/node": "^0.4.4-dev.0"
   }
 }

@@ -1,9 +1,9 @@
-const { runMain, toRunDockerConfig, run } = require('./function')
+const { runMain, runDocker } = require('./function')
 
 runMain(async (logger) => {
   logger.padLog('container')
-  await run(toRunDockerConfig({ argList: [ 'container', 'ls', '--all' ] })).promise
+  await runDocker([ 'container', 'ls', '--all' ]).promise
 
   logger.padLog('image')
-  await run(toRunDockerConfig({ argList: [ 'image', 'ls' ] })).promise
+  await runDocker([ 'image', 'ls' ]).promise
 }, 'docker-ls')
