@@ -37,8 +37,6 @@ jobs:
           GHCR_PASSWORD: ${{ secrets.GHCR_DRJS_PAT_PASSWORD }}
 
       - run: npm ci
-
-      - name: Build & Push
-        run: |
-          npm run build-debian10-all
-          npm run docker-push-all
+      - run: npm run build-debian10-all
+      - run: npm run docker-push-base-only
+      - run: npm run docker-push-ghcr-only

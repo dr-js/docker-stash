@@ -31,5 +31,4 @@ jobs:
           echo "npm: $(npm -v)"
 
       - run: npm ci
-
       - run: npm test

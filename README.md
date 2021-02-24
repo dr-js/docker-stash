@@ -52,6 +52,7 @@ npm run build-debian10
 
 # or for CN mirror
 npm run build-debian10-cn
+npm run build-debian10-cn-proxy
 ```
 
-Try edit & use `build-proxy*` if some fetch is slow
+Use `build-proxy*` for slow fetch

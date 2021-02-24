@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.0.5-dev.6",
+  "version": "0.0.5-dev.7",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
@@ -20,7 +20,9 @@
     "fix-script-filemode": "bash -c '(shopt -s globstar && chmod --changes +x source/**/*.sh && ls -al source/**/*.sh)'",
     "docker-pre-pull-buildkit": "sudo docker image pull \"$(node -p \"require('./source/debian10/BUILDKIT_SYNTAX.json')\")\"",
     "docker-push-all": "node source/docker-push.js ALL",
+    "docker-push-base-only": "node source/docker-push.js BASE-ONLY",
     "docker-push-cn-only": "node source/docker-push.js CN-ONLY",
+    "docker-push-ghcr-only": "node source/docker-push.js GHCR-ONLY",
     "docker-prune": "node source/docker-prune.js",
     "docker-ls": "node source/docker-ls.js",
     "tag-push": "TAG=\"$(node -p \"'v'+require('./package.json').version\")\" && git tag --force \"$TAG\" && git push --force origin \"$TAG\"",
