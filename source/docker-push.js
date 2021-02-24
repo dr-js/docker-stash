@@ -1,8 +1,7 @@
 const {
   oneOf,
-  runMain,
+  runMain, runDocker,
   fromRoot,
-  runDocker,
   loadTagCore
 } = require('./function')
 
@@ -34,7 +33,7 @@ runMain(async (logger) => {
     ...BUILD_FLAVOR_LIST_DEBIAN10.map((flavorName) => `${BUILD_REPO_DEBIAN10}:10-${flavorName}-${BUILD_VERSION}-cn`)
   ]
   const TAG_LIST_GHCR = TAG_LIST.map(toGitHubTag)
-  if (!IS_PUSH_CN_ONLY) for (const tag of TAG_LIST) await runDocker([ 'tag', tag, toGitHubTag(tag) ]).promise
+  if (!IS_PUSH_CN_ONLY) for (const tag of TAG_LIST) await runDocker([ 'tag', tag, toGitHubTag(tag) ]).promise // re-tag image
 
   const PUSH_TAG_LIST = IS_PUSH_CN_ONLY ? TAG_LIST_CN : [
     ...TAG_LIST,

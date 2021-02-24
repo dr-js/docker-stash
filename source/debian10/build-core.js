@@ -1,11 +1,12 @@
+const { calcHash } = require('@dr-js/core/library/node/data/Buffer')
+const { checkImageExist } = require('@dr-js/dev/library/docker')
 const {
-  writeFileSync, createHash,
+  writeFileSync,
   oneOf,
-  runMain, resetDirectory,
+  runMain, resetDirectory, runDocker,
   fromCache, fromOutput,
-  runDocker,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
-  getIsDockerImageExist, saveTagCore
+  saveTagCore
 } = require('../function')
 
 const BUILD_REPO = require('./BUILD_REPO.json')
@@ -24,10 +25,12 @@ const URL_HASH = 'https://api.github.com/repos/debuerreotype/docker-debian-artif
 const URL_DOCKERFILE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/Dockerfile'
 const URL_CORE_IMAGE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/rootfs.tar.xz'
 
-// update at 2020/12/23, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
-const DEB_CA_CERTIFICATES = [ 'http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20200601~deb10u1_all.deb', '794bd3ffa0fc268dc8363f8924b2ab7cf831ab151574a6c1584790ce9945cbb2' ]
-const DEB_OPENSSL = [ 'http://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1d-0+deb10u4_amd64.deb', 'fa997ab8745f28ea3553ebc623872bb6809cc94898f6c72d81a757d9ee47dfe3' ]
-const DEB_LIBSSL = [ 'http://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1d-0+deb10u4_amd64.deb', 'b02b468f0fad929b5d2b38ae05607c22c4f1ef70adc2688fb02b9d9514d6ac51' ]
+// update at 2021/02/20, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
+const DEB_CA_CERTIFICATES = [ 'http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20200601~deb10u2_all.deb', 'a9e267a24088c793a9cf782455fd344db5fdced714f112a8857c5bfd07179387' ]
+const DEB_OPENSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_1.1.1d-0+deb10u5_amd64.deb', 'f4c32a3f851adeb0145edafb8ea271aed8330ee864de23f155f4141a81dc6e10' ]
+const DEB_LIBSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1d-0+deb10u5_amd64.deb', '1741ec08b10caa4d3c8a165768323a14946278a7e6fb9cd56ae59cf4fe1ef970' ]
+
+// update at 2021/02/20, to find from: https://packages.debian.org/buster/libjemalloc2
 const DEB_LIBJEMALLOC = [ 'http://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.1.0-3_amd64.deb', 'ecd3a4bbe5056dafc7eca4967a2b20c91c1fe6cdbbd9bbaab06896aa3e35afcd' ]
 
 runMain(async (logger) => {
@@ -43,19 +46,19 @@ runMain(async (logger) => {
     Buffer.from(getExtraDockerfileString({ DOCKER_BUILD_MIRROR }))
   ])
 
-  const SOURCE_HASH = createHash('sha1').update(dockerfileBuffer).update(coreImageBuffer).digest('base64').replace(/\W/g, '')
+  const SOURCE_HASH = calcHash(Buffer.concat([ dockerfileBuffer, coreImageBuffer ])).replace(/\W/g, '')
   const BUILD_TAG = `10-${BUILD_FLAVOR}-${SOURCE_HASH}${DOCKER_BUILD_MIRROR ? `-${DOCKER_BUILD_MIRROR.toLowerCase()}` : ''}`
   const PATH_BUILD = fromOutput('debian', BUILD_TAG)
-  const PATH_LOG = fromOutput('debian', `${BUILD_TAG}.log`)
+  const PATH_LOG = fromOutput('debian', `core#${BUILD_TAG}.log`)
 
   logger.padLog('build config')
   logger.log('BUILD_TAG:', BUILD_TAG)
   logger.log('PATH_BUILD:', PATH_BUILD)
 
   logger.padLog('check existing image')
-  if (await getIsDockerImageExist(BUILD_REPO, BUILD_TAG)) logger.padLog('found existing image, skip build')
+  if (await checkImageExist(BUILD_REPO, BUILD_TAG)) logger.log('found existing image, skip build')
   else {
-    logger.padLog('no existing image, build new')
+    logger.log('no existing image, build new')
 
     logger.padLog('assemble "/" (context)')
     await resetDirectory(PATH_BUILD)

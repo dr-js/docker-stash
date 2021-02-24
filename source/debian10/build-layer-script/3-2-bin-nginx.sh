@@ -3,9 +3,9 @@
 source ./0-1-base-apt.sh
 
 # MNT
-MNT_TGZ_NGINX="$(echo /mnt/build-layer-bin-nginx/nginx-*.tar.gz)"
-MNT_ZIP_BROTLI="$(echo /mnt/build-layer-bin-nginx/brotli.zip)"
-MNT_ZIP_NGX_BROTLI="$(echo /mnt/build-layer-bin-nginx/ngx-brotli.zip)"
+MNT_TGZ_NGINX="$(echo /mnt/build-layer-resource/nginx-*.tar.gz)"
+MNT_ZIP_BROTLI="/mnt/build-layer-resource/brotli.zip"
+MNT_ZIP_NGX_BROTLI="/mnt/build-layer-resource/ngx-brotli.zip"
 
 apt-update
   # apt-install nginx-light # this version do not have brotli module, and a bit outdated (Dec 2018)

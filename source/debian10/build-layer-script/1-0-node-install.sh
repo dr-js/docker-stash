@@ -3,8 +3,8 @@
 source ./0-2-base-node.sh
 
 # MNT
-MNT_DEB_NODEJS="$(echo /mnt/build-layer-node/nodejs*.deb)"
-MNT_TGZ_NPM="$(echo /mnt/build-layer-node/npm*.tgz)"
+MNT_DEB_NODEJS="$(echo /mnt/build-layer-resource/nodejs*.deb)"
+MNT_TGZ_NPM="$(echo /mnt/build-layer-resource/npm*.tgz)"
 
 apt-update
   # apt-install curl
@@ -19,19 +19,13 @@ apt-update
 
   dpkg -i "${MNT_DEB_NODEJS}" || apt-install -f # fix missing dependencies like "python2"
 
-  # mute npm
-  mkdir -p ~/.config/configstore/
-  echo "{\"optOut\":true}" > ~/.config/configstore/update-notifier-npm.json
-  echo "update-notifier=false" > ~/.npmrc
-
-  # update npm
-  npm install --global "${MNT_TGZ_NPM}"
+  npm config set --global update-notifier false # mute npm update notice
+  npm install --global "${MNT_TGZ_NPM}" # update npm
 
   # trim npm files
   rm -rf /usr/lib/node_modules/npm/changelogs/
   rm -rf /usr/lib/node_modules/npm/html/
   rm -rf /usr/lib/node_modules/npm/man/
-  rm -rf /usr/lib/node_modules/npm/node_modules/ajv/dist/
   npm cache clean --force
   node-path-clear /usr/lib/node_modules/
 apt-clear

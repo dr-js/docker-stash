@@ -1,17 +1,17 @@
-const { resolve, dirname } = require('path')
-const { readFileSync, writeFileSync, createWriteStream } = require('fs')
-const { createHash } = require('crypto')
+const { resolve } = require('path')
+const { readFileSync, writeFileSync } = require('fs')
 const { strictEqual } = require('assert')
 
 const { catchSync } = require('@dr-js/core/library/common/error')
 const { oneOf } = require('@dr-js/core/library/common/verify')
+const { calcHash } = require('@dr-js/core/library/node/data/Buffer')
 const { modifyCopy } = require('@dr-js/core/library/node/file/Modify')
 const { createDirectory } = require('@dr-js/core/library/node/file/Directory')
 const { fetchWithJump } = require('@dr-js/core/library/node/net')
-const { run, runSync } = require('@dr-js/core/library/node/run')
 
 const { fetchLikeRequestWithProxy } = require('@dr-js/node/library/module/Software/npm')
 
+const { runDocker } = require('@dr-js/dev/library/docker')
 const { runMain } = require('@dr-js/dev/library/main')
 const { resetDirectory } = require('@dr-js/dev/library/node/file')
 
@@ -23,33 +23,6 @@ const fromCache = (...args) => resolve(PATH_CACHE, ...args)
 const fromOutput = (...args) => resolve(PATH_OUTPUT, ...args)
 
 const { name: PACKAGE_NAME } = require(fromRoot('package.json'))
-
-const runWithTee = async (argList, option = {}, logFile) => { // output to both stdout and log file
-  await createDirectory(dirname(logFile))
-  const { promise, subProcess } = run(argList, { ...option, quiet: true })
-  const logStream = createWriteStream(logFile)
-  subProcess.stdout.pipe(process.stdout, { end: false })
-  subProcess.stderr.pipe(process.stderr, { end: false })
-  subProcess.stdout.pipe(logStream, { end: false })
-  subProcess.stderr.pipe(logStream, { end: false })
-  await promise
-  subProcess.stdout.unpipe(process.stdout)
-  subProcess.stderr.unpipe(process.stderr)
-  subProcess.stdout.unpipe(logStream)
-  subProcess.stderr.unpipe(logStream)
-  logStream.end()
-}
-
-const COMMAND_DOCKER = [ 'docker' ]
-try {
-  runSync([ 'docker', 'version', '--format', '"{{.Server.Version}}"' ], { quiet: true })
-} catch (error) { COMMAND_DOCKER.unshift('sudo') }
-
-const runDocker = (argList = [], option = {}, teeLogFile) => (teeLogFile ? runWithTee : run)(
-  [ ...COMMAND_DOCKER, ...argList ],
-  { describeError: teeLogFile || !option.quiet, ...option }, // describeError only when output is redirected
-  teeLogFile
-)
 
 const fetchBuffer = async (url) => {
   console.log(' - fetch:', url)
@@ -107,42 +80,21 @@ const fetchFileWithLocalCache = async (
       writeFileSync(fileCacheBuffer, buffer)
     }
     const [ hashString, hashAlgo = 'sha256', hashDigest = 'hex' ] = hash.split(':')
-    strictEqual(createHash(hashAlgo).update(buffer).digest(hashDigest), hashString, `hash mismatch for: ${url}`)
+    strictEqual(calcHash(buffer, hashAlgo, hashDigest), hashString, `hash mismatch for: ${url}`)
 
     await createDirectory(pathOutput)
     writeFileSync(resolve(pathOutput, filename), buffer)
   }
 }
 
-const getIsDockerImageExist = async (imageRepo, imageTag) => {
-  { // check local
-    const { promise, stdoutPromise } = runDocker([ 'image', 'ls', `${imageRepo}:${imageTag}` ], { quiet: true })
-    await promise
-    const stdoutString = String(await stdoutPromise)
-    if (stdoutString.includes(imageRepo) && stdoutString.includes(imageTag)) return true
-  }
-  try { // check pull
-    const { promise } = runDocker([ 'pull', `${imageRepo}:${imageTag}` ], { quiet: true })
-    await promise
-    { // check local again
-      const { promise, stdoutPromise } = runDocker([ 'image', 'ls', `${imageRepo}:${imageTag}` ], { quiet: true })
-      await promise
-      const stdoutString = String(await stdoutPromise)
-      if (stdoutString.includes(imageRepo) && stdoutString.includes(imageTag)) return true
-    }
-  } catch (error) {}
-  return false
-}
-
 const saveTagCore = (path, DOCKER_BUILD_MIRROR = '', tag) => writeFileSync(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`), JSON.stringify(tag))
 const loadTagCore = (path, DOCKER_BUILD_MIRROR = '') => JSON.parse(String(readFileSync(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`))))
 
 module.exports = {
-  writeFileSync, createHash,
+  writeFileSync,
   oneOf, modifyCopy,
-  runMain, resetDirectory,
+  runMain, resetDirectory, runDocker,
   fromRoot, fromCache, fromOutput,
-  run, runWithTee, runDocker,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
-  getIsDockerImageExist, saveTagCore, loadTagCore
+  saveTagCore, loadTagCore
 }

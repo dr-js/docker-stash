@@ -9,7 +9,8 @@ A collection of strange docker scripts
 
 [//]: # (NON_PACKAGE_CONTENT)
 
-DockerHub:
+Docker Image Registry:
+- [ghcr.io/dr-js/debian](https://ghcr.io/dr-js/debian)
 - [drjs/debian](https://hub.docker.com/r/drjs/debian)
 - [drjs/ubuntu](https://hub.docker.com/r/drjs/ubuntu) [depecated]
 
