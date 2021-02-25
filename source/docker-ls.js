@@ -1,9 +1,9 @@
-const { runMain, runDocker } = require('./function')
+const { runMain, dockerSync } = require('./function')
 
 runMain(async (logger) => {
   logger.padLog('container')
-  await runDocker([ 'container', 'ls', '--all' ]).promise
+  dockerSync([ 'container', 'ls', '--all' ])
 
   logger.padLog('image')
-  await runDocker([ 'image', 'ls' ]).promise
+  dockerSync([ 'image', 'ls' ])
 }, 'docker-ls')

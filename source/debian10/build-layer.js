@@ -1,7 +1,8 @@
+const { dockerWithTee } = require('@dr-js/dev/library/docker')
 const {
   writeFileSync,
   oneOf, modifyCopy,
-  runMain, resetDirectory, runDocker,
+  runMain, resetDirectory,
   fromRoot, fromCache, fromOutput,
   fetchFileWithLocalCache,
   loadTagCore
@@ -45,7 +46,8 @@ runMain(async (logger) => {
   for (const file of [
     '0-0-base.sh',
     '0-1-base-apt.sh',
-    BUILD_FLAVOR.NAME.startsWith('node') && '0-2-base-node.sh',
+    /^node/.test(BUILD_FLAVOR.NAME) && '0-2-base-node.sh',
+    /^j?ruby/.test(BUILD_FLAVOR.NAME) && '0-3-base-ruby.sh',
     BUILD_FLAVOR.LAYER_SCRIPT
   ].filter(Boolean)) await modifyCopy(fromRoot(__dirname, 'build-layer-script/', file), fromOutput(PATH_BUILD, 'build-layer-script/', file))
 
@@ -61,17 +63,24 @@ runMain(async (logger) => {
     const TGZ_NGINX = [ 'https://nginx.org/download/nginx-1.18.0.tar.gz', '4c373e7ab5bf91d34a4f11a0c9496561061ba5eee6020db272a17a7228d35f99' ] // TODO: need to calc hash yourself
     const ZIP_BROTLI = [ 'https://github.com/google/brotli/archive/e61745a6.zip', '4a79fd9fd30bae4d08dab373326cfb21ab0d6b50e0e55564043e35dde7210219', 'brotli.zip' ] // specify filename // TODO: need to calc hash yourself
     const ZIP_NGX_BROTLI = [ 'https://github.com/google/ngx_brotli/archive/9aec15e2.zip', '9ec37453ef1a4866590e96bc8df41657382281afcdcc0d368947544e9950d8f9', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
+    // update at 2020/11/10, to find download from: https://cache.ruby-lang.org/pub/ruby/2.5/
+    // and release info: https://www.ruby-lang.org/en/downloads/releases/
+    const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.8.tar.gz', '6c0bdf07876c69811a9e7dc237c43d40b1cb6369f68e0e17953d7279b524ad9a' ] // TODO: need to calc hash yourself
+    // update at 2021/03/05, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
+    const TGZ_JRUBY = [ 'https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.2.16.0/jruby-dist-9.2.16.0-bin.tar.gz', '5ae27f149f73f3fea4f34359cbb773c25d9d987e72b5edec9e8b93957997eb30' ] // TODO: need to calc hash yourself
 
     const fromOutputResource = (...args) => fromOutput(PATH_BUILD, 'build-layer-resource/', ...args)
     await resetDirectory(fromOutputResource())
     await fetchFileWithLocalCache([
       ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_NODE ? [ DEB_NODEJS, TGZ_NPM ] : []),
-      ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? [ TGZ_NGINX, ZIP_BROTLI, ZIP_NGX_BROTLI ] : [])
+      ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? [ TGZ_NGINX, ZIP_BROTLI, ZIP_NGX_BROTLI ] : []),
+      ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_RUBY ? [ TGZ_RUBY ] : []),
+      ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_JRUBY ? [ TGZ_JRUBY ] : [])
     ].map(([ url, hash, filename ]) => [ url, hash, fromOutputResource(), filename ]), fromCache('debian', '10-layer-url'))
   }
 
   logger.padLog('build image')
-  await runDocker([
+  await dockerWithTee([
     'image', 'build',
     '--tag', getFlavoredImageTag(BUILD_FLAVOR.NAME),
     '--tag', getFlavoredImageTag(BUILD_FLAVOR.NAME, LOCAL_BUILD_LATEST), // NOTE: for layer to use as base, so version-bump won't change Dockerfile

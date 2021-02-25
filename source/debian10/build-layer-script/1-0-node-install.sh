@@ -19,13 +19,17 @@ apt-update
 
   dpkg -i "${MNT_DEB_NODEJS}" || apt-install -f # fix missing dependencies like "python2"
 
+  mkdir -p /root/.config/configstore/
+  echo '{ "optOut": true, "lastUpdateCheck": 999999999999999 }' > /root/.config/configstore/update-notifier-npm.json
   npm config set --global update-notifier false # mute npm update notice
   npm install --global "${MNT_TGZ_NPM}" # update npm
 
   # trim npm files
+  rm -rf /tmp/npm-*
   rm -rf /usr/lib/node_modules/npm/changelogs/
   rm -rf /usr/lib/node_modules/npm/html/
   rm -rf /usr/lib/node_modules/npm/man/
+  rm -rf /usr/lib/node_modules/npm/scripts/
   npm cache clean --force
   node-path-clear /usr/lib/node_modules/
 apt-clear

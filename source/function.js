@@ -11,7 +11,7 @@ const { fetchWithJump } = require('@dr-js/core/library/node/net')
 
 const { fetchLikeRequestWithProxy } = require('@dr-js/node/library/module/Software/npm')
 
-const { runDocker } = require('@dr-js/dev/library/docker')
+const { dockerSync } = require('@dr-js/dev/library/docker')
 const { runMain } = require('@dr-js/dev/library/main')
 const { resetDirectory } = require('@dr-js/dev/library/node/file')
 
@@ -93,7 +93,7 @@ const loadTagCore = (path, DOCKER_BUILD_MIRROR = '') => JSON.parse(String(readFi
 module.exports = {
   writeFileSync,
   oneOf, modifyCopy,
-  runMain, resetDirectory, runDocker,
+  runMain, resetDirectory, dockerSync,
   fromRoot, fromCache, fromOutput,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
   saveTagCore, loadTagCore

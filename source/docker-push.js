@@ -1,6 +1,6 @@
 const {
   oneOf,
-  runMain, runDocker,
+  runMain, dockerSync,
   fromRoot,
   loadTagCore
 } = require('./function')
@@ -41,16 +41,16 @@ runMain(async (logger) => {
 
   if (hasTarget('GHCR')) {
     logger.padLog(`re-tag to: ${BUILD_REPO_GHCR}`)
-    for (const tag of TAG_LIST_BASE) await runDocker([ 'tag', tag, toGitHubTag(tag) ]).promise
+    for (const tag of TAG_LIST_BASE) dockerSync([ 'tag', tag, toGitHubTag(tag) ])
   }
 
   logger.padLog('push image')
   for (const tag of [
+    ...(hasTarget('GHCR') ? TAG_LIST_GHCR : []), // faster in CI
     ...(hasTarget('BASE') ? TAG_LIST_BASE : []),
-    ...(hasTarget('CN') ? TAG_LIST_CN : []),
-    ...(hasTarget('GHCR') ? TAG_LIST_GHCR : [])
+    ...(hasTarget('CN') ? TAG_LIST_CN : [])
   ]) {
     logger.log(`push tag: ${tag}`)
-    await runDocker([ 'push', tag ]).promise
+    dockerSync([ 'push', tag ])
   }
 }, 'docker-push')

@@ -1,9 +1,9 @@
 const { calcHash } = require('@dr-js/core/library/node/data/Buffer')
-const { checkImageExist } = require('@dr-js/dev/library/docker')
+const { dockerWithTee, checkImageExist } = require('@dr-js/dev/library/docker')
 const {
   writeFileSync,
   oneOf,
-  runMain, resetDirectory, runDocker,
+  runMain, resetDirectory,
   fromCache, fromOutput,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
   saveTagCore
@@ -24,14 +24,6 @@ oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
 const URL_HASH = 'https://api.github.com/repos/debuerreotype/docker-debian-artifacts/git/refs/heads/dist-amd64' // branch info
 const URL_DOCKERFILE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/Dockerfile'
 const URL_CORE_IMAGE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/rootfs.tar.xz'
-
-// update at 2021/02/20, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
-const DEB_CA_CERTIFICATES = [ 'http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20200601~deb10u2_all.deb', 'a9e267a24088c793a9cf782455fd344db5fdced714f112a8857c5bfd07179387' ]
-const DEB_OPENSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_1.1.1d-0+deb10u5_amd64.deb', 'f4c32a3f851adeb0145edafb8ea271aed8330ee864de23f155f4141a81dc6e10' ]
-const DEB_LIBSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1d-0+deb10u5_amd64.deb', '1741ec08b10caa4d3c8a165768323a14946278a7e6fb9cd56ae59cf4fe1ef970' ]
-
-// update at 2021/02/20, to find from: https://packages.debian.org/buster/libjemalloc2
-const DEB_LIBJEMALLOC = [ 'http://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.1.0-3_amd64.deb', 'ecd3a4bbe5056dafc7eca4967a2b20c91c1fe6cdbbd9bbaab06896aa3e35afcd' ]
 
 runMain(async (logger) => {
   logger.padLog('borrow file from github:debuerreotype/docker-debian-artifacts')
@@ -66,16 +58,25 @@ runMain(async (logger) => {
     writeFileSync(fromOutput(PATH_BUILD, URL_CORE_IMAGE.split('/').pop()), coreImageBuffer)
 
     logger.padLog('assemble "build-core/"')
-    await fetchFileWithLocalCache([
-      [ ...DEB_CA_CERTIFICATES, fromOutput(PATH_BUILD, 'build-core/') ],
-      [ ...DEB_OPENSSL, fromOutput(PATH_BUILD, 'build-core/') ],
-      [ ...DEB_LIBSSL, fromOutput(PATH_BUILD, 'build-core/') ],
-      [ ...DEB_LIBJEMALLOC, fromOutput(PATH_BUILD, 'build-core/') ]
-    ], fromCache('debian', '10-core-url'))
-    writeFileSync(fromOutput(PATH_BUILD, 'build-core/bashrc'), STRING_BASHRC)
+    {
+      // update at 2021/02/20, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
+      const DEB_CA_CERTIFICATES = [ 'http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20200601~deb10u2_all.deb', 'a9e267a24088c793a9cf782455fd344db5fdced714f112a8857c5bfd07179387' ]
+      const DEB_OPENSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_1.1.1d-0+deb10u5_amd64.deb', 'f4c32a3f851adeb0145edafb8ea271aed8330ee864de23f155f4141a81dc6e10' ]
+      const DEB_LIBSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1d-0+deb10u5_amd64.deb', '1741ec08b10caa4d3c8a165768323a14946278a7e6fb9cd56ae59cf4fe1ef970' ]
+      // update at 2021/02/20, to find from: https://packages.debian.org/buster/libjemalloc2
+      const DEB_LIBJEMALLOC = [ 'http://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.1.0-3_amd64.deb', 'ecd3a4bbe5056dafc7eca4967a2b20c91c1fe6cdbbd9bbaab06896aa3e35afcd' ]
+
+      await fetchFileWithLocalCache([
+        [ ...DEB_CA_CERTIFICATES, fromOutput(PATH_BUILD, 'build-core/') ],
+        [ ...DEB_OPENSSL, fromOutput(PATH_BUILD, 'build-core/') ],
+        [ ...DEB_LIBSSL, fromOutput(PATH_BUILD, 'build-core/') ],
+        [ ...DEB_LIBJEMALLOC, fromOutput(PATH_BUILD, 'build-core/') ]
+      ], fromCache('debian', '10-core-url'))
+      writeFileSync(fromOutput(PATH_BUILD, 'build-core/bashrc'), STRING_BASHRC)
+    }
 
     logger.padLog('build image')
-    await runDocker([
+    await dockerWithTee([
       'image', 'build',
       '--tag', `${BUILD_REPO}:${BUILD_TAG}`,
       '--file', './Dockerfile',

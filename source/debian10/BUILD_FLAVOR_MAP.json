@@ -4,6 +4,10 @@
   "FLAVOR_BIN_COMMON": { "NAME": "bin-common", "BASE_IMAGE": "node", "LAYER_SCRIPT": "3-0-bin-common.sh" },
 
   "FLAVOR_BIN_GIT": { "NAME": "bin-git", "BASE_IMAGE": "bin-common", "LAYER_SCRIPT": "3-1-bin-git.sh" },
-  "FLAVOR_BIN_NGINX": { "NAME": "bin-nginx", "BASE_IMAGE": "bin-common", "LAYER_SCRIPT": "3-2-bin-nginx.sh" },
-  "FLAVOR_BIN_SSHD": { "NAME": "bin-sshd", "BASE_IMAGE": "bin-common", "LAYER_SCRIPT": "3-3-bin-sshd.sh" }
+  "FLAVOR_BIN_SSHD": { "NAME": "bin-sshd", "BASE_IMAGE": "bin-git", "LAYER_SCRIPT": "3-2-bin-sshd.sh" },
+  "FLAVOR_BIN_NGINX": { "NAME": "bin-nginx", "BASE_IMAGE": "bin-sshd", "LAYER_SCRIPT": "3-3-bin-nginx.sh" },
+
+  "FLAVOR_JAVA": { "NAME": "java", "BASE_IMAGE": "bin-nginx", "LAYER_SCRIPT": "5-0-java-install.sh" },
+  "FLAVOR_RUBY": { "NAME": "ruby", "BASE_IMAGE": "java", "LAYER_SCRIPT": "5-1-ruby-install.sh" },
+  "FLAVOR_JRUBY": { "NAME": "jruby", "BASE_IMAGE": "java", "LAYER_SCRIPT": "5-2-jruby-install.sh" }
 }

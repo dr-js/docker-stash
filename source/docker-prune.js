@@ -1,13 +1,13 @@
-const { runMain, runDocker } = require('./function')
+const { runMain, dockerSync } = require('./function')
 
 runMain(async (logger) => {
   // TODO: NOTE: this remove too much, build cache should live longer
   // logger.padLog('system')
-  // await runDocker([ 'system', 'prune', '--force' ]).promise
+  // dockerSync([ 'system', 'prune', '--force' ])
 
   logger.padLog('container')
-  await runDocker([ 'container', 'prune', '--force' ]).promise
+  dockerSync([ 'container', 'prune', '--force' ])
 
   logger.padLog('image')
-  await runDocker([ 'image', 'prune', '--force' ]).promise
+  dockerSync([ 'image', 'prune', '--force' ])
 }, 'docker-prune')

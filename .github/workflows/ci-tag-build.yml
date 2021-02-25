@@ -25,18 +25,23 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Log CI info
+        run: |
+          echo "system: $(node -p "os.platform() + ' - ' + os.release() + ' [' + os.arch() + ']'")"
+          echo "node: $(node -v)"
+          echo "npm: $(npm -v)"
+
       - name: Setup Docker # https://stackoverflow.com/questions/60171603/enable-experimental-features-on-github-workflow-images/60454218#60454218
         run: |
           echo '{ "experimental": true, "features": { "buildkit": true } }' | sudo tee /etc/docker/daemon.json
           sudo systemctl restart docker
 
-          echo "$PASSWORD" | sudo docker login --username drjs --password-stdin
-          echo "$GHCR_PASSWORD" | sudo docker login --username dr-js --password-stdin ghcr.io
+          echo "$PASSWORD" | docker login --username drjs --password-stdin
+          echo "$GHCR_PASSWORD" | docker login --username dr-js --password-stdin ghcr.io
         env:
           PASSWORD: ${{ secrets.DOCKER_HUB_DRJS_PASSWORD }}
           GHCR_PASSWORD: ${{ secrets.GHCR_DRJS_PAT_PASSWORD }}
 
       - run: npm ci
       - run: npm run build-debian10-all
-      - run: npm run docker-push-base-only
-      - run: npm run docker-push-ghcr-only
+      - run: npm run docker-push-all
