@@ -5,11 +5,11 @@ const {
   runMain, resetDirectory,
   fromRoot, fromCache, fromOutput,
   fetchFileWithLocalCache,
-  loadTagCore
+  loadTagCore, loadRepo
 } = require('../function')
 
 const { version: BUILD_VERSION } = require(fromRoot('package.json'))
-const BUILD_REPO = require('./BUILD_REPO.json')
+const BUILD_REPO = loadRepo(__dirname)
 const BUILDKIT_SYNTAX = require('./BUILDKIT_SYNTAX.json')
 const BUILD_FLAVOR_MAP = require('./BUILD_FLAVOR_MAP.json')
 
@@ -22,7 +22,7 @@ const [
 oneOf(BUILD_FLAVOR_NAME, Object.values(BUILD_FLAVOR_MAP).map(({ NAME }) => NAME))
 oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
 
-const BUILD_FLAVOR = Object.values(BUILD_FLAVOR_MAP).find((FLAVOR) => BUILD_FLAVOR_NAME === FLAVOR.NAME && FLAVOR)
+const BUILD_FLAVOR = Object.values(BUILD_FLAVOR_MAP).find((FLAVOR) => BUILD_FLAVOR_NAME === FLAVOR.NAME)
 const getFlavoredTag = (name, version = BUILD_VERSION) => `10-${name}-${version}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR.toLowerCase()}`}`
 const getFlavoredImageTag = (name, version = BUILD_VERSION) => name === '@CORE'
   ? loadTagCore(__dirname, DOCKER_BUILD_MIRROR)

@@ -6,10 +6,10 @@ const {
   runMain, resetDirectory,
   fromCache, fromOutput,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
-  saveTagCore
+  saveTagCore, loadRepo
 } = require('../function')
 
-const BUILD_REPO = require('./BUILD_REPO.json')
+const BUILD_REPO = loadRepo(__dirname)
 const BUILDKIT_SYNTAX = require('./BUILDKIT_SYNTAX.json')
 const BUILD_FLAVOR = 'core'
 

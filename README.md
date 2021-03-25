@@ -32,6 +32,19 @@ Use Docker BuildKit:
   - https://docs.docker.com/develop/develop-images/build_enhancements/#to-enable-buildkit-builds
   - https://stackoverflow.com/questions/26050899/how-to-mount-host-volumes-into-docker-containers-in-dockerfile-during-build/52762779#52762779
 
+Current layer stack:
+```
+debian:10-core
+└─bin-common
+  └─bin-sshd
+    └─bin-nginx
+      └─bin-git
+        └─dep-chrome
+          └─java
+            ├─ruby
+            └─jruby
+```
+
 #### build step
 
 The build has layered setup to add each feature `layer` on top of prev image `layer`,
@@ -44,7 +57,7 @@ Try not to frequently rebuild the `core` after `layer` is built,
 
 #### build `debian10`
 
-First check `source/debian10/BUILD_REPO.json`
+First create `source/debian10/BUILD_REPO.json` and `source/debian10/BUILD_REPO_GHCR.json`
 
 Then run:
 ```shell script

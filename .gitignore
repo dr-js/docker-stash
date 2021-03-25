@@ -25,5 +25,6 @@ node_modules
 **/*-gitignore/**
 **/*-gitignore*
 
-# Ignore TAG_CORE.json
+# Ignore config/cache json
 source/*/TAG_CORE*.json
+source/*/BUILD_REPO*.json

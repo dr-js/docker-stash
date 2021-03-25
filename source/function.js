@@ -89,6 +89,7 @@ const fetchFileWithLocalCache = async (
 
 const saveTagCore = (path, DOCKER_BUILD_MIRROR = '', tag) => writeFileSync(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`), JSON.stringify(tag))
 const loadTagCore = (path, DOCKER_BUILD_MIRROR = '') => JSON.parse(String(readFileSync(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`))))
+const loadRepo = (path, isGHCR = false) => JSON.parse(String(readFileSync(fromRoot(path, isGHCR ? 'BUILD_REPO_GHCR.json' : 'BUILD_REPO.json'))))
 
 module.exports = {
   writeFileSync,
@@ -96,5 +97,5 @@ module.exports = {
   runMain, resetDirectory, dockerSync,
   fromRoot, fromCache, fromOutput,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
-  saveTagCore, loadTagCore
+  saveTagCore, loadTagCore, loadRepo
 }
