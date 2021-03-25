@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.1.0-dev.1",
+  "version": "0.1.0-dev.2",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
@@ -18,7 +18,6 @@
     "docker-pre-pull-buildkit": "sudo docker image pull \"$(node -p \"require('./source/debian10/BUILDKIT_SYNTAX.json')\")\"",
     "docker-push-all": "node source/docker-push.js ALL",
     "docker-push-base-only": "node source/docker-push.js BASE-ONLY",
-    "docker-push-cn-only": "node source/docker-push.js CN-ONLY",
     "docker-push-ghcr-only": "node source/docker-push.js GHCR-ONLY",
     "docker-prune": "node source/docker-prune.js",
     "docker-ls": "node source/docker-ls.js",

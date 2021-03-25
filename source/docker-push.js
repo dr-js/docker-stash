@@ -13,9 +13,8 @@ const [
 
 runMain(async (logger) => {
   const PUSH_TARGET_MAP = {
-    'ALL': [ 'BASE', 'CN', 'GHCR' ],
+    'ALL': [ 'BASE', 'GHCR' ],
     'BASE-ONLY': [ 'BASE' ],
-    'CN-ONLY': [ 'CN' ],
     'GHCR-ONLY': [ 'GHCR' ]
   }
   oneOf(PUSH_TARGET, Object.keys(PUSH_TARGET_MAP))
@@ -30,9 +29,7 @@ runMain(async (logger) => {
 
   const TAG_LIST_BASE = [
     loadTagCore(fromRoot(__dirname, 'debian10/'), ''),
-    ...BUILD_FLAVOR_LIST_DEBIAN10.map((flavorName) => `${BUILD_REPO_DEBIAN10}:10-${flavorName}-${BUILD_VERSION}`)
-  ]
-  const TAG_LIST_CN = [
+    ...BUILD_FLAVOR_LIST_DEBIAN10.map((flavorName) => `${BUILD_REPO_DEBIAN10}:10-${flavorName}-${BUILD_VERSION}`),
     loadTagCore(fromRoot(__dirname, 'debian10/'), 'CN'),
     ...BUILD_FLAVOR_LIST_DEBIAN10.map((flavorName) => `${BUILD_REPO_DEBIAN10}:10-${flavorName}-${BUILD_VERSION}-cn`)
   ]
@@ -46,8 +43,7 @@ runMain(async (logger) => {
   logger.padLog('push image')
   for (const tag of [
     ...(hasTarget('GHCR') ? TAG_LIST_GHCR : []), // faster in CI
-    ...(hasTarget('BASE') ? TAG_LIST_BASE : []),
-    ...(hasTarget('CN') ? TAG_LIST_CN : [])
+    ...(hasTarget('BASE') ? TAG_LIST_BASE : [])
   ]) {
     logger.log(`push tag: ${tag}`)
     dockerSync([ 'push', tag ])

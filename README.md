@@ -35,14 +35,15 @@ Use Docker BuildKit:
 Current layer stack:
 ```
 debian:10-core
-└─bin-common
-  └─bin-sshd
-    └─bin-nginx
-      └─bin-git
-        └─dep-chrome
-          └─java
-            ├─ruby
-            └─jruby
+└─node
+  └─bin-common
+    └─bin-sshd
+      └─bin-nginx
+        └─bin-git
+          └─dep-chrome
+            └─java
+              ├─ruby
+              └─jruby
 ```
 
 #### build step
