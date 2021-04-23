@@ -30,8 +30,8 @@ const getFlavoredImageTag = (name, version = BUILD_VERSION) => name === '@CORE'
 
 runMain(async (logger) => {
   const BUILD_TAG = getFlavoredTag(BUILD_FLAVOR.NAME)
-  const PATH_BUILD = fromOutput('debian', BUILD_FLAVOR.NAME) // leave less file around
-  const PATH_LOG = fromOutput('debian', `layer#${BUILD_VERSION}#${BUILD_TAG}.log`)
+  const PATH_BUILD = fromOutput('debian10', `${BUILD_FLAVOR.NAME}${DOCKER_BUILD_MIRROR}`) // leave less file around
+  const PATH_LOG = fromOutput('debian10', `layer#${BUILD_VERSION}#${BUILD_TAG}.log`)
 
   logger.padLog('build config')
   logger.log('BUILD_TAG:', BUILD_TAG)
@@ -76,7 +76,7 @@ runMain(async (logger) => {
       ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? [ TGZ_NGINX, ZIP_BROTLI, ZIP_NGX_BROTLI ] : []),
       ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_RUBY ? [ TGZ_RUBY ] : []),
       ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_JRUBY ? [ TGZ_JRUBY ] : [])
-    ].map(([ url, hash, filename ]) => [ url, hash, fromOutputResource(), filename ]), fromCache('debian', '10-layer-url'))
+    ].map(([ url, hash, filename ]) => [ url, hash, fromOutputResource(), filename ]), fromCache('debian10', 'layer-url'))
   }
 
   logger.padLog('build image')

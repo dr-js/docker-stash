@@ -31,7 +31,7 @@ runMain(async (logger) => {
     coreDockerfileBuffer, coreImageBuffer
   ] = await fetchGitHubBufferListWithLocalCache([
     URL_DOCKERFILE, URL_CORE_IMAGE
-  ], URL_HASH, fromCache('debian', '10-core-github'))
+  ], URL_HASH, fromCache('debian10', 'core-github'))
   const dockerfileBuffer = Buffer.concat([
     Buffer.from(`# syntax = ${BUILDKIT_SYNTAX}\n\n`),
     coreDockerfileBuffer,
@@ -40,8 +40,8 @@ runMain(async (logger) => {
 
   const SOURCE_HASH = calcHash(Buffer.concat([ dockerfileBuffer, coreImageBuffer ])).replace(/\W/g, '')
   const BUILD_TAG = `10-${BUILD_FLAVOR}-${SOURCE_HASH}${DOCKER_BUILD_MIRROR ? `-${DOCKER_BUILD_MIRROR.toLowerCase()}` : ''}`
-  const PATH_BUILD = fromOutput('debian', BUILD_TAG)
-  const PATH_LOG = fromOutput('debian', `core#${BUILD_TAG}.log`)
+  const PATH_BUILD = fromOutput('debian10', BUILD_TAG)
+  const PATH_LOG = fromOutput('debian10', `core#${BUILD_TAG}.log`)
 
   logger.padLog('build config')
   logger.log('BUILD_TAG:', BUILD_TAG)
@@ -71,7 +71,7 @@ runMain(async (logger) => {
         [ ...DEB_OPENSSL, fromOutput(PATH_BUILD, 'build-core/') ],
         [ ...DEB_LIBSSL, fromOutput(PATH_BUILD, 'build-core/') ],
         [ ...DEB_LIBJEMALLOC, fromOutput(PATH_BUILD, 'build-core/') ]
-      ], fromCache('debian', '10-core-url'))
+      ], fromCache('debian10', 'core-url'))
       writeFileSync(fromOutput(PATH_BUILD, 'build-core/bashrc'), STRING_BASHRC)
     }
 
