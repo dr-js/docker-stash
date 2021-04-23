@@ -6,7 +6,7 @@ apt-update
   apt-install \
     sudo \
     procps $(: "provide ps|free|top|uptime|... commands, check: https://packages.debian.org/buster/procps") \
-    less nano htop \
+    less nano htop vim \
     wget curl iproute2 netcat-openbsd \
     zip unzip xz-utils p7zip-full $(: "tar gzip is already installed")
 apt-clear
@@ -19,6 +19,7 @@ top -v # from `procps`
 less --version
 nano --version
 htop --version
+vim --version
 wget --version
 curl --version
 ip -Version # from `iproute2`
