@@ -53,21 +53,21 @@ runMain(async (logger) => {
 
   logger.padLog('assemble "build-layer-resource/"')
   {
-    // update at 2021/02/20, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
+    // update at 2021/04/23, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
     // and: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
-    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.16.0-1nodesource1_amd64.deb', '7d5473133c15352a57ed27e40b62820a7116155ec6be37dcbd39a3d957c42a54' ]
-    // update at 2020/01/13, to find download from: https://registry.npmjs.org/npm/latest (under `dist.tarball`)
-    const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.11.tgz', '1Zh7LjuIoEhIyjkBflSSGzfjuPQwDlghNloppjruOH5bmj9midT9qcNT0tRUZRR04shU9ekrxNy9+UTBrqeBpQ==:sha512:base64' ]
-    // update at 2021/01/13, to find download from: https://nginx.org/en/download.html
+    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.16.1-1nodesource1_amd64.deb', 'bd7840640c132556400801123297ab57e275dbe744c1fc7f0f87f7c603067a7f' ]
+    // update at 2020/04/23, to find download from: `npm view npm@latest-6`
+    const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.13.tgz', 'SRl4jJi0EBHY2xKuu98FLRMo3VhYQSA6otyLnjSEiHoSG/9shXCFNJy9tivpUJvtkN9s6VDdItHa5Rn+fNBzag==:sha512:base64' ]
+    // update at 2021/04/23, to find download from: https://nginx.org/en/download.html
     // and: https://github.com/google/ngx_brotli
-    const TGZ_NGINX = [ 'https://nginx.org/download/nginx-1.18.0.tar.gz', '4c373e7ab5bf91d34a4f11a0c9496561061ba5eee6020db272a17a7228d35f99' ] // TODO: need to calc hash yourself
+    const TGZ_NGINX = [ 'https://nginx.org/download/nginx-1.20.0.tar.gz', '54ef91ec8ebcaa486c640c09c92d832eaeaff149b10ee52ef140f407b1b04d1c' ] // TODO: need to calc hash yourself
     const ZIP_BROTLI = [ 'https://github.com/google/brotli/archive/e61745a6.zip', '4a79fd9fd30bae4d08dab373326cfb21ab0d6b50e0e55564043e35dde7210219', 'brotli.zip' ] // specify filename // TODO: need to calc hash yourself
     const ZIP_NGX_BROTLI = [ 'https://github.com/google/ngx_brotli/archive/9aec15e2.zip', '9ec37453ef1a4866590e96bc8df41657382281afcdcc0d368947544e9950d8f9', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
-    // update at 2020/11/10, to find download from: https://cache.ruby-lang.org/pub/ruby/2.5/
+    // update at 2021/04/23, to find download from: https://cache.ruby-lang.org/pub/ruby/2.5/
     // and release info: https://www.ruby-lang.org/en/downloads/releases/
-    const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.8.tar.gz', '6c0bdf07876c69811a9e7dc237c43d40b1cb6369f68e0e17953d7279b524ad9a' ] // TODO: need to calc hash yourself
-    // update at 2021/03/05, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
-    const TGZ_JRUBY = [ 'https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.2.16.0/jruby-dist-9.2.16.0-bin.tar.gz', '5ae27f149f73f3fea4f34359cbb773c25d9d987e72b5edec9e8b93957997eb30' ] // TODO: need to calc hash yourself
+    const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.5/ruby-2.5.9.tar.gz', 'f5894e05f532b748c3347894a5efa42066fd11cc8d261d4d9788ff71da00be68' ] // TODO: need to calc hash yourself
+    // update at 2021/04/23, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
+    const TGZ_JRUBY = [ 'https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.2.17.0/jruby-dist-9.2.17.0-bin.tar.gz', '7701d3537b3a606d2765ac6d5c40e675ddaa01d3cebad26a21a66e3aadd5c202' ] // TODO: need to calc hash yourself
 
     const fromOutputResource = (...args) => fromOutput(PATH_BUILD, 'build-layer-resource/', ...args)
     await resetDirectory(fromOutputResource())
