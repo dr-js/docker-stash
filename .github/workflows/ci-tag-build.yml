@@ -1,10 +1,7 @@
 name: ci-tag-build
 
 on: # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestbranchestags
-  push:
-    tags:
-      - 'v*' # use `v0.0.0` tag pattern
-      # - '!v*-dev.*' # for dev tag like `v0.0.0-dev.0`, upload manually if needed
+  push: { tags: [ 'v*' ] } # use `v0.0.0` tag pattern
 
 jobs:
   build:
@@ -17,13 +14,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Setup Git repo
-        uses: actions/checkout@v2 # https://github.com/actions/checkout
-
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1 # https://github.com/actions/setup-node
-        with:
-          node-version: ${{ matrix.node-version }}
+      - uses: actions/checkout@v2 # https://github.com/actions/checkout
+      - uses: actions/setup-node@v1 # https://github.com/actions/setup-node
+        with: { node-version: "${{ matrix.node-version }}" }
 
       - name: Log CI info & Setup Docker # https://stackoverflow.com/questions/60171603/enable-experimental-features-on-github-workflow-images/60454218#60454218
         run: |
