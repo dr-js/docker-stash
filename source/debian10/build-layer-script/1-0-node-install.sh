@@ -17,7 +17,7 @@ apt-update
   # apt-install nodejs
   # apt-remove curl lsb-release # auto-installed by node setup script
 
-  dpkg -i "${MNT_DEB_NODEJS}" || apt-install -f # fix missing dependencies like "python2"
+  dpkg -i "${MNT_DEB_NODEJS}" || apt-install --fix-broken # fix missing dependencies like "python2"
 
   mkdir -p /root/.config/configstore/
   echo '{ "optOut": true, "lastUpdateCheck": 999999999999999 }' > /root/.config/configstore/update-notifier-npm.json

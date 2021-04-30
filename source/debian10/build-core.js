@@ -31,7 +31,7 @@ runMain(async (logger) => {
     coreDockerfileBuffer, coreImageBuffer
   ] = await fetchGitHubBufferListWithLocalCache([
     URL_DOCKERFILE, URL_CORE_IMAGE
-  ], URL_HASH, fromCache('debian', '10-core-github'))
+  ], URL_HASH, fromCache('debian10', 'core-github'))
   const dockerfileBuffer = Buffer.concat([
     Buffer.from(`# syntax = ${BUILDKIT_SYNTAX}\n\n`),
     coreDockerfileBuffer,
@@ -40,8 +40,8 @@ runMain(async (logger) => {
 
   const SOURCE_HASH = calcHash(Buffer.concat([ dockerfileBuffer, coreImageBuffer ])).replace(/\W/g, '')
   const BUILD_TAG = `10-${BUILD_FLAVOR}-${SOURCE_HASH}${DOCKER_BUILD_MIRROR ? `-${DOCKER_BUILD_MIRROR.toLowerCase()}` : ''}`
-  const PATH_BUILD = fromOutput('debian', BUILD_TAG)
-  const PATH_LOG = fromOutput('debian', `core#${BUILD_TAG}.log`)
+  const PATH_BUILD = fromOutput('debian10', BUILD_TAG)
+  const PATH_LOG = fromOutput('debian10', `core#${BUILD_TAG}.log`)
 
   logger.padLog('build config')
   logger.log('BUILD_TAG:', BUILD_TAG)
@@ -59,10 +59,10 @@ runMain(async (logger) => {
 
     logger.padLog('assemble "build-core/"')
     {
-      // update at 2021/02/20, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
+      // update at 2021/04/23, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
       const DEB_CA_CERTIFICATES = [ 'http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20200601~deb10u2_all.deb', 'a9e267a24088c793a9cf782455fd344db5fdced714f112a8857c5bfd07179387' ]
-      const DEB_OPENSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_1.1.1d-0+deb10u5_amd64.deb', 'f4c32a3f851adeb0145edafb8ea271aed8330ee864de23f155f4141a81dc6e10' ]
-      const DEB_LIBSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1d-0+deb10u5_amd64.deb', '1741ec08b10caa4d3c8a165768323a14946278a7e6fb9cd56ae59cf4fe1ef970' ]
+      const DEB_OPENSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_1.1.1d-0+deb10u6_amd64.deb', '2a17791ec6663e84c6d706864198520fe47f5a19159a643b1a6109290b4f3656' ]
+      const DEB_LIBSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1d-0+deb10u6_amd64.deb', 'd1f867ab6e8179edf87be699fa876e5ca12f972b236ca4a9c95d6fa9d82e8651' ]
       // update at 2021/02/20, to find from: https://packages.debian.org/buster/libjemalloc2
       const DEB_LIBJEMALLOC = [ 'http://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.1.0-3_amd64.deb', 'ecd3a4bbe5056dafc7eca4967a2b20c91c1fe6cdbbd9bbaab06896aa3e35afcd' ]
 
@@ -71,7 +71,7 @@ runMain(async (logger) => {
         [ ...DEB_OPENSSL, fromOutput(PATH_BUILD, 'build-core/') ],
         [ ...DEB_LIBSSL, fromOutput(PATH_BUILD, 'build-core/') ],
         [ ...DEB_LIBJEMALLOC, fromOutput(PATH_BUILD, 'build-core/') ]
-      ], fromCache('debian', '10-core-url'))
+      ], fromCache('debian10', 'core-url'))
       writeFileSync(fromOutput(PATH_BUILD, 'build-core/bashrc'), STRING_BASHRC)
     }
 
