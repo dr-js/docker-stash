@@ -7,8 +7,9 @@
   "FLAVOR_BIN_GIT": { "NAME": "bin-git", "BASE_IMAGE": "bin-nginx", "LAYER_SCRIPT": "3-3-bin-git.sh" },
 
   "FLAVOR_DEP_CHROME": { "NAME": "dep-chrome", "BASE_IMAGE": "bin-git", "LAYER_SCRIPT": "5-0-dep-chrome.sh" },
+  "FLAVOR_DEP_FONT": { "NAME": "dep-font", "BASE_IMAGE": "dep-chrome", "LAYER_SCRIPT": "6-0-dep-font.sh" },
 
-  "FLAVOR_JAVA": { "NAME": "java", "BASE_IMAGE": "dep-chrome", "LAYER_SCRIPT": "7-0-java-install.sh" },
+  "FLAVOR_JAVA": { "NAME": "java", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "7-0-java-install.sh" },
   "FLAVOR_RUBY": { "NAME": "ruby", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-1-ruby-install.sh" },
   "FLAVOR_JRUBY": { "NAME": "jruby", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-2-jruby-install.sh" }
 }

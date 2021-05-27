@@ -1,5 +1,3 @@
-const { resolve } = require('path')
-const { readFileSync, writeFileSync } = require('fs')
 const { strictEqual } = require('assert')
 
 const { catchSync } = require('@dr-js/core/library/common/error')
@@ -7,30 +5,25 @@ const { oneOf } = require('@dr-js/core/library/common/verify')
 const { calcHash } = require('@dr-js/core/library/node/data/Buffer')
 const { modifyCopy } = require('@dr-js/core/library/node/file/Modify')
 const { createDirectory } = require('@dr-js/core/library/node/file/Directory')
-const { fetchWithJump } = require('@dr-js/core/library/node/net')
 
-const { fetchLikeRequestWithProxy } = require('@dr-js/node/library/module/Software/npm')
+const { fetchWithJumpProxy } = require('@dr-js/node/library/module/Software/npm')
 
-const { dockerSync } = require('@dr-js/dev/library/docker')
-const { runMain } = require('@dr-js/dev/library/main')
 const { resetDirectory } = require('@dr-js/dev/library/node/file')
+const { dockerSync } = require('@dr-js/dev/library/docker')
+const { fromPathCombo } = require('@dr-js/dev/library/output')
+const { runMain, resolve, readFileSync, writeFileSync } = require('@dr-js/dev/library/main')
 
-const PATH_ROOT = resolve(__dirname, '../')
-const PATH_CACHE = resolve(__dirname, PATH_ROOT, 'cache-gitignore/')
-const PATH_OUTPUT = resolve(__dirname, PATH_ROOT, 'output-gitignore/')
-const fromRoot = (...args) => resolve(PATH_ROOT, ...args)
-const fromCache = (...args) => resolve(PATH_CACHE, ...args)
-const fromOutput = (...args) => resolve(PATH_OUTPUT, ...args)
+const { fromRoot, fromOutput } = fromPathCombo()
+const fromCache = (...args) => fromRoot('cache-gitignore/', ...args)
 
-const { name: PACKAGE_NAME } = require(fromRoot('package.json'))
+const { name: PACKAGE_NAME, version: PACKAGE_VERSION } = require(fromRoot('package.json'))
 
 const fetchBuffer = async (url) => {
   console.log(' - fetch:', url)
-  return (await fetchWithJump(url, {
+  return (await fetchWithJumpProxy(url, {
     jumpMax: 4,
     timeout: 10 * 60 * 1000,
-    headers: { 'accept': '*/*', 'user-agent': PACKAGE_NAME },
-    fetch: fetchLikeRequestWithProxy
+    headers: { 'accept': '*/*', 'user-agent': PACKAGE_NAME }
   })).buffer()
 }
 
@@ -91,11 +84,18 @@ const saveTagCore = (path, DOCKER_BUILD_MIRROR = '', tag) => writeFileSync(fromR
 const loadTagCore = (path, DOCKER_BUILD_MIRROR = '') => JSON.parse(String(readFileSync(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`))))
 const loadRepo = (path, isGHCR = false) => JSON.parse(String(readFileSync(fromRoot(path, isGHCR ? 'BUILD_REPO_GHCR.json' : 'BUILD_REPO.json'))))
 
+const [ semverMain, ...semverLabelList ] = PACKAGE_VERSION.split('-')
+const [ tagVersionMajor ] = /^[.0]*\d*/.exec(semverMain) || [ 'unknown' ] // get semver major
+const tagLabel = semverLabelList.join('').replace(/[^A-Za-z]/g, '') // separate `main` and `dev` caches
+const TAG_LAYER_CACHE = [ tagVersionMajor, tagLabel, 'latest' ].filter(Boolean).join('-')
+const TAG_LAYER_MAIN_CACHE = [ tagVersionMajor, 'latest' ].filter(Boolean).join('-') // try use main cache in `dev` branch
+
 module.exports = {
   writeFileSync,
   oneOf, modifyCopy,
   runMain, resetDirectory, dockerSync,
   fromRoot, fromCache, fromOutput,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
-  saveTagCore, loadTagCore, loadRepo
+  saveTagCore, loadTagCore, loadRepo,
+  TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
 }

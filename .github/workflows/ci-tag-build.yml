@@ -5,18 +5,11 @@ on: # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow
 
 jobs:
   build:
-    strategy:
-      fail-fast: false # allow all test to run to the end
-      matrix:
-        os: [ ubuntu-latest ] # [ ubuntu-latest, windows-latest, macos-latest ]
-        node-version: [ 14.x ]
-
-    runs-on: ${{ matrix.os }}
-
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 # https://github.com/actions/checkout
       - uses: actions/setup-node@v1 # https://github.com/actions/setup-node
-        with: { node-version: "${{ matrix.node-version }}" }
+        with: { node-version: "14.x" }
 
       - name: Log CI info & Setup Docker # https://stackoverflow.com/questions/60171603/enable-experimental-features-on-github-workflow-images/60454218#60454218
         run: |

@@ -2,7 +2,8 @@ const {
   oneOf,
   runMain, dockerSync,
   fromRoot,
-  loadTagCore, loadRepo
+  loadTagCore, loadRepo,
+  TAG_LAYER_CACHE
 } = require('./function')
 
 const [
@@ -33,6 +34,10 @@ runMain(async (logger) => {
     loadTagCore(fromRoot(__dirname, 'debian10/'), 'CN'),
     ...BUILD_FLAVOR_LIST_DEBIAN10.map((flavorName) => `${BUILD_REPO_DEBIAN10}:10-${flavorName}-${BUILD_VERSION}-cn`)
   ]
+  const TAG_LIST_BASE_CACHE = [ // only use cache from BASE for now
+    ...BUILD_FLAVOR_LIST_DEBIAN10.map((flavorName) => `${BUILD_REPO_DEBIAN10}:10-${flavorName}-${TAG_LAYER_CACHE}`),
+    ...BUILD_FLAVOR_LIST_DEBIAN10.map((flavorName) => `${BUILD_REPO_DEBIAN10}:10-${flavorName}-${TAG_LAYER_CACHE}-cn`)
+  ]
   const TAG_LIST_GHCR = TAG_LIST_BASE.map(toGitHubTag)
 
   if (hasTarget('GHCR')) {
@@ -42,8 +47,8 @@ runMain(async (logger) => {
 
   logger.padLog('push image')
   for (const tag of [
-    ...(hasTarget('GHCR') ? TAG_LIST_GHCR : []), // faster in CI
-    ...(hasTarget('BASE') ? TAG_LIST_BASE : [])
+    ...(hasTarget('GHCR') ? [ ...TAG_LIST_GHCR ].reverse() : []), // faster in CI
+    ...(hasTarget('BASE') ? [ ...TAG_LIST_BASE, ...TAG_LIST_BASE_CACHE ].reverse() : [])
   ]) {
     logger.log(`push tag: ${tag}`)
     dockerSync([ 'push', tag ])

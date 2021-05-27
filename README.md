@@ -55,11 +55,12 @@ debian:10-core
   └─bin-common
     └─bin-sshd
       └─bin-nginx
-        └─bin-git
-          └─dep-chrome
-            └─java
-              ├─ruby
-              └─jruby
+        └─bin-git (layer from here & above is light)
+          └─dep-chrome (layer from here & below will add 50MiB+ each)
+            └─dep-font
+              └─java
+                ├─ruby
+                └─jruby
 ```
 
 
