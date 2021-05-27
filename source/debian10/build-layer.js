@@ -53,9 +53,9 @@ runMain(async (logger) => {
 
   logger.padLog('assemble "build-layer-resource/"')
   {
-    // update at 2021/04/23, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
+    // update at 2021/5/18, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
     // and: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
-    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.16.1-1nodesource1_amd64.deb', 'bd7840640c132556400801123297ab57e275dbe744c1fc7f0f87f7c603067a7f' ]
+    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.17.0-1nodesource1_amd64.deb', '2798e25fbe738c6fd299bb923a362a49fbce380b4d58a2a6f826d396202784c0' ]
     // update at 2020/04/23, to find download from: `npm view npm@latest-6`
     const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.13.tgz', 'SRl4jJi0EBHY2xKuu98FLRMo3VhYQSA6otyLnjSEiHoSG/9shXCFNJy9tivpUJvtkN9s6VDdItHa5Rn+fNBzag==:sha512:base64' ]
     // update at 2021/04/23, to find download from: https://nginx.org/en/download.html
