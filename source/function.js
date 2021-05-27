@@ -16,7 +16,7 @@ const { runMain, resolve, readFileSync, writeFileSync } = require('@dr-js/dev/li
 const { fromRoot, fromOutput } = fromPathCombo()
 const fromCache = (...args) => fromRoot('cache-gitignore/', ...args)
 
-const { name: PACKAGE_NAME } = require(fromRoot('package.json'))
+const { name: PACKAGE_NAME, version: PACKAGE_VERSION } = require(fromRoot('package.json'))
 
 const fetchBuffer = async (url) => {
   console.log(' - fetch:', url)
@@ -84,11 +84,21 @@ const saveTagCore = (path, DOCKER_BUILD_MIRROR = '', tag) => writeFileSync(fromR
 const loadTagCore = (path, DOCKER_BUILD_MIRROR = '') => JSON.parse(String(readFileSync(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`))))
 const loadRepo = (path, isGHCR = false) => JSON.parse(String(readFileSync(fromRoot(path, isGHCR ? 'BUILD_REPO_GHCR.json' : 'BUILD_REPO.json'))))
 
+const [ semverMain, ...semverLabelList ] = PACKAGE_VERSION.split('-')
+const [ tagVersionMajor ] = /^[.0]*\d*/.exec(semverMain) || [ 'unknown' ] // get semver major
+const tagLabel = semverLabelList.join('').replace(/[^A-Za-z]/g, '') // separate `main` and `dev` caches
+const TAG_LAYER_CACHE = [
+  tagVersionMajor,
+  tagLabel,
+  'latest'
+].filter(Boolean).join('-')
+
 module.exports = {
   writeFileSync,
   oneOf, modifyCopy,
   runMain, resetDirectory, dockerSync,
   fromRoot, fromCache, fromOutput,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
-  saveTagCore, loadTagCore, loadRepo
+  saveTagCore, loadTagCore, loadRepo,
+  TAG_LAYER_CACHE
 }
