@@ -6,7 +6,7 @@ const {
   fromRoot, fromCache, fromOutput,
   fetchFileWithLocalCache,
   loadTagCore, loadRepo,
-  TAG_LAYER_CACHE
+  TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
 } = require('../function')
 
 const { version: BUILD_VERSION } = require(fromRoot('package.json'))
@@ -84,7 +84,10 @@ runMain(async (logger) => {
     'image', 'build',
     '--tag', getFlavoredImageTag(BUILD_FLAVOR.NAME),
     '--tag', getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE), // NOTE: for layer to use as base, so version-bump won't change Dockerfile
-    '--cache-from', getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE), // cache tag
+    '--cache-from', [ ...new Set([ // cache tag
+      getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE), // try same label first
+      getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_MAIN_CACHE) // try `main` next
+    ]) ].join(','), // https://github.com/moby/moby/issues/34715#issuecomment-425933774
     '--build-arg', 'BUILDKIT_INLINE_CACHE=1', // save build cache metadata // https://docs.docker.com/engine/reference/commandline/build/#specifying-external-cache-sources
     '--file', './Dockerfile',
     '--progress=plain', // https://docs.docker.com/develop/develop-images/build_enhancements/#new-docker-build-command-line-build-output

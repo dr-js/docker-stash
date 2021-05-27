@@ -87,11 +87,8 @@ const loadRepo = (path, isGHCR = false) => JSON.parse(String(readFileSync(fromRo
 const [ semverMain, ...semverLabelList ] = PACKAGE_VERSION.split('-')
 const [ tagVersionMajor ] = /^[.0]*\d*/.exec(semverMain) || [ 'unknown' ] // get semver major
 const tagLabel = semverLabelList.join('').replace(/[^A-Za-z]/g, '') // separate `main` and `dev` caches
-const TAG_LAYER_CACHE = [
-  tagVersionMajor,
-  tagLabel,
-  'latest'
-].filter(Boolean).join('-')
+const TAG_LAYER_CACHE = [ tagVersionMajor, tagLabel, 'latest' ].filter(Boolean).join('-')
+const TAG_LAYER_MAIN_CACHE = [ tagVersionMajor, 'latest' ].filter(Boolean).join('-') // try use main cache in `dev` branch
 
 module.exports = {
   writeFileSync,
@@ -100,5 +97,5 @@ module.exports = {
   fromRoot, fromCache, fromOutput,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
   saveTagCore, loadTagCore, loadRepo,
-  TAG_LAYER_CACHE
+  TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
 }
