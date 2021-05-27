@@ -47,8 +47,8 @@ runMain(async (logger) => {
 
   logger.padLog('push image')
   for (const tag of [
-    ...(hasTarget('GHCR') ? TAG_LIST_GHCR : []), // faster in CI
-    ...(hasTarget('BASE') ? [ ...TAG_LIST_BASE, ...TAG_LIST_BASE_CACHE ] : [])
+    ...(hasTarget('GHCR') ? [ ...TAG_LIST_GHCR ].reverse() : []), // faster in CI
+    ...(hasTarget('BASE') ? [ ...TAG_LIST_BASE, ...TAG_LIST_BASE_CACHE ].reverse() : [])
   ]) {
     logger.log(`push tag: ${tag}`)
     dockerSync([ 'push', tag ])
