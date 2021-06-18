@@ -54,20 +54,20 @@ runMain(async (logger) => {
 
   logger.padLog('assemble "build-layer-resource/"')
   {
-    // update at 2021/5/18, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
+    // update at 2021/06/18, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
     // and: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
-    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.17.0-1nodesource1_amd64.deb', '2798e25fbe738c6fd299bb923a362a49fbce380b4d58a2a6f826d396202784c0' ]
+    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.17.1-1nodesource1_amd64.deb', '1c035be7cfe991c03d5034a8b740537409ca5dff8afb9a85723f3e4d0fdea35e' ]
     // update at 2020/04/23, to find download from: `npm view npm@latest-6`
     const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.13.tgz', 'SRl4jJi0EBHY2xKuu98FLRMo3VhYQSA6otyLnjSEiHoSG/9shXCFNJy9tivpUJvtkN9s6VDdItHa5Rn+fNBzag==:sha512:base64' ]
-    // update at 2021/04/23, to find download from: https://nginx.org/en/download.html
+    // update at 2021/06/18, to find download from: https://nginx.org/en/download.html
     // and: https://github.com/google/ngx_brotli
-    const TGZ_NGINX = [ 'https://nginx.org/download/nginx-1.20.0.tar.gz', '54ef91ec8ebcaa486c640c09c92d832eaeaff149b10ee52ef140f407b1b04d1c' ] // TODO: need to calc hash yourself
+    const TGZ_NGINX = [ 'https://nginx.org/download/nginx-1.20.1.tar.gz', 'e462e11533d5c30baa05df7652160ff5979591d291736cfa5edb9fd2edb48c49' ] // TODO: need to calc hash yourself
     const ZIP_BROTLI = [ 'https://github.com/google/brotli/archive/e61745a6.zip', '4a79fd9fd30bae4d08dab373326cfb21ab0d6b50e0e55564043e35dde7210219', 'brotli.zip' ] // specify filename // TODO: need to calc hash yourself
     const ZIP_NGX_BROTLI = [ 'https://github.com/google/ngx_brotli/archive/9aec15e2.zip', '9ec37453ef1a4866590e96bc8df41657382281afcdcc0d368947544e9950d8f9', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
     // update at 2021/04/23, to find download from: https://www.ruby-lang.org/en/downloads/releases/
     const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.3.tar.gz', '8925a95e31d8f2c81749025a52a544ea1d05dad18794e6828709268b92e55338' ]
-    // update at 2021/04/23, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
-    const TGZ_JRUBY = [ 'https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.2.17.0/jruby-dist-9.2.17.0-bin.tar.gz', '7701d3537b3a606d2765ac6d5c40e675ddaa01d3cebad26a21a66e3aadd5c202' ] // TODO: need to calc hash yourself
+    // update at 2021/06/18, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
+    const TGZ_JRUBY = [ 'https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.2.19.0/jruby-dist-9.2.19.0-bin.tar.gz', '1f74885a2d3fa589fcbeb292a39facf7f86be3eac1ab015e32c65d32acf3f3bf' ]
 
     const fromOutputResource = (...args) => fromOutput(PATH_BUILD, 'build-layer-resource/', ...args)
     await resetDirectory(fromOutputResource())
