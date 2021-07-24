@@ -33,9 +33,9 @@
     "npm": ">=6.14"
   },
   "devDependencies": {
-    "@dr-js/core": "^0.4.12",
-    "@dr-js/dev": "^0.4.15",
-    "@dr-js/dev-eslint": "^0.4.15",
+    "@dr-js/core": "^0.4.13",
+    "@dr-js/dev": "^0.4.16",
+    "@dr-js/dev-eslint": "^0.4.16",
     "@dr-js/node": "^0.4.9"
   }
 }
