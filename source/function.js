@@ -6,7 +6,7 @@ const { calcHash } = require('@dr-js/core/library/node/data/Buffer')
 const { modifyCopy } = require('@dr-js/core/library/node/file/Modify')
 const { createDirectory } = require('@dr-js/core/library/node/file/Directory')
 
-const { fetchWithJumpProxy } = require('@dr-js/node/library/module/Software/npm')
+const { fetchWithJumpProxy } = require('@dr-js/core/library/node/module/Software/npm')
 
 const { resetDirectory } = require('@dr-js/dev/library/node/file')
 const { dockerSync } = require('@dr-js/dev/library/docker')
