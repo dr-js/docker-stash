@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: ghcr.io/dr-js/debian:10-bin-git-0.2.0
+    container: ghcr.io/dr-js/debian:10-bin-git-0.2.1
     steps:
       - uses: actions/checkout@v2 # https://github.com/actions/checkout
 
