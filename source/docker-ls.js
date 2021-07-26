@@ -1,4 +1,4 @@
-const { runMain, dockerSync } = require('./function')
+const { runMain, dockerSync } = require('./function.js')
 
 runMain(async (logger) => {
   logger.padLog('container')

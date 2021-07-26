@@ -1,17 +1,17 @@
 const { strictEqual } = require('assert')
 
-const { catchSync } = require('@dr-js/core/library/common/error')
-const { oneOf } = require('@dr-js/core/library/common/verify')
-const { calcHash } = require('@dr-js/core/library/node/data/Buffer')
-const { modifyCopy } = require('@dr-js/core/library/node/file/Modify')
-const { createDirectory } = require('@dr-js/core/library/node/file/Directory')
+const { catchSync } = require('@dr-js/core/library/common/error.js')
+const { oneOf } = require('@dr-js/core/library/common/verify.js')
+const { calcHash } = require('@dr-js/core/library/node/data/Buffer.js')
+const { modifyCopy } = require('@dr-js/core/library/node/file/Modify.js')
+const { createDirectory } = require('@dr-js/core/library/node/file/Directory.js')
 
-const { fetchWithJumpProxy } = require('@dr-js/core/library/node/module/Software/npm')
+const { fetchWithJumpProxy } = require('@dr-js/core/library/node/module/Software/npm.js')
 
-const { resetDirectory } = require('@dr-js/dev/library/node/file')
-const { dockerSync } = require('@dr-js/dev/library/docker')
-const { fromPathCombo } = require('@dr-js/dev/library/output')
-const { runMain, resolve, readFileSync, writeFileSync } = require('@dr-js/dev/library/main')
+const { resetDirectory } = require('@dr-js/dev/library/node/file.js')
+const { dockerSync } = require('@dr-js/dev/library/docker.js')
+const { fromPathCombo } = require('@dr-js/dev/library/output.js')
+const { runMain, resolve, readFileSync, writeFileSync } = require('@dr-js/dev/library/main.js')
 
 const { fromRoot, fromOutput } = fromPathCombo()
 const fromCache = (...args) => fromRoot('cache-gitignore/', ...args)

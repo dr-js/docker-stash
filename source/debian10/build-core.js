@@ -1,5 +1,5 @@
-const { calcHash } = require('@dr-js/core/library/node/data/Buffer')
-const { dockerWithTee, checkImageExist } = require('@dr-js/dev/library/docker')
+const { calcHash } = require('@dr-js/core/library/node/data/Buffer.js')
+const { dockerWithTee, checkImageExist } = require('@dr-js/dev/library/docker.js')
 const {
   writeFileSync,
   oneOf,
@@ -7,7 +7,7 @@ const {
   fromCache, fromOutput,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
   saveTagCore, loadRepo
-} = require('../function')
+} = require('../function.js')
 
 const BUILD_REPO = loadRepo(__dirname)
 const BUILDKIT_SYNTAX = require('./BUILDKIT_SYNTAX.json')

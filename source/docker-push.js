@@ -4,7 +4,7 @@ const {
   fromRoot,
   loadTagCore, loadRepo,
   TAG_LAYER_CACHE
-} = require('./function')
+} = require('./function.js')
 
 const [
   , // node

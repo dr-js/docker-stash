@@ -1,4 +1,4 @@
-const { dockerWithTee } = require('@dr-js/dev/library/docker')
+const { dockerWithTee } = require('@dr-js/dev/library/docker.js')
 const {
   writeFileSync,
   oneOf, modifyCopy,
@@ -7,7 +7,7 @@ const {
   fetchFileWithLocalCache,
   loadTagCore, loadRepo,
   TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
-} = require('../function')
+} = require('../function.js')
 
 const { version: BUILD_VERSION } = require(fromRoot('package.json'))
 const BUILD_REPO = loadRepo(__dirname)
