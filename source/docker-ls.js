@@ -1,9 +1,10 @@
-const { runMain, dockerSync } = require('./function.js')
+const { runDockerSync } = require('@dr-js/core/library/node/module/Software/docker.js')
+const { runMain } = require('./function.js')
 
 runMain(async (logger) => {
   logger.padLog('container')
-  dockerSync([ 'container', 'ls', '--all' ])
+  runDockerSync([ 'container', 'ls', '--all' ])
 
   logger.padLog('image')
-  dockerSync([ 'image', 'ls' ])
+  runDockerSync([ 'image', 'ls' ])
 }, 'docker-ls')

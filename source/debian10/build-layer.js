@@ -1,16 +1,16 @@
-const { dockerWithTee } = require('@dr-js/dev/library/docker.js')
+const { oneOf } = require('@dr-js/core/library/common/verify.js')
+const { writeText } = require('@dr-js/core/library/node/fs/File.js')
+const { resetDirectory } = require('@dr-js/core/library/node/fs/Directory.js')
+const { modifyCopy } = require('@dr-js/core/library/node/fs/Modify.js')
+const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
 const {
-  writeFileSync,
-  oneOf, modifyCopy,
-  runMain, resetDirectory,
-  fromRoot, fromCache, fromOutput,
+  runMain, fromRoot, fromOutput, fromTemp,
   fetchFileWithLocalCache,
   loadTagCore, loadRepo,
   TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
 } = require('../function.js')
 
 const { version: BUILD_VERSION } = require(fromRoot('package.json'))
-const BUILD_REPO = loadRepo(__dirname)
 const BUILDKIT_SYNTAX = require('./BUILDKIT_SYNTAX.json')
 const BUILD_FLAVOR_MAP = require('./BUILD_FLAVOR_MAP.json')
 
@@ -25,9 +25,9 @@ oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
 
 const BUILD_FLAVOR = Object.values(BUILD_FLAVOR_MAP).find((FLAVOR) => BUILD_FLAVOR_NAME === FLAVOR.NAME)
 const getFlavoredTag = (name, version = BUILD_VERSION) => `10-${name}-${version}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR.toLowerCase()}`}`
-const getFlavoredImageTag = (name, version = BUILD_VERSION) => name === '@CORE'
+const getFlavoredImageTag = async (name, version = BUILD_VERSION) => name === '@CORE'
   ? loadTagCore(__dirname, DOCKER_BUILD_MIRROR)
-  : `${BUILD_REPO}:${getFlavoredTag(name, version)}`
+  : `${await loadRepo(__dirname)}:${getFlavoredTag(name, version)}`
 
 runMain(async (logger) => {
   const BUILD_TAG = getFlavoredTag(BUILD_FLAVOR.NAME)
@@ -40,7 +40,7 @@ runMain(async (logger) => {
 
   logger.padLog('assemble "/" (context)')
   await resetDirectory(PATH_BUILD)
-  writeFileSync(fromOutput(PATH_BUILD, 'Dockerfile'), getLayerDockerfileString({ BUILD_FLAVOR, getFlavoredImageTag }))
+  await writeText(fromOutput(PATH_BUILD, 'Dockerfile'), await getLayerDockerfileString({ BUILD_FLAVOR, getFlavoredImageTag }))
 
   logger.padLog('assemble "build-layer-script/"')
   await resetDirectory(fromOutput(PATH_BUILD, 'build-layer-script/'))
@@ -76,17 +76,17 @@ runMain(async (logger) => {
       ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? [ TGZ_NGINX, ZIP_BROTLI, ZIP_NGX_BROTLI ] : []),
       ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_RUBY ? [ TGZ_RUBY ] : []),
       ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_JRUBY ? [ TGZ_JRUBY ] : [])
-    ].map(([ url, hash, filename ]) => [ url, hash, fromOutputResource(), filename ]), fromCache('debian10', 'layer-url'))
+    ].map(([ url, hash, filename ]) => [ url, hash, fromOutputResource(), filename ]), fromTemp('debian10', 'layer-url'))
   }
 
   logger.padLog('build image')
-  await dockerWithTee([
+  await runDockerWithTee([
     'image', 'build',
-    '--tag', getFlavoredImageTag(BUILD_FLAVOR.NAME),
-    '--tag', getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE), // NOTE: for layer to use as base, so version-bump won't change Dockerfile
+    '--tag', await getFlavoredImageTag(BUILD_FLAVOR.NAME),
+    '--tag', await getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE), // NOTE: for layer to use as base, so version-bump won't change Dockerfile
     '--cache-from', [ ...new Set([ // cache tag
-      getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE), // try same label first
-      getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_MAIN_CACHE) // try `main` next
+      await getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE), // try same label first
+      await getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_MAIN_CACHE) // try `main` next
     ]) ].join(','), // https://github.com/moby/moby/issues/34715#issuecomment-425933774
     '--build-arg', 'BUILDKIT_INLINE_CACHE=1', // save build cache metadata // https://docs.docker.com/engine/reference/commandline/build/#specifying-external-cache-sources
     '--file', './Dockerfile',
@@ -95,10 +95,10 @@ runMain(async (logger) => {
   ], { cwd: PATH_BUILD }, PATH_LOG)
 }, `build-${BUILD_FLAVOR.NAME}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR}`}`)
 
-const getLayerDockerfileString = ({
+const getLayerDockerfileString = async ({
   BUILD_FLAVOR, getFlavoredImageTag
 }) => `# syntax = ${BUILDKIT_SYNTAX}
-FROM ${getFlavoredImageTag(BUILD_FLAVOR.BASE_IMAGE, TAG_LAYER_CACHE)}
+FROM ${await getFlavoredImageTag(BUILD_FLAVOR.BASE_IMAGE, TAG_LAYER_CACHE)}
 RUN \\
   --mount=type=cache,target=/var/log \\
   --mount=type=cache,target=/var/cache \\
