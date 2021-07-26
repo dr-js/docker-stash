@@ -1,17 +1,13 @@
-const { calcHash } = require('@dr-js/core/library/node/data/Buffer')
-const { dockerWithTee, checkImageExist } = require('@dr-js/dev/library/docker')
+const { oneOf } = require('@dr-js/core/library/common/verify.js')
+const { calcHash } = require('@dr-js/core/library/node/data/Buffer.js')
+const { writeBuffer, writeText } = require('@dr-js/core/library/node/fs/File.js')
+const { resetDirectory } = require('@dr-js/core/library/node/fs/Directory.js')
+const { runDockerWithTee, checkPullImage } = require('@dr-js/dev/library/docker.js')
 const {
-  writeFileSync,
-  oneOf,
-  runMain, resetDirectory,
-  fromCache, fromOutput,
+  runMain, fromOutput, fromTemp,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
   saveTagCore, loadRepo
-} = require('../function')
-
-const BUILD_REPO = loadRepo(__dirname)
-const BUILDKIT_SYNTAX = require('./BUILDKIT_SYNTAX.json')
-const BUILD_FLAVOR = 'core'
+} = require('../function.js')
 
 const [
   , // node
@@ -26,12 +22,16 @@ const URL_DOCKERFILE = 'https://github.com/debuerreotype/docker-debian-artifacts
 const URL_CORE_IMAGE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/rootfs.tar.xz'
 
 runMain(async (logger) => {
+  const BUILD_REPO = await loadRepo(__dirname)
+  const BUILDKIT_SYNTAX = require('./BUILDKIT_SYNTAX.json')
+  const BUILD_FLAVOR = 'core'
+
   logger.padLog('borrow file from github:debuerreotype/docker-debian-artifacts')
   const [
     coreDockerfileBuffer, coreImageBuffer
   ] = await fetchGitHubBufferListWithLocalCache([
     URL_DOCKERFILE, URL_CORE_IMAGE
-  ], URL_HASH, fromCache('debian10', 'core-github'))
+  ], URL_HASH, fromTemp('debian10', 'core-github'))
   const dockerfileBuffer = Buffer.concat([
     Buffer.from(`# syntax = ${BUILDKIT_SYNTAX}\n\n`),
     coreDockerfileBuffer,
@@ -48,14 +48,14 @@ runMain(async (logger) => {
   logger.log('PATH_BUILD:', PATH_BUILD)
 
   logger.padLog('check existing image')
-  if (await checkImageExist(BUILD_REPO, BUILD_TAG)) logger.log('found existing image, skip build')
+  if (await checkPullImage(BUILD_REPO, BUILD_TAG)) logger.log('found existing image, skip build')
   else {
     logger.log('no existing image, build new')
 
     logger.padLog('assemble "/" (context)')
     await resetDirectory(PATH_BUILD)
-    writeFileSync(fromOutput(PATH_BUILD, 'Dockerfile'), dockerfileBuffer)
-    writeFileSync(fromOutput(PATH_BUILD, URL_CORE_IMAGE.split('/').pop()), coreImageBuffer)
+    await writeBuffer(fromOutput(PATH_BUILD, 'Dockerfile'), dockerfileBuffer)
+    await writeBuffer(fromOutput(PATH_BUILD, URL_CORE_IMAGE.split('/').pop()), coreImageBuffer)
 
     logger.padLog('assemble "build-core/"')
     {
@@ -71,12 +71,12 @@ runMain(async (logger) => {
         [ ...DEB_OPENSSL, fromOutput(PATH_BUILD, 'build-core/') ],
         [ ...DEB_LIBSSL, fromOutput(PATH_BUILD, 'build-core/') ],
         [ ...DEB_LIBJEMALLOC, fromOutput(PATH_BUILD, 'build-core/') ]
-      ], fromCache('debian10', 'core-url'))
-      writeFileSync(fromOutput(PATH_BUILD, 'build-core/bashrc'), STRING_BASHRC)
+      ], fromTemp('debian10', 'core-url'))
+      await writeText(fromOutput(PATH_BUILD, 'build-core/bashrc'), STRING_BASHRC)
     }
 
     logger.padLog('build image')
-    await dockerWithTee([
+    await runDockerWithTee([
       'image', 'build',
       '--tag', `${BUILD_REPO}:${BUILD_TAG}`,
       '--file', './Dockerfile',
@@ -87,7 +87,7 @@ runMain(async (logger) => {
   }
 
   logger.padLog('save core image tag')
-  saveTagCore(__dirname, DOCKER_BUILD_MIRROR, `${BUILD_REPO}:${BUILD_TAG}`)
+  await saveTagCore(__dirname, DOCKER_BUILD_MIRROR, `${BUILD_REPO}:${BUILD_TAG}`)
 }, 'build-core')
 
 const getExtraDockerfileString = ({

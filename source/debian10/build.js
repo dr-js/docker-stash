@@ -1,5 +1,5 @@
-const { run } = require('@dr-js/core/library/node/run')
-const { runMain } = require('../function')
+const { run } = require('@dr-js/core/library/node/run.js')
+const { runMain } = require('../function.js')
 
 const [
   , // node

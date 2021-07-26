@@ -56,6 +56,7 @@ debian:10-core
     └─bin-sshd
       └─bin-nginx
         └─bin-git (layer from here & above is light)
+          ├─go
           └─dep-chrome (layer from here & below will add 50MiB+ each)
             └─dep-font
               └─java

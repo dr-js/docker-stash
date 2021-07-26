@@ -1,20 +1,15 @@
 const { strictEqual } = require('assert')
 
-const { catchSync } = require('@dr-js/core/library/common/error')
-const { oneOf } = require('@dr-js/core/library/common/verify')
-const { calcHash } = require('@dr-js/core/library/node/data/Buffer')
-const { modifyCopy } = require('@dr-js/core/library/node/file/Modify')
-const { createDirectory } = require('@dr-js/core/library/node/file/Directory')
+const { catchAsync } = require('@dr-js/core/library/common/error.js')
+const { calcHash } = require('@dr-js/core/library/node/data/Buffer.js')
+const { readBuffer, writeBuffer, readJSON, writeJSON } = require('@dr-js/core/library/node/fs/File.js')
+const { createDirectory, resetDirectory } = require('@dr-js/core/library/node/fs/Directory.js')
+const { fetchWithJumpProxy } = require('@dr-js/core/library/node/module/Software/npm.js')
 
-const { fetchWithJumpProxy } = require('@dr-js/node/library/module/Software/npm')
+const { fromPathCombo } = require('@dr-js/dev/library/output.js')
+const { runMain, resolve } = require('@dr-js/dev/library/main.js')
 
-const { resetDirectory } = require('@dr-js/dev/library/node/file')
-const { dockerSync } = require('@dr-js/dev/library/docker')
-const { fromPathCombo } = require('@dr-js/dev/library/output')
-const { runMain, resolve, readFileSync, writeFileSync } = require('@dr-js/dev/library/main')
-
-const { fromRoot, fromOutput } = fromPathCombo()
-const fromCache = (...args) => fromRoot('cache-gitignore/', ...args)
+const { fromRoot, fromOutput, fromTemp } = fromPathCombo()
 
 const { name: PACKAGE_NAME, version: PACKAGE_VERSION } = require(fromRoot('package.json'))
 
@@ -38,23 +33,23 @@ const fetchGitHubBufferListWithLocalCache = async (
 ) => {
   const fileCacheHash = resolve(pathCache, filenameFromUrl(urlHash))
   const hashBuffer = __DEV_SKIP_FETCH__ ? undefined : await fetchBuffer(urlHash) // download hash
-  const hashCacheBuffer = catchSync(readFileSync, fileCacheHash).result
+  const hashCacheBuffer = (await catchAsync(readBuffer, fileCacheHash)).result
   const isCacheValid = __DEV_SKIP_FETCH__ || (hashCacheBuffer && Buffer.compare(hashBuffer, hashCacheBuffer) === 0)
   if (isCacheValid) console.log(' - cache valid:', urlHash)
   else await resetDirectory(pathCache)
   const bufferList = []
   for (const url of urlList) {
     const fileCacheBuffer = resolve(pathCache, filenameFromUrl(url))
-    let buffer = isCacheValid && catchSync(readFileSync, fileCacheBuffer).result // download buffer
+    let buffer = isCacheValid && (await catchAsync(readBuffer, fileCacheBuffer)).result // download buffer
     if (buffer) console.log(' - cache hit:', url)
     else {
       console.log(' - cache fetch as:', fileCacheBuffer)
       buffer = await fetchBuffer(url)
-      writeFileSync(fileCacheBuffer, buffer)
+      await writeBuffer(fileCacheBuffer, buffer)
     }
     bufferList.push(buffer)
   }
-  !__DEV_SKIP_FETCH__ && writeFileSync(fileCacheHash, hashBuffer) // save cache hash last
+  !__DEV_SKIP_FETCH__ && await writeBuffer(fileCacheHash, hashBuffer) // save cache hash last
   return bufferList
 }
 
@@ -65,24 +60,24 @@ const fetchFileWithLocalCache = async (
   await createDirectory(pathCache)
   for (const [ url, hash, pathOutput, filename = url.split('/').pop() ] of fetchList) {
     const fileCacheBuffer = resolve(pathCache, filenameFromUrl(url))
-    let buffer = catchSync(readFileSync, fileCacheBuffer).result // download buffer
+    let buffer = (await catchAsync(readBuffer, fileCacheBuffer)).result // download buffer
     if (buffer) console.log(' - cache hit:', url)
     else {
       console.log(' - cache fetch as:', fileCacheBuffer)
       buffer = await fetchBuffer(url)
-      writeFileSync(fileCacheBuffer, buffer)
+      await writeBuffer(fileCacheBuffer, buffer)
     }
     const [ hashString, hashAlgo = 'sha256', hashDigest = 'hex' ] = hash.split(':')
     strictEqual(calcHash(buffer, hashAlgo, hashDigest), hashString, `hash mismatch for: ${url}`)
 
     await createDirectory(pathOutput)
-    writeFileSync(resolve(pathOutput, filename), buffer)
+    await writeBuffer(resolve(pathOutput, filename), buffer)
   }
 }
 
-const saveTagCore = (path, DOCKER_BUILD_MIRROR = '', tag) => writeFileSync(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`), JSON.stringify(tag))
-const loadTagCore = (path, DOCKER_BUILD_MIRROR = '') => JSON.parse(String(readFileSync(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`))))
-const loadRepo = (path, isGHCR = false) => JSON.parse(String(readFileSync(fromRoot(path, isGHCR ? 'BUILD_REPO_GHCR.json' : 'BUILD_REPO.json'))))
+const saveTagCore = async (path, DOCKER_BUILD_MIRROR = '', tag) => writeJSON(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`), tag)
+const loadTagCore = async (path, DOCKER_BUILD_MIRROR = '') => readJSON(fromRoot(path, `TAG_CORE${DOCKER_BUILD_MIRROR}.json`))
+const loadRepo = async (path, isGHCR = false) => readJSON(fromRoot(path, isGHCR ? 'BUILD_REPO_GHCR.json' : 'BUILD_REPO.json'))
 
 const [ semverMain, ...semverLabelList ] = PACKAGE_VERSION.split('-')
 const [ tagVersionMajor ] = /^[.0]*\d*/.exec(semverMain) || [ 'unknown' ] // get semver major
@@ -91,10 +86,7 @@ const TAG_LAYER_CACHE = [ tagVersionMajor, tagLabel, 'latest' ].filter(Boolean).
 const TAG_LAYER_MAIN_CACHE = [ tagVersionMajor, 'latest' ].filter(Boolean).join('-') // try use main cache in `dev` branch
 
 module.exports = {
-  writeFileSync,
-  oneOf, modifyCopy,
-  runMain, resetDirectory, dockerSync,
-  fromRoot, fromCache, fromOutput,
+  runMain, fromRoot, fromOutput, fromTemp,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
   saveTagCore, loadTagCore, loadRepo,
   TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
