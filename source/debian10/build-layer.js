@@ -64,6 +64,8 @@ runMain(async (logger) => {
     const TGZ_NGINX = [ 'https://nginx.org/download/nginx-1.20.1.tar.gz', 'e462e11533d5c30baa05df7652160ff5979591d291736cfa5edb9fd2edb48c49' ] // TODO: need to calc hash yourself
     const ZIP_BROTLI = [ 'https://github.com/google/brotli/archive/e61745a6.zip', '4a79fd9fd30bae4d08dab373326cfb21ab0d6b50e0e55564043e35dde7210219', 'brotli.zip' ] // specify filename // TODO: need to calc hash yourself
     const ZIP_NGX_BROTLI = [ 'https://github.com/google/ngx_brotli/archive/9aec15e2.zip', '9ec37453ef1a4866590e96bc8df41657382281afcdcc0d368947544e9950d8f9', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
+    // update at 2021/07/26, to find download from: https://golang.org/dl/
+    const TGZ_GO = [ 'https://golang.org/dl/go1.16.6.linux-amd64.tar.gz', 'be333ef18b3016e9d7cb7b1ff1fdb0cac800ca0be4cf2290fe613b3d069dfe0d' ]
     // update at 2021/04/23, to find download from: https://www.ruby-lang.org/en/downloads/releases/
     const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.4.tar.gz', '3043099089608859fc8cce7f9fdccaa1f53a462457e3838ec3b25a7d609fbc5b' ]
     // update at 2021/06/18, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
@@ -74,6 +76,7 @@ runMain(async (logger) => {
     await fetchFileWithLocalCache([
       ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_NODE ? [ DEB_NODEJS, TGZ_NPM ] : []),
       ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? [ TGZ_NGINX, ZIP_BROTLI, ZIP_NGX_BROTLI ] : []),
+      ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_GO ? [ TGZ_GO ] : []),
       ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_RUBY ? [ TGZ_RUBY ] : []),
       ...(BUILD_FLAVOR === BUILD_FLAVOR_MAP.FLAVOR_JRUBY ? [ TGZ_JRUBY ] : [])
     ].map(([ url, hash, filename ]) => [ url, hash, fromOutputResource(), filename ]), fromTemp('debian10', 'layer-url'))

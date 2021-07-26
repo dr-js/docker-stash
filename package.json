@@ -13,7 +13,7 @@
     "build-proxy": "dr-dev --EE \"HTTP_PROXY=${npm_config_proxy-http://127.0.0.1:1080}&HTTPS_PROXY=${npm_config_https_proxy-http://127.0.0.1:1080}&NO_PROXY=127.0.0.1,localhost\" -E --",
     "build-debian10-cn-proxy": "npm run build-proxy -- dr-dev --rsl build-debian10-cn",
     "build-debian10-dev-core-cn-proxy": "npm run build-proxy -- node source/debian10/build-core.js CN",
-    "build-debian10-dev-layer-cn-proxy": "npm run build-proxy -- node source/debian10/build-layer.js ruby CN",
+    "build-debian10-dev-layer-cn-proxy": "npm run build-proxy -- node source/debian10/build-layer.js go CN",
     "// docker ======================": "",
     "docker-pre-pull-buildkit": "sudo docker image pull \"$(node -p \"require('./source/debian10/BUILDKIT_SYNTAX.json')\")\"",
     "docker-push-all": "node source/docker-push.js ALL",
