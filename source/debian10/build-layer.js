@@ -56,7 +56,7 @@ runMain(async (logger) => {
   {
     // update at 2021/06/18, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
     // and: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
-    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.17.1-1nodesource1_amd64.deb', '1c035be7cfe991c03d5034a8b740537409ca5dff8afb9a85723f3e4d0fdea35e' ]
+    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.17.2-1nodesource1_amd64.deb', 'af0ae74d085bf055e242f4a42210b3b95ad1a2e576f20faad6e33a792bd875fa' ]
     // update at 2020/04/23, to find download from: `npm view npm@latest-6`
     const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.13.tgz', 'SRl4jJi0EBHY2xKuu98FLRMo3VhYQSA6otyLnjSEiHoSG/9shXCFNJy9tivpUJvtkN9s6VDdItHa5Rn+fNBzag==:sha512:base64' ]
     // update at 2021/06/18, to find download from: https://nginx.org/en/download.html
@@ -65,7 +65,7 @@ runMain(async (logger) => {
     const ZIP_BROTLI = [ 'https://github.com/google/brotli/archive/e61745a6.zip', '4a79fd9fd30bae4d08dab373326cfb21ab0d6b50e0e55564043e35dde7210219', 'brotli.zip' ] // specify filename // TODO: need to calc hash yourself
     const ZIP_NGX_BROTLI = [ 'https://github.com/google/ngx_brotli/archive/9aec15e2.zip', '9ec37453ef1a4866590e96bc8df41657382281afcdcc0d368947544e9950d8f9', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
     // update at 2021/04/23, to find download from: https://www.ruby-lang.org/en/downloads/releases/
-    const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.3.tar.gz', '8925a95e31d8f2c81749025a52a544ea1d05dad18794e6828709268b92e55338' ]
+    const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.4.tar.gz', '3043099089608859fc8cce7f9fdccaa1f53a462457e3838ec3b25a7d609fbc5b' ]
     // update at 2021/06/18, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
     const TGZ_JRUBY = [ 'https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.2.19.0/jruby-dist-9.2.19.0-bin.tar.gz', '1f74885a2d3fa589fcbeb292a39facf7f86be3eac1ab015e32c65d32acf3f3bf' ]
 
