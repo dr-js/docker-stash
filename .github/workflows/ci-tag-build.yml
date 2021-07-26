@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 # https://github.com/actions/checkout
-      - uses: actions/setup-node@v1 # https://github.com/actions/setup-node
+      - uses: actions/setup-node@v2 # https://github.com/actions/setup-node
         with: { node-version: "14.x" }
 
       - name: Log CI info & Setup Docker # https://stackoverflow.com/questions/60171603/enable-experimental-features-on-github-workflow-images/60454218#60454218
