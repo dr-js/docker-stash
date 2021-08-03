@@ -54,11 +54,11 @@ runMain(async (logger) => {
 
   logger.padLog('assemble "build-layer-resource/"')
   {
-    // update at 2021/06/18, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
+    // update at 2021/08/03, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
     // and: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
-    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.17.2-1nodesource1_amd64.deb', 'af0ae74d085bf055e242f4a42210b3b95ad1a2e576f20faad6e33a792bd875fa' ]
-    // update at 2020/04/23, to find download from: `npm view npm@latest-6`
-    const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.13.tgz', 'SRl4jJi0EBHY2xKuu98FLRMo3VhYQSA6otyLnjSEiHoSG/9shXCFNJy9tivpUJvtkN9s6VDdItHa5Rn+fNBzag==:sha512:base64' ]
+    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.17.4-1nodesource1_amd64.deb', '796a1b5f6fa3caddd4b1f6e31bb8e98a1f289dae638a17d41ec73be0d080eceb' ]
+    // update at 2020/08/03, to find download from: `npm view npm@latest-6`
+    const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.14.tgz', '4TnYPV3rvwk9m92ON0iFrdXtRyMhrNkGdI8sr3dy1HVE3pVNxR9FyWYbjAw/HjfmHvmHUbxTVbmjAMv8NhIa6Q==:sha512:base64' ]
     // update at 2021/06/18, to find download from: https://nginx.org/en/download.html
     // and: https://github.com/google/ngx_brotli
     const TGZ_NGINX = [ 'https://nginx.org/download/nginx-1.20.1.tar.gz', 'e462e11533d5c30baa05df7652160ff5979591d291736cfa5edb9fd2edb48c49' ] // TODO: need to calc hash yourself

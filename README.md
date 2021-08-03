@@ -55,9 +55,9 @@ debian:10-core
   └─bin-common
     └─bin-sshd
       └─bin-nginx
-        └─bin-git (layer from here & above is light)
+        └─bin-git (layer from here & above is light, layer below will add 50MiB+ each)
           ├─go
-          └─dep-chrome (layer from here & below will add 50MiB+ each)
+          └─dep-chrome
             └─dep-font
               └─java
                 ├─ruby
