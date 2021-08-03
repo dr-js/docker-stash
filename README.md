@@ -59,6 +59,7 @@ debian:10-core
           ├─go
           └─dep-chrome
             └─dep-font
+              ├─node-puppeteer10
               └─java
                 ├─ruby
                 └─jruby
