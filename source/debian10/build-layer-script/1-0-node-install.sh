@@ -30,7 +30,10 @@ apt-update
   rm -rf /usr/lib/node_modules/npm/html/
   rm -rf /usr/lib/node_modules/npm/man/
   rm -rf /usr/lib/node_modules/npm/scripts/
+
+  # clear npm
   npm cache clean --force
+  rm -rf ~/.npm/
   node-path-clear /usr/lib/node_modules/
 apt-clear
 
