@@ -22,8 +22,9 @@
     "docker-prune": "node source/docker-prune.js",
     "docker-ls": "node source/docker-ls.js",
     "// =============================": "",
+    "version-bump": "dr-dev --version-bump-git-branch --git-commit --debug",
+    "tag-push": "dr-dev --shell-alias quick-git-push-combo",
     "fix-script-filemode": "bash -c '(shopt -s globstar && chmod --changes +x source/**/*.sh && ls -al source/**/*.sh)'",
-    "tag-push": "TAG=\"$(node -p \"'v'+require('./package.json').version\")\" && git tag --force \"$TAG\" && git push --force origin \"$TAG\"",
     "lint": "eslint ./source/",
     "test": "npm run lint",
     "prepack": "echo \"Error: do not pack this package\" && exit 1"
