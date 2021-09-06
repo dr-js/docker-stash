@@ -1,10 +1,10 @@
 const { runDockerSync } = require('@dr-js/core/library/node/module/Software/docker.js')
-const { runMain } = require('./function.js')
+const { runKit } = require('@dr-js/core/library/node/kit.js')
 
-runMain(async (logger) => {
-  logger.padLog('container')
+runKit(async (kit) => {
+  kit.padLog('container')
   runDockerSync([ 'container', 'ls', '--all' ])
 
-  logger.padLog('image')
+  kit.padLog('image')
   runDockerSync([ 'image', 'ls' ])
-}, 'docker-ls')
+}, { title: 'docker-ls' })

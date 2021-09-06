@@ -2,11 +2,13 @@ const { oneOf } = require('@dr-js/core/library/common/verify.js')
 const { calcHash } = require('@dr-js/core/library/node/data/Buffer.js')
 const { writeBuffer, writeText } = require('@dr-js/core/library/node/fs/File.js')
 const { resetDirectory } = require('@dr-js/core/library/node/fs/Directory.js')
+const { runKit } = require('@dr-js/core/library/node/kit.js')
+
 const { runDockerWithTee, checkPullImage } = require('@dr-js/dev/library/docker.js')
 const {
-  runMain, fromOutput, fromTemp,
-  fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
-  saveTagCore, loadRepo
+  BUILDKIT_SYNTAX,
+  DEBIAN10_BUILD_REPO, saveDebian10TagCore,
+  fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache
 } = require('../function.js')
 
 const [
@@ -21,17 +23,16 @@ const URL_HASH = 'https://api.github.com/repos/debuerreotype/docker-debian-artif
 const URL_DOCKERFILE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/Dockerfile'
 const URL_CORE_IMAGE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/rootfs.tar.xz'
 
-runMain(async (logger) => {
-  const BUILD_REPO = await loadRepo(__dirname)
-  const BUILDKIT_SYNTAX = require('./BUILDKIT_SYNTAX.json')
+runKit(async (kit) => {
+  const BUILD_REPO = DEBIAN10_BUILD_REPO
   const BUILD_FLAVOR = 'core'
 
-  logger.padLog('borrow file from github:debuerreotype/docker-debian-artifacts')
+  kit.padLog('borrow file from github:debuerreotype/docker-debian-artifacts')
   const [
     coreDockerfileBuffer, coreImageBuffer
   ] = await fetchGitHubBufferListWithLocalCache([
     URL_DOCKERFILE, URL_CORE_IMAGE
-  ], URL_HASH, fromTemp('debian10', 'core-github'))
+  ], URL_HASH, kit.fromTemp('debian10', 'core-github'))
   const dockerfileBuffer = Buffer.concat([
     Buffer.from(`# syntax = ${BUILDKIT_SYNTAX}\n\n`),
     coreDockerfileBuffer,
@@ -40,24 +41,25 @@ runMain(async (logger) => {
 
   const SOURCE_HASH = calcHash(Buffer.concat([ dockerfileBuffer, coreImageBuffer ])).replace(/\W/g, '')
   const BUILD_TAG = `10-${BUILD_FLAVOR}-${SOURCE_HASH}${DOCKER_BUILD_MIRROR ? `-${DOCKER_BUILD_MIRROR.toLowerCase()}` : ''}`
-  const PATH_BUILD = fromOutput('debian10', BUILD_TAG)
-  const PATH_LOG = fromOutput('debian10', `core#${BUILD_TAG}.log`)
+  const PATH_BUILD = kit.fromOutput('debian10-core', BUILD_TAG)
+  const PATH_LOG = kit.fromOutput('debian10-core', `${BUILD_TAG}.log`)
 
-  logger.padLog('build config')
-  logger.log('BUILD_TAG:', BUILD_TAG)
-  logger.log('PATH_BUILD:', PATH_BUILD)
+  kit.padLog('build config')
+  kit.log('BUILD_TAG:', BUILD_TAG)
+  kit.log('PATH_BUILD:', PATH_BUILD)
+  kit.log('PATH_LOG:', PATH_LOG)
 
-  logger.padLog('check existing image')
-  if (await checkPullImage(BUILD_REPO, BUILD_TAG)) logger.log('found existing image, skip build')
+  kit.padLog('check existing image')
+  if (await checkPullImage(BUILD_REPO, BUILD_TAG)) kit.log('found existing image, skip build')
   else {
-    logger.log('no existing image, build new')
+    kit.log('no existing image, build new')
 
-    logger.padLog('assemble "/" (context)')
+    kit.padLog('assemble "/" (context)')
     await resetDirectory(PATH_BUILD)
-    await writeBuffer(fromOutput(PATH_BUILD, 'Dockerfile'), dockerfileBuffer)
-    await writeBuffer(fromOutput(PATH_BUILD, URL_CORE_IMAGE.split('/').pop()), coreImageBuffer)
+    await writeBuffer(kit.fromOutput(PATH_BUILD, 'Dockerfile'), dockerfileBuffer)
+    await writeBuffer(kit.fromOutput(PATH_BUILD, URL_CORE_IMAGE.split('/').pop()), coreImageBuffer)
 
-    logger.padLog('assemble "build-core/"')
+    kit.padLog('assemble "build-core/"')
     {
       // update at 2021/04/23, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
       const DEB_CA_CERTIFICATES = [ 'http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20200601~deb10u2_all.deb', 'a9e267a24088c793a9cf782455fd344db5fdced714f112a8857c5bfd07179387' ]
@@ -67,15 +69,15 @@ runMain(async (logger) => {
       const DEB_LIBJEMALLOC = [ 'http://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.1.0-3_amd64.deb', 'ecd3a4bbe5056dafc7eca4967a2b20c91c1fe6cdbbd9bbaab06896aa3e35afcd' ]
 
       await fetchFileWithLocalCache([
-        [ ...DEB_CA_CERTIFICATES, fromOutput(PATH_BUILD, 'build-core/') ],
-        [ ...DEB_OPENSSL, fromOutput(PATH_BUILD, 'build-core/') ],
-        [ ...DEB_LIBSSL, fromOutput(PATH_BUILD, 'build-core/') ],
-        [ ...DEB_LIBJEMALLOC, fromOutput(PATH_BUILD, 'build-core/') ]
-      ], fromTemp('debian10', 'core-url'))
-      await writeText(fromOutput(PATH_BUILD, 'build-core/bashrc'), STRING_BASHRC)
+        [ ...DEB_CA_CERTIFICATES, kit.fromOutput(PATH_BUILD, 'build-core/') ],
+        [ ...DEB_OPENSSL, kit.fromOutput(PATH_BUILD, 'build-core/') ],
+        [ ...DEB_LIBSSL, kit.fromOutput(PATH_BUILD, 'build-core/') ],
+        [ ...DEB_LIBJEMALLOC, kit.fromOutput(PATH_BUILD, 'build-core/') ]
+      ], kit.fromTemp('debian10', 'core-url'))
+      await writeText(kit.fromOutput(PATH_BUILD, 'build-core/bashrc'), STRING_BASHRC)
     }
 
-    logger.padLog('build image')
+    kit.padLog('build image')
     await runDockerWithTee([
       'image', 'build',
       '--tag', `${BUILD_REPO}:${BUILD_TAG}`,
@@ -86,9 +88,9 @@ runMain(async (logger) => {
     ], { cwd: PATH_BUILD }, PATH_LOG)
   }
 
-  logger.padLog('save core image tag')
-  await saveTagCore(__dirname, DOCKER_BUILD_MIRROR, `${BUILD_REPO}:${BUILD_TAG}`)
-}, 'build-core')
+  kit.padLog('save core image tag')
+  saveDebian10TagCore(DOCKER_BUILD_MIRROR, `${BUILD_REPO}:${BUILD_TAG}`)
+}, { title: 'build-core' })
 
 const getExtraDockerfileString = ({
   DOCKER_BUILD_MIRROR = '',

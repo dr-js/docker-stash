@@ -22,7 +22,7 @@ Require enable Docker experimental:
 - Docker Desktop: check settings
 
 Require enable Docker BuildKit:
-- for faster build, pre-pull `docker image pull "$(node -p "require('./source/debian10/BUILDKIT_SYNTAX.json')")"` to local
+- for faster build, use `npm run docker-pre-pull-buildkit` to pre-pull to local
 - Docker Linux: edit `/etc/docker/daemon.json`
   - https://docs.docker.com/develop/develop-images/build_enhancements/#to-enable-buildkit-builds
 - Docker Desktop: check settings

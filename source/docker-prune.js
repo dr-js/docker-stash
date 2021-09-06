@@ -1,14 +1,14 @@
 const { runDockerSync } = require('@dr-js/core/library/node/module/Software/docker.js')
-const { runMain } = require('./function.js')
+const { runKit } = require('@dr-js/core/library/node/kit.js')
 
-runMain(async (logger) => {
+runKit(async (kit) => {
   // TODO: NOTE: this remove too much, build cache should live longer
-  // logger.padLog('system')
+  // kit.padLog('system')
   // runDockerSync([ 'system', 'prune', '--force' ])
 
-  logger.padLog('container')
+  kit.padLog('container')
   runDockerSync([ 'container', 'prune', '--force' ])
 
-  logger.padLog('image')
+  kit.padLog('image')
   runDockerSync([ 'image', 'prune', '--force' ])
-}, 'docker-prune')
+}, { title: 'docker-prune' })

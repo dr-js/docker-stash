@@ -15,7 +15,7 @@
     "build-debian10-dev-core-cn-proxy": "npm run build-proxy -- node source/debian10/build-core.js CN",
     "build-debian10-dev-layer-cn-proxy": "npm run build-proxy -- node source/debian10/build-layer.js go CN",
     "// docker ======================": "",
-    "docker-pre-pull-buildkit": "sudo docker image pull \"$(node -p \"require('./source/debian10/BUILDKIT_SYNTAX.json')\")\"",
+    "docker-pre-pull-buildkit": "sudo docker image pull \"$(node -p \"require('./source/function.js').BUILDKIT_SYNTAX\")\"",
     "docker-push-all": "node source/docker-push.js ALL",
     "docker-push-base-only": "node source/docker-push.js BASE-ONLY",
     "docker-push-ghcr-only": "node source/docker-push.js GHCR-ONLY",
