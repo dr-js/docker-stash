@@ -147,6 +147,7 @@ RUN \\
  && echo "/usr/lib/x86_64-linux-gnu/libjemalloc.so.2" >> /etc/ld.so.preload \\
 \\${_ && 'pull update and upgrade if any'}
  && DEBIAN_FRONTEND=noninteractive apt-get update -yq \\
+ && DEBIAN_FRONTEND=noninteractive apt-get install libext2fs2 -yq \\${_ && 'manual install to upgrade with new package'}
  && DEBIAN_FRONTEND=noninteractive apt-get upgrade -yq \\
  && DEBIAN_FRONTEND=noninteractive apt-get autoremove -yq --purge \\
       -o APT::AutoRemove::RecommendsImportant=false \\
