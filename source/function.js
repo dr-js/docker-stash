@@ -14,6 +14,7 @@ const { fromRoot, fromOutput, fromTemp } = fromPathCombo()
 const { name: PACKAGE_NAME, version: PACKAGE_VERSION } = require('../package.json')
 
 const BUILDKIT_SYNTAX = 'docker/dockerfile:1.3.0'
+const DOCKER_BUILD_ARCH_LIST = [ 'amd64', 'arm64' ]
 
 const DEBIAN11_BUILD_REPO = require('./debian11/BUILD_REPO.json')
 const DEBIAN11_BUILD_REPO_GHCR = require('./debian11/BUILD_REPO_GHCR.json')
@@ -126,7 +127,7 @@ const TAG_LAYER_CACHE = [ tagVersionMajor, tagLabel, 'latest' ].filter(Boolean).
 const TAG_LAYER_MAIN_CACHE = [ tagVersionMajor, 'latest' ].filter(Boolean).join('-') // try use main cache in `dev` branch
 
 module.exports = {
-  BUILDKIT_SYNTAX,
+  BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_LIST,
 
   DEBIAN11_BUILD_REPO, DEBIAN11_BUILD_REPO_GHCR,
   DEBIAN11_BUILD_FLAVOR_MAP, DEBIAN11_BUILD_FLAVOR_LIST,

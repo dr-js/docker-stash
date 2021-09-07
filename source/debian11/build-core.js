@@ -6,7 +6,7 @@ const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee, checkPullImage } = require('@dr-js/dev/library/docker.js')
 const {
-  BUILDKIT_SYNTAX,
+  BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_LIST,
   DEBIAN11_BUILD_REPO, saveDebian11TagCore,
   fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache
 } = require('../function.js')
@@ -19,35 +19,49 @@ const [
 
 oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
 
-const URL_HASH = 'https://api.github.com/repos/debuerreotype/docker-debian-artifacts/git/refs/heads/dist-amd64' // branch info
-const URL_DOCKERFILE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/bullseye/slim/Dockerfile'
-const URL_CORE_IMAGE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/bullseye/slim/rootfs.tar.xz'
-
 runKit(async (kit) => {
   const BUILD_REPO = DEBIAN11_BUILD_REPO
   const BUILD_FLAVOR = 'core'
 
   kit.padLog('borrow file from github:debuerreotype/docker-debian-artifacts')
-  const [
-    coreDockerfileBuffer, coreImageBuffer
-  ] = await fetchGitHubBufferListWithLocalCache([
-    URL_DOCKERFILE, URL_CORE_IMAGE
-  ], URL_HASH, kit.fromTemp('debian11', 'core-github'))
-  const dockerfileBuffer = Buffer.concat([
-    Buffer.from(`# syntax = ${BUILDKIT_SYNTAX}\n\n`),
-    coreDockerfileBuffer,
-    Buffer.from(getExtraDockerfileString({ DOCKER_BUILD_MIRROR }))
-  ])
 
-  const SOURCE_HASH = calcHash(Buffer.concat([ dockerfileBuffer, coreImageBuffer ])).replace(/\W/g, '')
+  const URL_HASH = 'https://api.github.com/repos/debuerreotype/docker-debian-artifacts/git/refs/heads/dist-amd64' // branch info
+  // const URL_DOCKERFILE = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/bullseye/slim/Dockerfile'
+  const URL_CORE_IMAGE_AMD64 = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/bullseye/slim/rootfs.tar.xz'
+  const URL_CORE_IMAGE_ARM64 = 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/bullseye/slim/rootfs.tar.xz'
+
+  // update at 2021/09/07, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
+  const DEB_CA_CERTIFICATES = [ 'http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20210119_all.deb', 'b2d488ad4d8d8adb3ba319fc9cb2cf9909fc42cb82ad239a26c570a2e749c389' ]
+  const DEB_OPENSSL_AMD64 = [ 'http://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1k-1_amd64.deb', 'a5eed50b8df5840a1d8adbf9087dcdbd01be7c2e2038c741dd50c207ef5cffa1' ]
+  const DEB_OPENSSL_ARM64 = [ 'http://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1k-1_arm64.deb', '3222bb16b996dd62a71c361855fd0397c7130b86473a05ad95bcab206768155e' ]
+  const DEB_LIBSSL_AMD64 = [ 'http://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1k-1_amd64.deb', '74055ee6421dc2aaa37c95e9076725aa77bf9e80ecf66cb8d1c6862c660904bb' ]
+  const DEB_LIBSSL_ARM64 = [ 'http://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1k-1_arm64.deb', 'c84553386b027ccd4cda3beb5365e2fce70c0f73e83a610161823778016871be' ]
+  // update at 2021/09/07, to find from: https://packages.debian.org/search?keywords=libjemalloc2
+  const DEB_LIBJEMALLOC_AMD64 = [ 'http://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_amd64.deb', 'dcb79555b137ad70c9d392ca31e04533e3a10b63aa0db02d5a26f464060cc0f5' ]
+  const DEB_LIBJEMALLOC_ARM64 = [ 'http://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_arm64.deb', '7e3537d43b3109183bec24be8e1154a7643ad6e03bb851f2ae0b5dc065954c99' ]
+
+  const [ coreImageAmd64Buffer, coreImageArm64Buffer ] = await fetchGitHubBufferListWithLocalCache([
+    URL_CORE_IMAGE_AMD64, URL_CORE_IMAGE_ARM64
+  ], URL_HASH, kit.fromTemp('debian11', 'core-github'))
+  const dockerfileAmd64Buffer = Buffer.from(getDockerfileString({ DOCKER_BUILD_ARCH: 'amd64', DOCKER_BUILD_MIRROR }))
+  const dockerfileArm64Buffer = Buffer.from(getDockerfileString({ DOCKER_BUILD_ARCH: 'arm64', DOCKER_BUILD_MIRROR }))
+
+  const SOURCE_HASH = calcHash(Buffer.concat([
+    dockerfileAmd64Buffer, dockerfileArm64Buffer,
+    coreImageAmd64Buffer, coreImageArm64Buffer,
+    Buffer.from(JSON.stringify([
+      DEB_CA_CERTIFICATES,
+      DEB_OPENSSL_AMD64, DEB_OPENSSL_ARM64,
+      DEB_LIBSSL_AMD64, DEB_LIBSSL_ARM64,
+      DEB_LIBJEMALLOC_AMD64, DEB_LIBJEMALLOC_ARM64
+    ]))
+  ])).replace(/\W/g, '')
   const BUILD_TAG = `11-${BUILD_FLAVOR}-${SOURCE_HASH}${DOCKER_BUILD_MIRROR ? `-${DOCKER_BUILD_MIRROR.toLowerCase()}` : ''}`
   const PATH_BUILD = kit.fromOutput('debian11-core', BUILD_TAG)
-  const PATH_LOG = kit.fromOutput('debian11-core', `${BUILD_TAG}.log`)
 
   kit.padLog('build config')
   kit.log('BUILD_TAG:', BUILD_TAG)
   kit.log('PATH_BUILD:', PATH_BUILD)
-  kit.log('PATH_LOG:', PATH_LOG)
 
   kit.padLog('check existing image')
   if (await checkPullImage(BUILD_REPO, BUILD_TAG)) kit.log('found existing image, skip build')
@@ -56,53 +70,64 @@ runKit(async (kit) => {
 
     kit.padLog('assemble "/" (context)')
     await resetDirectory(PATH_BUILD)
-    await writeBuffer(kit.fromOutput(PATH_BUILD, 'Dockerfile'), dockerfileBuffer)
-    await writeBuffer(kit.fromOutput(PATH_BUILD, URL_CORE_IMAGE.split('/').pop()), coreImageBuffer)
+    await writeBuffer(kit.fromOutput(PATH_BUILD, 'Dockerfile.amd64'), dockerfileAmd64Buffer)
+    await writeBuffer(kit.fromOutput(PATH_BUILD, 'Dockerfile.arm64'), dockerfileArm64Buffer)
+    await writeBuffer(kit.fromOutput(PATH_BUILD, 'rootfs.tar.xz.amd64'), coreImageAmd64Buffer)
+    await writeBuffer(kit.fromOutput(PATH_BUILD, 'rootfs.tar.xz.arm64'), coreImageArm64Buffer)
 
     kit.padLog('assemble "build-core/"')
     {
-      // update at 2021/09/07, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
-      const DEB_CA_CERTIFICATES = [ 'http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20210119_all.deb', 'b2d488ad4d8d8adb3ba319fc9cb2cf9909fc42cb82ad239a26c570a2e749c389' ]
-      const DEB_OPENSSL = [ 'http://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1k-1_amd64.deb', 'a5eed50b8df5840a1d8adbf9087dcdbd01be7c2e2038c741dd50c207ef5cffa1' ]
-      const DEB_LIBSSL = [ 'http://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1k-1_amd64.deb', '74055ee6421dc2aaa37c95e9076725aa77bf9e80ecf66cb8d1c6862c660904bb' ]
-      // update at 2021/09/07, to find from: https://packages.debian.org/search?keywords=libjemalloc2
-      const DEB_LIBJEMALLOC = [ 'http://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_amd64.deb', 'dcb79555b137ad70c9d392ca31e04533e3a10b63aa0db02d5a26f464060cc0f5' ]
-
+      const PATH_BUILD_CORE = kit.fromOutput(PATH_BUILD, 'build-core/')
       await fetchFileWithLocalCache([
-        [ ...DEB_CA_CERTIFICATES, kit.fromOutput(PATH_BUILD, 'build-core/') ],
-        [ ...DEB_OPENSSL, kit.fromOutput(PATH_BUILD, 'build-core/') ],
-        [ ...DEB_LIBSSL, kit.fromOutput(PATH_BUILD, 'build-core/') ],
-        [ ...DEB_LIBJEMALLOC, kit.fromOutput(PATH_BUILD, 'build-core/') ]
+        [ ...DEB_CA_CERTIFICATES, PATH_BUILD_CORE ],
+        [ ...DEB_OPENSSL_AMD64, PATH_BUILD_CORE ], [ ...DEB_OPENSSL_ARM64, PATH_BUILD_CORE ],
+        [ ...DEB_LIBSSL_AMD64, PATH_BUILD_CORE ], [ ...DEB_LIBSSL_ARM64, PATH_BUILD_CORE ],
+        [ ...DEB_LIBJEMALLOC_AMD64, PATH_BUILD_CORE ], [ ...DEB_LIBJEMALLOC_ARM64, PATH_BUILD_CORE ]
       ], kit.fromTemp('debian11', 'core-url'))
-      await writeText(kit.fromOutput(PATH_BUILD, 'build-core/bashrc'), STRING_BASHRC)
+      await writeText(kit.fromOutput(PATH_BUILD_CORE, 'bashrc'), STRING_BASHRC)
     }
 
-    kit.padLog('build image')
-    await runDockerWithTee([
-      'image', 'build',
-      '--tag', `${BUILD_REPO}:${BUILD_TAG}`,
-      '--file', './Dockerfile',
-      '--progress=plain', // https://docs.docker.com/develop/develop-images/build_enhancements/#new-docker-build-command-line-build-output
-      '--squash', // merge layer // TODO: NOTE: this is a experimental Docker feature, need to manually enable
-      '.' // context is always CWD
-    ], { cwd: PATH_BUILD }, PATH_LOG)
+    for (const DOCKER_BUILD_ARCH of DOCKER_BUILD_ARCH_LIST) {
+      kit.padLog(`build image for ${DOCKER_BUILD_ARCH}`)
+
+      const PATH_LOG = kit.fromOutput('debian11-core', `${BUILD_TAG}.${DOCKER_BUILD_ARCH}.log`)
+      kit.log('PATH_LOG:', PATH_LOG)
+
+      await runDockerWithTee([
+        'image', 'build',
+        `--tag=${BUILD_REPO}:${BUILD_TAG}-${DOCKER_BUILD_ARCH}`,
+        `--file=./Dockerfile.${DOCKER_BUILD_ARCH}`,
+        `--platform=linux/${DOCKER_BUILD_ARCH}`,
+        '--progress=plain', // https://docs.docker.com/develop/develop-images/build_enhancements/#new-docker-build-command-line-build-output
+        '--squash', // merge layer // TODO: NOTE: this is a experimental Docker feature, need to manually enable
+        '.' // context is always CWD
+      ], { cwd: PATH_BUILD }, PATH_LOG)
+    }
   }
 
   kit.padLog('save core image tag')
   saveDebian11TagCore(DOCKER_BUILD_MIRROR, `${BUILD_REPO}:${BUILD_TAG}`)
 }, { title: 'build-core' })
 
-const getExtraDockerfileString = ({
+const getDockerfileString = ({
+  DOCKER_BUILD_ARCH = '',
   DOCKER_BUILD_MIRROR = '',
-  debianMirror = DOCKER_BUILD_MIRROR === 'CN' ? 'https://mirrors.tuna.tsinghua.edu.cn' // https://mirrors.tuna.tsinghua.edu.cn/help/debian/
+  debianMirror = DOCKER_BUILD_MIRROR === 'CN'
+    ? 'https://mirrors.tuna.tsinghua.edu.cn' // https://mirrors.tuna.tsinghua.edu.cn/help/debian/
     : 'http://deb.debian.org' // https://wiki.debian.org/SourcesList#Example_sources.list
-}) => `
-# extra command to append
+}) => `# syntax = ${BUILDKIT_SYNTAX}
+FROM scratch
+
+${_ && 'use prepared fs'}
+ADD "rootfs.tar.xz.${DOCKER_BUILD_ARCH}" /
 
 LABEL arg.DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
 ENV DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
-SHELL [ "/bin/bash", "-c" ]
+LABEL arg.DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH)}
+ENV DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH)}
 WORKDIR /root/
+SHELL [ "/bin/bash", "-c" ]
+CMD [ "bash" ]
 
 RUN set -ex \\
  && { \\${_ && 'reset apt source list with bullseye-backports'}
@@ -135,18 +160,19 @@ RUN set -ex \\
 \\${_ && 'check system time, apt update will fail if the time is off too much'}
  && date -uIs
 
-RUN \\
-  --mount=type=cache,target=/var/log \\
-  --mount=type=cache,target=/var/cache \\
-  --mount=type=cache,target=/var/lib/apt \\
+RUN \\${_ && 'check: https://github.com/moby/buildkit/blob/v0.9.0/frontend/dockerfile/docs/syntax.md'}
+  --mount=type=cache,id=${DOCKER_BUILD_ARCH}-core-cache-0,target=/var/log \\
+  --mount=type=cache,id=${DOCKER_BUILD_ARCH}-core-cache-1,target=/var/cache \\
+  --mount=type=cache,id=${DOCKER_BUILD_ARCH}-core-cache-2,target=/var/lib/apt \\
   --mount=type=bind,target=/mnt/,source=. \\
+    set -ex \\
 \\${_ && 'add ssl & ca for https'}
-    DEBIAN_FRONTEND=noninteractive dpkg -i /mnt/build-core/libssl*.deb \\
- && DEBIAN_FRONTEND=noninteractive dpkg -i /mnt/build-core/openssl*.deb \\
+ && DEBIAN_FRONTEND=noninteractive dpkg -i /mnt/build-core/libssl*_${DOCKER_BUILD_ARCH}.deb \\
+ && DEBIAN_FRONTEND=noninteractive dpkg -i /mnt/build-core/openssl*_${DOCKER_BUILD_ARCH}.deb \\
  && DEBIAN_FRONTEND=noninteractive dpkg -i /mnt/build-core/ca-certificates*.deb \\
 \\${_ && 'add & use jemalloc by default, check: https://stackoverflow.com/questions/53234410/how-to-use-node-js-with-jemalloc/53412679#53412679'}
- && DEBIAN_FRONTEND=noninteractive dpkg -i /mnt/build-core/libjemalloc*.deb \\
- && echo "/usr/lib/x86_64-linux-gnu/libjemalloc.so.2" >> /etc/ld.so.preload \\
+ && DEBIAN_FRONTEND=noninteractive dpkg -i /mnt/build-core/libjemalloc*_${DOCKER_BUILD_ARCH}.deb \\
+ && echo "/usr/lib/${DOCKER_BUILD_ARCH === 'amd64' ? 'x86_64' : 'aarch64'}-linux-gnu/libjemalloc.so.2" >> /etc/ld.so.preload \\
 \\${_ && 'pull update and upgrade if any'}
  && DEBIAN_FRONTEND=noninteractive apt-get update -yq \\
  && DEBIAN_FRONTEND=noninteractive apt-get upgrade -yq \\
@@ -163,7 +189,7 @@ RUN \\
  && shopt -u nullglob \\
 \\${_ && 'reset root & default bashrc'}
  && cat /mnt/build-core/bashrc > /etc/bash.bashrc \\
- && (rm -rf /etc/skel/.* /root/.* || true) \\
+ && ( rm -rf /etc/skel/.* /root/.* || true ) \\
 \\${_ && 'log version & info'}
  && id \\
  && env \\
@@ -173,7 +199,7 @@ RUN \\
  && ls --version \\
  && cat --version \\
  && tar --version \\
- && gzip --version \\
+ && gzip --version
 `
 const _ = '' // HACK: NOTE: hack for adding comment
 
