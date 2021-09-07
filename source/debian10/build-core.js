@@ -61,10 +61,10 @@ runKit(async (kit) => {
 
     kit.padLog('assemble "build-core/"')
     {
-      // update at 2021/04/23, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
+      // update at 2021/09/07, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
       const DEB_CA_CERTIFICATES = [ 'http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20200601~deb10u2_all.deb', 'a9e267a24088c793a9cf782455fd344db5fdced714f112a8857c5bfd07179387' ]
-      const DEB_OPENSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_1.1.1d-0+deb10u6_amd64.deb', '2a17791ec6663e84c6d706864198520fe47f5a19159a643b1a6109290b4f3656' ]
-      const DEB_LIBSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1d-0+deb10u6_amd64.deb', 'd1f867ab6e8179edf87be699fa876e5ca12f972b236ca4a9c95d6fa9d82e8651' ]
+      const DEB_OPENSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_1.1.1d-0+deb10u7_amd64.deb', 'eb2c128d1b378547bab986c7024bc297573a4ac6f180d2b44465b6ad5b432284' ]
+      const DEB_LIBSSL = [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl1.1_1.1.1d-0+deb10u7_amd64.deb', '49e1171928d3930fb8ba5659a80e8862d7d585c6d750acb6520b1c133ac00b29' ]
       // update at 2021/02/20, to find from: https://packages.debian.org/buster/libjemalloc2
       const DEB_LIBJEMALLOC = [ 'http://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.1.0-3_amd64.deb', 'ecd3a4bbe5056dafc7eca4967a2b20c91c1fe6cdbbd9bbaab06896aa3e35afcd' ]
 
