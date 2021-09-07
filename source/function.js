@@ -15,6 +15,27 @@ const { name: PACKAGE_NAME, version: PACKAGE_VERSION } = require('../package.jso
 
 const BUILDKIT_SYNTAX = 'docker/dockerfile:1.3.0'
 
+const DEBIAN11_BUILD_REPO = require('./debian11/BUILD_REPO.json')
+const DEBIAN11_BUILD_REPO_GHCR = require('./debian11/BUILD_REPO_GHCR.json')
+const DEBIAN11_BUILD_FLAVOR_MAP = require('./debian11/BUILD_FLAVOR_MAP.json')
+const DEBIAN11_BUILD_FLAVOR_LIST = Object.values(DEBIAN11_BUILD_FLAVOR_MAP)
+
+const saveDebian11TagCore = (DOCKER_BUILD_MIRROR = '', tag) => writeJSONSync(resolve(__dirname, `debian11/TAG_CORE${DOCKER_BUILD_MIRROR}.json`), tag)
+const loadDebian11TagCore = (DOCKER_BUILD_MIRROR = '') => readJSONSync(resolve(__dirname, `debian11/TAG_CORE${DOCKER_BUILD_MIRROR}.json`))
+const verifyDebian11BuildArg = ({ BUILD_FLAVOR_NAME, DOCKER_BUILD_MIRROR }) => {
+  oneOf(BUILD_FLAVOR_NAME, DEBIAN11_BUILD_FLAVOR_LIST.map(({ NAME }) => NAME))
+  oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
+  const BUILD_FLAVOR = DEBIAN11_BUILD_FLAVOR_LIST.find(({ NAME }) => BUILD_FLAVOR_NAME === NAME)
+  const getFlavoredTag = (name, version = PACKAGE_VERSION) => `11-${name}-${version}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR.toLowerCase()}`}`
+  const getFlavoredImageTag = (name, version = PACKAGE_VERSION) => name === '@CORE'
+    ? loadDebian11TagCore(DOCKER_BUILD_MIRROR)
+    : `${DEBIAN11_BUILD_REPO}:${getFlavoredTag(name, version)}`
+  return {
+    BUILD_FLAVOR,
+    getFlavoredTag, getFlavoredImageTag
+  }
+}
+
 const DEBIAN10_BUILD_REPO = require('./debian10/BUILD_REPO.json')
 const DEBIAN10_BUILD_REPO_GHCR = require('./debian10/BUILD_REPO_GHCR.json')
 const DEBIAN10_BUILD_FLAVOR_MAP = require('./debian10/BUILD_FLAVOR_MAP.json')
@@ -106,6 +127,10 @@ const TAG_LAYER_MAIN_CACHE = [ tagVersionMajor, 'latest' ].filter(Boolean).join(
 
 module.exports = {
   BUILDKIT_SYNTAX,
+
+  DEBIAN11_BUILD_REPO, DEBIAN11_BUILD_REPO_GHCR,
+  DEBIAN11_BUILD_FLAVOR_MAP, DEBIAN11_BUILD_FLAVOR_LIST,
+  saveDebian11TagCore, loadDebian11TagCore, verifyDebian11BuildArg,
 
   DEBIAN10_BUILD_REPO, DEBIAN10_BUILD_REPO_GHCR,
   DEBIAN10_BUILD_FLAVOR_MAP, DEBIAN10_BUILD_FLAVOR_LIST,

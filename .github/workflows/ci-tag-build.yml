@@ -5,7 +5,7 @@ on: # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow
 
 jobs:
   build:
-    timeout-minutes: 45
+    timeout-minutes: 90
     runs-on: ubuntu-latest
     steps:
       - { uses: "actions/checkout@v2" } # https://github.com/actions/checkout
@@ -22,6 +22,9 @@ jobs:
           echo '"drjs/debian"' > source/debian10/BUILD_REPO.json
           echo '"ghcr.io/dr-js/debian"' > source/debian10/BUILD_REPO_GHCR.json
 
+          echo '"drjs/debian"' > source/debian11/BUILD_REPO.json
+          echo '"ghcr.io/dr-js/debian"' > source/debian11/BUILD_REPO_GHCR.json
+
           echo "$PASSWORD" | docker login --username drjs --password-stdin
           echo "$GHCR_PASSWORD" | docker login --username dr-js --password-stdin ghcr.io
         env:
@@ -32,4 +35,6 @@ jobs:
       - run: npm test
       - run: npm run build-debian10
       - run: npm run build-debian10-cn
+      - run: npm run build-debian11
+      - run: npm run build-debian11-cn
       - run: npm run docker-push-all
