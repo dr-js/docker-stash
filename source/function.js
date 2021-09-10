@@ -16,8 +16,7 @@ const { name: PACKAGE_NAME, version: PACKAGE_VERSION } = require('../package.jso
 const BUILDKIT_SYNTAX = 'docker/dockerfile:1.3.0'
 const DOCKER_BUILD_ARCH_INFO_LIST = [
   { key: 'amd64', node: 'x64', docker: 'linux/amd64', debian: 'amd64', debianLibName: 'x86_64-linux-gnu' },
-  { key: 'arm64', node: 'arm64', docker: 'linux/arm64', debian: 'arm64', debianLibName: 'aarch64-linux-gnu' },
-  { key: 'armv7', node: 'arm', docker: 'linux/arm/v7', debian: 'armhf', debianLibName: 'arm-linux-gnueabihf' }
+  { key: 'arm64', node: 'arm64', docker: 'linux/arm64', debian: 'arm64', debianLibName: 'aarch64-linux-gnu' }
 ]
 
 const DOCKER_BUILD_ARCH_LIST = [ 'amd64', 'arm64' ]

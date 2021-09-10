@@ -28,8 +28,7 @@ runKit(async (kit) => {
   const URL_CACHE_HASH = 'https://api.github.com/repos/debuerreotype/docker-debian-artifacts/git/refs/heads' // use all branch info as cache hash
   const URL_CORE_IMAGE_MAP = {
     'amd64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/bullseye/slim/rootfs.tar.xz',
-    'arm64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/bullseye/slim/rootfs.tar.xz',
-    'armv7': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm32v7/bullseye/slim/rootfs.tar.xz'
+    'arm64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/bullseye/slim/rootfs.tar.xz'
   }
 
   const DEB_FETCH_LIST = [
@@ -37,14 +36,11 @@ runKit(async (kit) => {
     [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20210119_all.deb', 'b2d488ad4d8d8adb3ba319fc9cb2cf9909fc42cb82ad239a26c570a2e749c389' ],
     [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1k-1_amd64.deb', 'a5eed50b8df5840a1d8adbf9087dcdbd01be7c2e2038c741dd50c207ef5cffa1' ],
     [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1k-1_arm64.deb', '3222bb16b996dd62a71c361855fd0397c7130b86473a05ad95bcab206768155e' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1k-1_armhf.deb', '86dcd2626d3c76f1a447126528eb837aa48f8c4848cf802f1b69fa0ffaec7452' ],
     [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1k-1_amd64.deb', '74055ee6421dc2aaa37c95e9076725aa77bf9e80ecf66cb8d1c6862c660904bb' ],
     [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1k-1_arm64.deb', 'c84553386b027ccd4cda3beb5365e2fce70c0f73e83a610161823778016871be' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1k-1_armhf.deb', '03fad8c4221237d79357633535fe66f06cca17676d4df0d134f4056b9c43fe5e' ],
     // update at 2021/09/07, to find from: https://packages.debian.org/search?keywords=libjemalloc2
     [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_amd64.deb', 'dcb79555b137ad70c9d392ca31e04533e3a10b63aa0db02d5a26f464060cc0f5' ],
-    [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_arm64.deb', '7e3537d43b3109183bec24be8e1154a7643ad6e03bb851f2ae0b5dc065954c99' ],
-    [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_armhf.deb', '970061356957c8776ffe4617ded7ad257af2a746d06f027603bbc9aef67cb761' ]
+    [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_arm64.deb', '7e3537d43b3109183bec24be8e1154a7643ad6e03bb851f2ae0b5dc065954c99' ]
   ]
 
   const coreImageBufferMap = await fetchGitHubBufferMapWithLocalCache(URL_CORE_IMAGE_MAP, URL_CACHE_HASH, kit.fromTemp('debian11', 'core-github'))
@@ -65,8 +61,7 @@ runKit(async (kit) => {
   kit.padLog('check existing image')
   if (
     (await checkPullImage(BUILD_REPO, `${BUILD_TAG}-amd64`)) &&
-    (await checkPullImage(BUILD_REPO, `${BUILD_TAG}-arm64`)) &&
-    (await checkPullImage(BUILD_REPO, `${BUILD_TAG}-armv7`))
+    (await checkPullImage(BUILD_REPO, `${BUILD_TAG}-arm64`))
   ) kit.log('found existing image, skip build')
   else {
     kit.log('no existing image, build new')

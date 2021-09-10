@@ -52,10 +52,8 @@ runKit(async (kit) => {
       // update at 2021/09/07, to find download:
       // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-amd64/Packages
       // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-arm64/Packages
-      // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-armhf/Packages
       [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.9.0-deb-1nodesource1_amd64.deb', '9cba9bbd911ba8473e6d0e2ed97378ad0b1d827ad7c91c4c87c46fc2ce9a1850' ],
       [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.9.0-deb-1nodesource1_arm64.deb', '657e2ba1a763a4b00e895ffa868bdde5a6b832f7b3f247ae8603ce30649a78f6' ],
-      [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.9.0-deb-1nodesource1_armhf.deb', 'e1d6551af297fe215bd33fd32c92d009e2e217bcf52210e55ccd5e79b671b144', 'nodejs_###_armv7.deb' ], // NOTE: fix filename
       // update at 2020/09/07, to find download from: `npm view npm@latest-6`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
       [ 'https://registry.npmjs.org/npm/-/npm-6.14.15.tgz', 'dkcQc4n+DiJAMYG2haNAMyJbmuvevjXz+WC9dCUzodw8EovwTIc6CATSsTEplCY6c0jG4OshxFGFJsrnKJguWA==:sha512:base64' ],
       [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.19.tgz', 'rs6UHi6Dpp+Ddn66K/wrkSuDYtrqeVaxyoosYPRQ+0LHzbqes5d2B2yyQCPRMYmWNSPdyKMGu42ZSeGSCDhqtw==:sha512:base64', 'dr-js-###.tgz' ], // NOTE: fix filename
@@ -71,8 +69,7 @@ runKit(async (kit) => {
     const RES_FLAVOR_GO = [
       // update at 2021/09/07, to find download from: https://golang.org/dl/
       [ 'https://golang.org/dl/go1.17.linux-amd64.tar.gz', '6bf89fc4f5ad763871cf7eac80a2d594492de7a818303283f1366a7f6a30372d' ],
-      [ 'https://golang.org/dl/go1.17.linux-arm64.tar.gz', '01a9af009ada22122d3fcb9816049c1d21842524b38ef5d5a0e2ee4b26d7c3e7' ],
-      [ 'https://golang.org/dl/go1.17.linux-armv6l.tar.gz', 'ae89d33f4e4acc222bdb04331933d5ece4ae71039812f6ccd7493cb3e8ddfb4e', 'go-###-armv7.tar.gz' ] // NOTE: fix filename
+      [ 'https://golang.org/dl/go1.17.linux-arm64.tar.gz', '01a9af009ada22122d3fcb9816049c1d21842524b38ef5d5a0e2ee4b26d7c3e7' ]
     ]
     // update at 2021/04/23, to find download from: https://www.ruby-lang.org/en/downloads/releases/
     const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.4.tar.gz', '3043099089608859fc8cce7f9fdccaa1f53a462457e3838ec3b25a7d609fbc5b' ]
