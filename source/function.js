@@ -14,6 +14,12 @@ const { fromRoot, fromOutput, fromTemp } = fromPathCombo()
 const { name: PACKAGE_NAME, version: PACKAGE_VERSION } = require('../package.json')
 
 const BUILDKIT_SYNTAX = 'docker/dockerfile:1.3.0'
+const DOCKER_BUILD_ARCH_INFO_LIST = [
+  { key: 'amd64', node: 'x64', docker: 'linux/amd64', debian: 'amd64', debianLibName: 'x86_64-linux-gnu' },
+  { key: 'arm64', node: 'arm64', docker: 'linux/arm64', debian: 'arm64', debianLibName: 'aarch64-linux-gnu' },
+  { key: 'armv7', node: 'arm', docker: 'linux/arm/v7', debian: 'armhf', debianLibName: 'arm-linux-gnueabihf' }
+]
+
 const DOCKER_BUILD_ARCH_LIST = [ 'amd64', 'arm64' ]
 
 const DEBIAN11_BUILD_REPO = require('./debian11/BUILD_REPO.json')
@@ -71,6 +77,32 @@ const filenameFromUrl = (url) => String(url).replace(/[^\w-]/g, '_')
 
 const __DEV_SKIP_FETCH__ = false // NOTE: debug fast toggle
 
+const fetchGitHubBufferMapWithLocalCache = async (
+  urlMap,
+  urlCacheHash, // use this fetch result as hash to decide cache valid or not
+  pathCache
+) => {
+  const fileCacheHash = resolve(pathCache, filenameFromUrl(urlCacheHash))
+  const hashBuffer = __DEV_SKIP_FETCH__ ? undefined : await fetchBuffer(urlCacheHash) // download hash
+  const hashCacheBuffer = (await catchAsync(readBuffer, fileCacheHash)).result
+  const isCacheValid = __DEV_SKIP_FETCH__ || (hashCacheBuffer && Buffer.compare(hashBuffer, hashCacheBuffer) === 0)
+  if (isCacheValid) console.log(' - cache valid:', urlCacheHash)
+  else await resetDirectory(pathCache)
+  const bufferMap = {}
+  for (const [ key, url ] of Object.entries(urlMap)) {
+    const fileCacheBuffer = resolve(pathCache, filenameFromUrl(url))
+    let buffer = isCacheValid && (await catchAsync(readBuffer, fileCacheBuffer)).result // download buffer
+    if (buffer) console.log(' - cache hit:', url)
+    else {
+      console.log(' - cache fetch as:', fileCacheBuffer)
+      buffer = await fetchBuffer(url)
+      await writeBuffer(fileCacheBuffer, buffer)
+    }
+    bufferMap[ key ] = buffer
+  }
+  !__DEV_SKIP_FETCH__ && await writeBuffer(fileCacheHash, hashBuffer) // save cache hash last
+  return bufferMap
+}
 const fetchGitHubBufferListWithLocalCache = async (
   urlList,
   urlHash, // use this fetch result as hash to decide cache valid or not
@@ -96,6 +128,28 @@ const fetchGitHubBufferListWithLocalCache = async (
   }
   !__DEV_SKIP_FETCH__ && await writeBuffer(fileCacheHash, hashBuffer) // save cache hash last
   return bufferList
+}
+
+const fetchFileListWithLocalCache = async (
+  fetchList = [], // [ url, hash, filename = 'last part of url' ], will cache the url result, so url should contain some sort of hash
+  { pathOutput, pathCache }
+) => {
+  await createDirectory(pathCache)
+  for (const [ url, hash, filename = url.split('/').pop() ] of fetchList) {
+    const fileCacheBuffer = resolve(pathCache, filenameFromUrl(url))
+    let buffer = (await catchAsync(readBuffer, fileCacheBuffer)).result // download buffer
+    if (buffer) console.log(' - cache hit:', url)
+    else {
+      console.log(' - cache fetch as:', fileCacheBuffer)
+      buffer = await fetchBuffer(url)
+      await writeBuffer(fileCacheBuffer, buffer)
+    }
+    const [ hashString, hashAlgo = 'sha256', hashDigest = 'hex' ] = hash.split(':')
+    strictEqual(calcHash(buffer, hashAlgo, hashDigest), hashString, `hash mismatch for: ${url}`)
+
+    await createDirectory(pathOutput)
+    await writeBuffer(resolve(pathOutput, filename), buffer)
+  }
 }
 
 const fetchFileWithLocalCache = async (
@@ -127,7 +181,8 @@ const TAG_LAYER_CACHE = [ tagVersionMajor, tagLabel, 'latest' ].filter(Boolean).
 const TAG_LAYER_MAIN_CACHE = [ tagVersionMajor, 'latest' ].filter(Boolean).join('-') // try use main cache in `dev` branch
 
 module.exports = {
-  BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_LIST,
+  BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
+  DOCKER_BUILD_ARCH_LIST,
 
   DEBIAN11_BUILD_REPO, DEBIAN11_BUILD_REPO_GHCR,
   DEBIAN11_BUILD_FLAVOR_MAP, DEBIAN11_BUILD_FLAVOR_LIST,
@@ -138,6 +193,6 @@ module.exports = {
   saveDebian10TagCore, loadDebian10TagCore, verifyDebian10BuildArg,
 
   fromRoot, fromOutput, fromTemp,
-  fetchGitHubBufferListWithLocalCache, fetchFileWithLocalCache,
+  fetchGitHubBufferMapWithLocalCache, fetchGitHubBufferListWithLocalCache, fetchFileListWithLocalCache, fetchFileWithLocalCache,
   TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
 }

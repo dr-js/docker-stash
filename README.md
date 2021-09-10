@@ -50,6 +50,19 @@ The `CN` version will change some repo mirror in docker for faster build in CN,
 
 Current layer stack:
 ```
+debian:11-core
+└─node
+  └─bin-common
+    └─bin-sshd
+      └─bin-git
+        └─bin-nginx (layer from here & above is light, layer below will add 50MiB+ each)
+          ├─go
+          └─dep-chrome
+            └─dep-font
+              ├─node-puppeteer10
+              └─java
+                ├─ruby
+                └─jruby
 debian:10-core
 └─node
   └─bin-common

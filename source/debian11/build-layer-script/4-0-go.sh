@@ -3,7 +3,7 @@
 source ./0-1-base-apt.sh
 
 # MNT
-MNT_TGZ_GO="$(echo /mnt/build-layer-resource/go*.tar.gz)"
+MNT_TGZ_GO="$(echo /mnt/build-layer-resource/go*-${DOCKER_BUILD_ARCH}.tar.gz)"
 
 # https://golang.org/doc/install#install
 tar -C "/usr/local" -xzf "${MNT_TGZ_GO}"
