@@ -19,7 +19,14 @@ mkdir -p "${PUPPETEER_ROOT}"
     export PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors
   fi
 
-  npm install "puppeteer@${PUPPETEER_VERSION}"
+  if [[ "${DOCKER_BUILD_ARCH}" = "amd64" ]] ; then
+    npm install "puppeteer@${PUPPETEER_VERSION}"
+  else
+    apt-update
+      apt-install chromium # slightly out of date: 90.0.4430.212-1
+    apt-clear
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install "puppeteer@${PUPPETEER_VERSION}"
+  fi
 
   # clear npm
   npm cache clean --force
@@ -27,10 +34,12 @@ mkdir -p "${PUPPETEER_ROOT}"
   node-path-clear "${PUPPETEER_ROOT}"
 )
 
-# log version & info
-test -e "${PUPPETEER_ROOT}/node_modules/puppeteer/.local-chromium/linux-"*"/chrome-linux/chrome"
-if ldd "${PUPPETEER_ROOT}/node_modules/puppeteer/.local-chromium/linux-"*"/chrome-linux/chrome" | grep "not found" ; then
-  ldd "${PUPPETEER_ROOT}/node_modules/puppeteer/.local-chromium/linux-"*"/chrome-linux/chrome" && false # log what's wrong & return error
-else
-  echo "[ldd pass]"
+if [[ "${DOCKER_BUILD_ARCH}" = "amd64" ]] ; then
+  # log version & info
+  test -e "${PUPPETEER_ROOT}/node_modules/puppeteer/.local-chromium/linux-"*"/chrome-linux/chrome"
+  if ldd "${PUPPETEER_ROOT}/node_modules/puppeteer/.local-chromium/linux-"*"/chrome-linux/chrome" | grep "not found" ; then
+    ldd "${PUPPETEER_ROOT}/node_modules/puppeteer/.local-chromium/linux-"*"/chrome-linux/chrome" && false # log what's wrong & return error
+  else
+    echo "[ldd pass]"
+  fi
 fi
