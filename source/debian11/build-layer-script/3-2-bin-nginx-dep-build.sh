@@ -7,10 +7,16 @@ MNT_TGZ_NGINX="$(echo /mnt/build-layer-resource/nginx-*.tar.gz)"
 MNT_ZIP_BROTLI="/mnt/build-layer-resource/brotli.zip"
 MNT_ZIP_NGX_BROTLI="/mnt/build-layer-resource/ngx-brotli.zip"
 
-apt-update
+# EXPECT build layer
+
+#apt-update
   # apt-install nginx-light # this version do not have brotli module, and a bit outdated (Dec 2018)
 
-  apt-install build-essential \
+  # NOTE: GCC: compile will crash on qemu-arm-over-x86 build, similar report: https://bugs.launchpad.net/ubuntu/+source/gcc-10/+bug/1890435
+  # BUILD_DEP="make gcc"
+  BUILD_DEP=""
+
+  apt-install ${BUILD_DEP} \
     libssl-dev        libssl1.1 \
     zlib1g-dev        zlib1g \
     libpcre3-dev      libpcre3
@@ -32,18 +38,11 @@ apt-update
   ( cd "${PATH_NGINX}"
     # check for parameters: https://nginx.org/en/docs/configure.html
     # below mostly used Debian10 `nginx -V` output
-    # NOTE: the `-flto` option which trims output ~13M->~8M is from: https://gist.github.com/JoeUX/ae339373eea94fdaac65f9a842026e06#file-compile-nginx-sh-L73
-    #   though the Debian10 nginx is ~1M
     ./configure \
-      --with-cc-opt='-g -O2 -flto -fstack-protector-strong -Wformat -Werror=format-security -fPIC -Wdate-time -D_FORTIFY_SOURCE=2' \
-      --with-ld-opt='-Wl,-z,relro -Wl,-z,now -fPIC' \
-      --prefix=/usr/share/nginx \
+      --with-cc-opt='-s -g0 -O2 -Wformat -Wdate-time -Werror=format-security -fstack-protector-strong -flto -fPIC -D_FORTIFY_SOURCE=2' \
+      --with-ld-opt='-s -Wl,-z,relro -Wl,-z,now -fstack-protector-strong -flto -fPIC' \
+      --prefix=/tmp/nginx \
       --sbin-path=/usr/local/bin/nginx \
-      --conf-path=/etc/nginx/nginx.conf \
-      --http-log-path=/var/log/nginx/access.log \
-      --error-log-path=/var/log/nginx/error.log \
-      --lock-path=/var/lock/nginx.lock \
-      --pid-path=/run/nginx.pid \
       --with-debug \
       --with-pcre-jit \
       --with-threads \
@@ -62,16 +61,12 @@ apt-update
     make -j "$(nproc)"
     make install
   )
-  rm -rf "${PATH_NGINX_BUILD}"
+#  rm -rf "${PATH_NGINX_BUILD}"
+#
+#  rm -rf /etc/nginx/*cgi*
 
-  rm -rf /etc/nginx/*cgi*
-
-  apt-remove build-essential \
-    libssl-dev \
-    zlib1g-dev \
-    libpcre3-dev
-apt-clear
-
-# log version & info
-nginx -V
-ldd /usr/local/bin/nginx
+#  apt-remove ${BUILD_DEP} \
+#    libssl-dev \
+#    zlib1g-dev \
+#    libpcre3-dev
+#apt-clear
