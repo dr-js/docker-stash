@@ -26,7 +26,7 @@ apt-update
 
     # https://github.com/rbenv/ruby-build/wiki#suggested-build-environment
     apt-install \
-      autoconf bison build-essential \
+      autoconf bison make gcc \
       libssl-dev        libssl1.1 \
       libyaml-dev       libyaml-0-2 \
       libreadline-dev   libreadline8 \
@@ -38,6 +38,8 @@ apt-update
 
     autoconf # may re-generate configure
 
+    CFLAGS="-s -g0" \
+    LDFLAGS="-s" \
     ./configure \
       --build="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
       --disable-install-doc \
@@ -49,7 +51,7 @@ apt-update
   rm -rf "${PATH_RUBY_BUILD}"
 
   apt-remove \
-      autoconf bison build-essential \
+      autoconf bison make gcc \
       libssl-dev \
       libyaml-dev \
       libreadline-dev \
