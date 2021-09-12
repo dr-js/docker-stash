@@ -19,8 +19,6 @@ const DOCKER_BUILD_ARCH_INFO_LIST = [
   { key: 'arm64', node: 'arm64', docker: 'linux/arm64', debian: 'arm64', debianLibName: 'aarch64-linux-gnu' }
 ]
 
-const DOCKER_BUILD_ARCH_LIST = [ 'amd64', 'arm64' ]
-
 const DEBIAN11_BUILD_REPO = require('./debian11/BUILD_REPO.json')
 const DEBIAN11_BUILD_REPO_GHCR = require('./debian11/BUILD_REPO_GHCR.json')
 const DEBIAN11_BUILD_FLAVOR_MAP = require('./debian11/BUILD_FLAVOR_MAP.json')
@@ -181,7 +179,6 @@ const TAG_LAYER_MAIN_CACHE = [ tagVersionMajor, 'latest' ].filter(Boolean).join(
 
 module.exports = {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
-  DOCKER_BUILD_ARCH_LIST,
 
   DEBIAN11_BUILD_REPO, DEBIAN11_BUILD_REPO_GHCR,
   DEBIAN11_BUILD_FLAVOR_MAP, DEBIAN11_BUILD_FLAVOR_LIST,
