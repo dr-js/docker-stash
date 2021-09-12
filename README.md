@@ -22,7 +22,7 @@ Require enable Docker experimental:
 - Docker Desktop: check settings
 
 Require enable Docker BuildKit:
-- for faster build, pre-pull `docker image pull "$(node -p "require('./source/debian10/BUILDKIT_SYNTAX.json')")"` to local
+- for faster build, use `npm run docker-pre-pull-buildkit` to pre-pull to local
 - Docker Linux: edit `/etc/docker/daemon.json`
   - https://docs.docker.com/develop/develop-images/build_enhancements/#to-enable-buildkit-builds
 - Docker Desktop: check settings
@@ -50,6 +50,20 @@ The `CN` version will change some repo mirror in docker for faster build in CN,
 
 Current layer stack:
 ```
+debian:11-core
+└─node
+  └─bin-common
+    └─bin-sshd
+      └─bin-git
+        ├─dep-build (big layer with C/C++ compiler tools)
+        └─bin-nginx (layer from here & above is light, layer below will add 50MiB+ each)
+          ├─go
+          └─dep-chrome
+            └─dep-font
+              ├─node-puppeteer10
+              └─java
+                ├─ruby
+                └─jruby
 debian:10-core
 └─node
   └─bin-common

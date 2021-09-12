@@ -5,10 +5,11 @@ on:
 
 jobs:
   build:
+    timeout-minutes: 5
     runs-on: ubuntu-latest
-    container: ghcr.io/dr-js/debian:10-bin-git-0.2.1
+    container: ghcr.io/dr-js/debian:11-bin-git-0.2.4-dev.1
     steps:
-      - uses: actions/checkout@v2 # https://github.com/actions/checkout
+      - { uses: "actions/checkout@v2" } # https://github.com/actions/checkout
 
       - name: Log CI info
         run: |
