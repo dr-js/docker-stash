@@ -17,6 +17,7 @@
     "build-debian10-dev-core-cn-proxy": "npm run build-proxy -- node source/debian10/build-core.js CN",
     "build-debian10-dev-layer-cn-proxy": "npm run build-proxy -- node source/debian10/build-layer.js go CN",
     "build-debian11-cn-proxy": "npm run build-proxy -- dr-dev --rsl build-debian11-cn",
+    "build-debian11-dev-core-proxy": "npm run build-proxy -- node source/debian11/build-core.js",
     "build-debian11-dev-core-cn-proxy": "npm run build-proxy -- node source/debian11/build-core.js CN",
     "build-debian11-dev-layer-cn-proxy": "npm run build-proxy -- node source/debian11/build-layer.js ruby CN",
     "// docker ======================": "",
