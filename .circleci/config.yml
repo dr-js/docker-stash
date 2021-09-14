@@ -7,26 +7,13 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: Setup
           command: |
             curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
             sudo apt-get install -y nodejs
-            sudo npm i -g @dr-js/core@^0.4.20-dev.0
 
-            echo "system: $(node -p "os.platform() + ' - ' + os.release() + ' [' + os.arch() + ']'")"
-            echo "user: $(id)"
-            echo "node: $(node -v)"
-            echo "npm: $(npm -v)"
-
-            echo '{ "experimental": true, "features": { "buildkit": true } }' | sudo tee /etc/docker/daemon.json
-            sudo systemctl restart docker
-
-            echo '"drjs/debian"' > source/debian10/BUILD_REPO.json
-            echo '"ghcr.io/dr-js/debian"' > source/debian10/BUILD_REPO_GHCR.json
-
-            echo '"drjs/debian"' > source/debian11/BUILD_REPO.json
-            echo '"ghcr.io/dr-js/debian"' > source/debian11/BUILD_REPO_GHCR.json
-
+            npx @dr-js/dev@0.4 -eI .github/ci-patch.js
+            bash .github/setup-docker.sh
             echo "${CIRCLECI_DOCKER_HUB_DRJS_PW}" | dr-js --docker -- login --username drjs --password-stdin
             echo "${CIRCLECI_GHCR_DRJS_PAT}" | dr-js --docker -- login --username dr-js --password-stdin ghcr.io
       - run: npm ci
