@@ -37,5 +37,5 @@ jobs:
       - run: npm run build-debian10-cn
       - run: npm run build-debian11
       - run: npm run build-debian11-cn
-      - run: npm run debian10-push-all
-      - run: npm run debian11-push-all
+      - run: npm run push-debian10-all
+      - run: npm run push-debian11-all

@@ -49,4 +49,4 @@ runKit(async (kit) => {
     kit.log(`push tag: ${tag}`)
     runDockerSync([ 'image', 'push', tag ])
   }
-}, { title: 'debian10-push' })
+}, { title: 'push-debian10' })

@@ -33,7 +33,7 @@ jobs:
       - run: npm test
       - run: npm run build-debian11
       - run: npm run build-debian11-cn
-      - run: npm run debian11-push-all
+      - run: npm run push-debian11-all
 
 workflows:
   version: 2
