@@ -40,7 +40,6 @@ runKit(async (kit) => {
   for (const file of [
     '0-0-base.sh',
     '0-1-base-apt.sh',
-    /^node/.test(BUILD_FLAVOR.NAME) && '0-2-base-node.sh',
     /^j?ruby/.test(BUILD_FLAVOR.NAME) && '0-3-base-ruby.sh',
     BUILD_FLAVOR.LAYER_SCRIPT,
     BUILD_FLAVOR.LAYER_DEP_BUILD_SCRIPT
@@ -56,8 +55,8 @@ runKit(async (kit) => {
       [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.9.0-deb-1nodesource1_arm64.deb', '657e2ba1a763a4b00e895ffa868bdde5a6b832f7b3f247ae8603ce30649a78f6' ],
       // update at 2020/09/07, to find download from: `npm view npm@latest-6`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
       [ 'https://registry.npmjs.org/npm/-/npm-6.14.15.tgz', 'dkcQc4n+DiJAMYG2haNAMyJbmuvevjXz+WC9dCUzodw8EovwTIc6CATSsTEplCY6c0jG4OshxFGFJsrnKJguWA==:sha512:base64' ],
-      [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.19.tgz', 'rs6UHi6Dpp+Ddn66K/wrkSuDYtrqeVaxyoosYPRQ+0LHzbqes5d2B2yyQCPRMYmWNSPdyKMGu42ZSeGSCDhqtw==:sha512:base64', 'dr-js-###.tgz' ], // NOTE: fix filename
-      [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.22.tgz', 'Pdm5Z66DXmzL0ACFbv27djWPgldHlPn6Trzw/VsCsM/RtqKOKN3Dg9+ghdnrR//Ll838K19HGWEzv51kOJzGwA==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
+      [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.20.tgz', 'OIuK7hAIXg/jhtBTTUU8QLlQ6ee8+T2EXkXJJ+Bi5hQNl49mD/ZnMDkdxI4E0rITQdB5k3GhzQ+3/RuBpbVe5g==:sha512:base64', 'dr-js-###.tgz' ], // NOTE: fix filename
+      [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.23.tgz', 'hqmvFoMWH4QT4Uc1smuQr1w0DwuFWy04townNdjUNnxTicyMRksMG5LQHR3fL7dkhEzdWp3IPjayJRc2NNCo5Q==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
     ]
     const RES_FLAVOR_BIN_NGINX = [
       // update at 2021/06/18, to find download from: https://nginx.org/en/download.html
