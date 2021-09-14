@@ -44,7 +44,7 @@ rm -rf /usr/share/jruby/bin/*.dll
   fi
 gem-clear
 
-ruby-path-clear /usr/share/jruby/lib/ruby/gems/*/gems/
+dr-dev --package-trim-ruby-gem /usr/share/jruby/lib/ruby/gems/*/gems/
 
 # log version & info
 jruby --version

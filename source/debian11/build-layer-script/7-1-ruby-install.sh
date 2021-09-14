@@ -82,7 +82,7 @@ apt-clear
   fi
 gem-clear
 
-ruby-path-clear /usr/local/lib/ruby/gems/*/gems/
+dr-dev --package-trim-ruby-gem /usr/local/lib/ruby/gems/*/gems/
 
 # log version & info
 ruby --version
