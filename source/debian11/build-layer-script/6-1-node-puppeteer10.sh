@@ -2,7 +2,7 @@
 
 source ./0-1-base-apt.sh
 
-PUPPETEER_VERSION="10.0.0" # check version at: https://github.com/puppeteer/puppeteer/releases
+PUPPETEER_VERSION="10.4.0" # update at 2021/09/22, check version at: https://github.com/puppeteer/puppeteer/releases
 PUPPETEER_ROOT="/media/node-puppeteer10/"
 
 # TODO: check if resolved
