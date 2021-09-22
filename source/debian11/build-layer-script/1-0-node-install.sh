@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ./0-2-base-node.sh
+source ./0-1-base-apt.sh
 
 # MNT
 MNT_DEB_NODEJS="$(echo /mnt/build-layer-resource/nodejs*_${DOCKER_BUILD_ARCH}.deb)"
@@ -37,7 +37,7 @@ apt-update
   # clear npm
   npm cache clean --force
   rm -rf ~/.npm/
-  node-path-clear /usr/lib/node_modules/
+  dr-dev --package-trim-node-modules /usr/lib/node_modules/
 apt-clear
 
 # log version & info

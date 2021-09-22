@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-source ./0-2-base-node.sh
+source ./0-1-base-apt.sh
 
-PUPPETEER_VERSION="10.0.0" # check version at: https://github.com/puppeteer/puppeteer/releases
+PUPPETEER_VERSION="10.4.0" # update at 2021/09/22, check version at: https://github.com/puppeteer/puppeteer/releases
 PUPPETEER_ROOT="/media/node-puppeteer10/"
 
 # TODO: check if resolved
@@ -31,7 +31,7 @@ mkdir -p "${PUPPETEER_ROOT}"
   # clear npm
   npm cache clean --force
   rm -rf ~/.npm/
-  node-path-clear "${PUPPETEER_ROOT}"
+  dr-dev --package-trim-node-modules "${PUPPETEER_ROOT}"
 )
 
 if [[ "${DOCKER_BUILD_ARCH}" = "amd64" ]] ; then

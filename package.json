@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
@@ -20,17 +20,18 @@
     "build-debian11-dev-core-proxy": "npm run build-proxy -- node source/debian11/build-core.js",
     "build-debian11-dev-core-cn-proxy": "npm run build-proxy -- node source/debian11/build-core.js CN",
     "build-debian11-dev-layer-cn-proxy": "npm run build-proxy -- node source/debian11/build-layer.js ruby CN",
+    "// push ========================": "",
+    "push-debian10-all": "node source/debian10/push.js ALL",
+    "push-debian10-base-only": "node source/debian10/push.js BASE-ONLY",
+    "push-debian10-ghcr-only": "node source/debian10/push.js GHCR-ONLY",
+    "push-debian11-all": "node source/debian11/push.js ALL",
+    "push-debian11-manifest-all": "node source/debian11/push-manifest.js ALL",
     "// docker ======================": "",
     "docker-pre-pull-buildkit": "sudo docker image pull \"$(node -p \"require('./source/function.js').BUILDKIT_SYNTAX\")\"",
     "docker-pre-pull-binfmt": "sudo docker image pull tonistiigi/binfmt",
     "docker-setup-binfmt": "sudo docker run --privileged --rm tonistiigi/binfmt --install amd64,arm64",
     "docker-clear-binfmt": "sudo docker run --privileged --rm tonistiigi/binfmt --uninstall qemu-*",
     "docker-test-binfmt": "sudo docker buildx ls && sudo docker run --rm --platform=linux/amd64 amd64/alpine uname -m && sudo docker run --rm --platform=linux/arm64 arm64v8/alpine uname -m",
-    "debian10-push-all": "node source/debian10/push.js ALL",
-    "debian10-push-base-only": "node source/debian10/push.js BASE-ONLY",
-    "debian10-push-ghcr-only": "node source/debian10/push.js GHCR-ONLY",
-    "debian11-push-all": "node source/debian11/push.js ALL",
-    "debian11-push-manifest-all": "node source/debian11/push-manifest.js ALL",
     "docker-prune": "node source/docker-prune.js",
     "docker-ls": "node source/docker-ls.js",
     "// =============================": "",
@@ -46,8 +47,8 @@
     "npm": ">=6.14"
   },
   "devDependencies": {
-    "@dr-js/core": "^0.4.20-dev.0",
-    "@dr-js/dev": "^0.4.23-dev.0",
-    "@dr-js/dev-eslint": "^0.4.23-dev.0"
+    "@dr-js/core": "^0.4.20",
+    "@dr-js/dev": "^0.4.23",
+    "@dr-js/dev-eslint": "^0.4.23"
   }
 }

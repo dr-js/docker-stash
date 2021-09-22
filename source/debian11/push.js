@@ -56,4 +56,4 @@ runKit(async (kit) => {
       runDockerSync([ 'image', 'push', toArch(tag) ])
     }
   }
-}, { title: 'debian11-push' })
+}, { title: 'push-debian11' })
