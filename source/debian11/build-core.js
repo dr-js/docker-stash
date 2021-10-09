@@ -123,6 +123,9 @@ WORKDIR /root/
 SHELL [ "/bin/bash", "-c" ]
 CMD [ "bash" ]
 
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+
 RUN set -ex \\
  && { \\${_ && 'reset apt source list with bullseye-backports'}
        echo 'deb ${debianMirror}/debian bullseye main'; \\
