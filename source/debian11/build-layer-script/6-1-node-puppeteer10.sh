@@ -2,7 +2,9 @@
 
 source ./0-1-base-apt.sh
 
-PUPPETEER_VERSION="10.4.0" # update at 2021/09/22, check version at: https://github.com/puppeteer/puppeteer/releases
+# MNT
+MNT_PUPPETEER_VERSION="$(cat /mnt/build-layer-resource/PUPPETEER_VERSION.txt)"
+
 PUPPETEER_ROOT="/media/node-puppeteer10/"
 
 # TODO: check if resolved
@@ -20,12 +22,12 @@ mkdir -p "${PUPPETEER_ROOT}"
   fi
 
   if [[ "${DOCKER_BUILD_ARCH}" = "amd64" ]] ; then
-    npm install "puppeteer@${PUPPETEER_VERSION}"
+    npm install "puppeteer@${MNT_PUPPETEER_VERSION}"
   else
     apt-update
       apt-install chromium # slightly out of date: 90.0.4430.212-1
     apt-clear
-    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install "puppeteer@${PUPPETEER_VERSION}"
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install "puppeteer@${MNT_PUPPETEER_VERSION}"
   fi
 
   # clear npm

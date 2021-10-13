@@ -4,8 +4,8 @@ source ./0-3-base-ruby.sh
 
 # MNT
 MNT_TGZ_RUBY="$(echo /mnt/build-layer-resource/ruby-*.tar.gz)"
+MNT_GEM_VERSION="$(cat /mnt/build-layer-resource/GEM_VERSION.txt)"
 
-GEM_VERSION="3.2.27" # check version at: https://rubygems.org/pages/download
 BUNDLER_MAJOR_VERSION="2"
 
 apt-update
@@ -71,7 +71,7 @@ apt-clear
     gem sources -l # check list sources
   fi
 
-  gem update --no-document --system "${GEM_VERSION}"
+  gem update --no-document --system "${MNT_GEM_VERSION}"
   gem-uninstall rubygems-update # remove gem update dependency
 
   gem install --no-document --force bundler -v "~> ${BUNDLER_MAJOR_VERSION}" # use latest bundler # https://github.com/rubygems/rubygems/issues/2058
