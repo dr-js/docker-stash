@@ -1,4 +1,4 @@
-name: ci-tag-build
+name: ci-tag-build-debian11
 
 on: # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestbranchestags
   push: { tags: [ 'v*' ] } # use `v0.0.0` tag pattern
@@ -20,6 +20,6 @@ jobs:
           GHCR_PASSWORD: ${{ secrets.GHCR_DRJS_PAT_PASSWORD }}
       - run: npm ci
       - run: npm test
-      - run: npm run build-debian10
-      - run: npm run build-debian10-cn
-      - run: npm run push-debian10-all
+      - run: npm run build-debian11
+      - run: npm run build-debian11-cn
+      - run: npm run push-debian11-all

@@ -46,18 +46,21 @@ runKit(async (kit) => {
 
   kit.padLog('assemble "build-layer-resource/"')
   {
-    // update at 2021/09/07, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
+    // update at 2021/10/13, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
     // and: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
-    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.17.6-deb-1nodesource1_amd64.deb', 'c8fb0ab92cb1eba45a45fe12680f98111207d633636a5852a9f90fccd931d435' ]
-    // update at 2020/09/07, to find download from: `npm view npm@latest-6`
+    const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.18.1-deb-1nodesource1_amd64.deb', 'cada48735333aa8f2e50b4099bb2bfccac8e1b1dc00d693cc86b06c3d19d6008' ]
+    // update at 2020/09/07, to find download from: `npm view npm@latest-6`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
     const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.15.tgz', 'dkcQc4n+DiJAMYG2haNAMyJbmuvevjXz+WC9dCUzodw8EovwTIc6CATSsTEplCY6c0jG4OshxFGFJsrnKJguWA==:sha512:base64' ]
+    const TGZ_DR_JS = [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.20.tgz', 'OIuK7hAIXg/jhtBTTUU8QLlQ6ee8+T2EXkXJJ+Bi5hQNl49mD/ZnMDkdxI4E0rITQdB5k3GhzQ+3/RuBpbVe5g==:sha512:base64', 'dr-js-###.tgz' ] // NOTE: fix filename
+    const TGZ_DR_DEV = [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.23.tgz', 'hqmvFoMWH4QT4Uc1smuQr1w0DwuFWy04townNdjUNnxTicyMRksMG5LQHR3fL7dkhEzdWp3IPjayJRc2NNCo5Q==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
+
     // update at 2021/06/18, to find download from: https://nginx.org/en/download.html
     // and: https://github.com/google/ngx_brotli
     const TGZ_NGINX = [ 'https://nginx.org/download/nginx-1.20.1.tar.gz', 'e462e11533d5c30baa05df7652160ff5979591d291736cfa5edb9fd2edb48c49' ] // TODO: need to calc hash yourself
     const ZIP_BROTLI = [ 'https://github.com/google/brotli/archive/e61745a6.zip', '4a79fd9fd30bae4d08dab373326cfb21ab0d6b50e0e55564043e35dde7210219', 'brotli.zip' ] // specify filename // TODO: need to calc hash yourself
     const ZIP_NGX_BROTLI = [ 'https://github.com/google/ngx_brotli/archive/9aec15e2.zip', '9ec37453ef1a4866590e96bc8df41657382281afcdcc0d368947544e9950d8f9', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
-    // update at 2021/09/07, to find download from: https://golang.org/dl/
-    const TGZ_GO = [ 'https://golang.org/dl/go1.17.linux-amd64.tar.gz', '6bf89fc4f5ad763871cf7eac80a2d594492de7a818303283f1366a7f6a30372d' ]
+    // update at 2021/10/13, to find download from: https://golang.org/dl/
+    const TGZ_GO = [ 'https://golang.org/dl/go1.17.2.linux-amd64.tar.gz', 'f242a9db6a0ad1846de7b6d94d507915d14062660616a61ef7c808a76e4f1676' ]
     // update at 2021/04/23, to find download from: https://www.ruby-lang.org/en/downloads/releases/
     const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.4.tar.gz', '3043099089608859fc8cce7f9fdccaa1f53a462457e3838ec3b25a7d609fbc5b' ]
     // update at 2021/06/18, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
@@ -66,7 +69,7 @@ runKit(async (kit) => {
     const fromOutputResource = (...args) => kit.fromOutput(PATH_BUILD, 'build-layer-resource/', ...args)
     await resetDirectory(fromOutputResource())
     await fetchFileWithLocalCache([
-      ...(BUILD_FLAVOR === DEBIAN10_BUILD_FLAVOR_MAP.FLAVOR_NODE ? [ DEB_NODEJS, TGZ_NPM ] : []),
+      ...(BUILD_FLAVOR === DEBIAN10_BUILD_FLAVOR_MAP.FLAVOR_NODE ? [ DEB_NODEJS, TGZ_NPM, TGZ_DR_JS, TGZ_DR_DEV ] : []),
       ...(BUILD_FLAVOR === DEBIAN10_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? [ TGZ_NGINX, ZIP_BROTLI, ZIP_NGX_BROTLI ] : []),
       ...(BUILD_FLAVOR === DEBIAN10_BUILD_FLAVOR_MAP.FLAVOR_GO ? [ TGZ_GO ] : []),
       ...(BUILD_FLAVOR === DEBIAN10_BUILD_FLAVOR_MAP.FLAVOR_RUBY ? [ TGZ_RUBY ] : []),
