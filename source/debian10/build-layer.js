@@ -49,8 +49,11 @@ runKit(async (kit) => {
     // update at 2021/10/13, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
     // and: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
     const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.18.1-deb-1nodesource1_amd64.deb', 'cada48735333aa8f2e50b4099bb2bfccac8e1b1dc00d693cc86b06c3d19d6008' ]
-    // update at 2020/09/07, to find download from: `npm view npm@latest-6`
+    // update at 2020/09/07, to find download from: `npm view npm@latest-6`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
     const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.15.tgz', 'dkcQc4n+DiJAMYG2haNAMyJbmuvevjXz+WC9dCUzodw8EovwTIc6CATSsTEplCY6c0jG4OshxFGFJsrnKJguWA==:sha512:base64' ]
+    const TGZ_DR_JS = [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.20.tgz', 'OIuK7hAIXg/jhtBTTUU8QLlQ6ee8+T2EXkXJJ+Bi5hQNl49mD/ZnMDkdxI4E0rITQdB5k3GhzQ+3/RuBpbVe5g==:sha512:base64', 'dr-js-###.tgz' ] // NOTE: fix filename
+    const TGZ_DR_DEV = [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.23.tgz', 'hqmvFoMWH4QT4Uc1smuQr1w0DwuFWy04townNdjUNnxTicyMRksMG5LQHR3fL7dkhEzdWp3IPjayJRc2NNCo5Q==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
+
     // update at 2021/06/18, to find download from: https://nginx.org/en/download.html
     // and: https://github.com/google/ngx_brotli
     const TGZ_NGINX = [ 'https://nginx.org/download/nginx-1.20.1.tar.gz', 'e462e11533d5c30baa05df7652160ff5979591d291736cfa5edb9fd2edb48c49' ] // TODO: need to calc hash yourself
@@ -66,7 +69,7 @@ runKit(async (kit) => {
     const fromOutputResource = (...args) => kit.fromOutput(PATH_BUILD, 'build-layer-resource/', ...args)
     await resetDirectory(fromOutputResource())
     await fetchFileWithLocalCache([
-      ...(BUILD_FLAVOR === DEBIAN10_BUILD_FLAVOR_MAP.FLAVOR_NODE ? [ DEB_NODEJS, TGZ_NPM ] : []),
+      ...(BUILD_FLAVOR === DEBIAN10_BUILD_FLAVOR_MAP.FLAVOR_NODE ? [ DEB_NODEJS, TGZ_NPM, TGZ_DR_JS, TGZ_DR_DEV ] : []),
       ...(BUILD_FLAVOR === DEBIAN10_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? [ TGZ_NGINX, ZIP_BROTLI, ZIP_NGX_BROTLI ] : []),
       ...(BUILD_FLAVOR === DEBIAN10_BUILD_FLAVOR_MAP.FLAVOR_GO ? [ TGZ_GO ] : []),
       ...(BUILD_FLAVOR === DEBIAN10_BUILD_FLAVOR_MAP.FLAVOR_RUBY ? [ TGZ_RUBY ] : []),

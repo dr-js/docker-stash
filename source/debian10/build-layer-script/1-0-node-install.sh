@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
-source ./0-2-base-node.sh
+source ./0-1-base-apt.sh
 
 # MNT
 MNT_DEB_NODEJS="$(echo /mnt/build-layer-resource/nodejs*.deb)"
 MNT_TGZ_NPM="$(echo /mnt/build-layer-resource/npm*.tgz)"
+MNT_TGZ_DR_JS="$(echo /mnt/build-layer-resource/dr-js*.tgz)"
+MNT_TGZ_DR_DEV="$(echo /mnt/build-layer-resource/dr-dev*.tgz)"
 
 apt-update
   # apt-install curl
@@ -23,6 +25,7 @@ apt-update
   echo '{ "optOut": true, "lastUpdateCheck": 999999999999999 }' > /root/.config/configstore/update-notifier-npm.json
   npm config set --global update-notifier false # mute npm update notice
   npm install --global "${MNT_TGZ_NPM}" # update npm
+  npm install --global "${MNT_TGZ_DR_JS}" "${MNT_TGZ_DR_DEV}" # install package
 
   # trim npm files
   rm -rf /tmp/npm-*
@@ -34,10 +37,13 @@ apt-update
   # clear npm
   npm cache clean --force
   rm -rf ~/.npm/
-  node-path-clear /usr/lib/node_modules/
+  dr-dev --package-trim-node-modules /usr/lib/node_modules/
 apt-clear
 
 # log version & info
 node --version
 npm --version
 npm config get cache # should be "/root/.npm/"
+dr-js --version
+dr-dev --version
+
