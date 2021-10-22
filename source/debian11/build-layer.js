@@ -48,14 +48,14 @@ runKit(async (kit) => {
   kit.padLog('assemble "build-layer-resource/"')
   {
     const RES_FLAVOR_NODE = [
-      // update at 2021/09/22, to find download:
+      // update at 2021/10/22, to find download:
       // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-amd64/Packages
       // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-arm64/Packages
-      [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.11.1-deb-1nodesource1_amd64.deb', '806f0387805bf1a204c2953b2c7af91ab5d8262e02bae07c750c410eb01a5ab0' ],
-      [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.11.1-deb-1nodesource1_arm64.deb', '6a81d4ed7060d5f5d918e8015d83ec2f5d47b42fe8fd650d0fa56bc4e7e2a5b2' ],
-      // update at 2020/09/07, to find download from: `npm view npm@latest-6`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
+      [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.12.0-deb-1nodesource1_amd64.deb', '53ec0b087e744a8f426450bbe5cf8fe320c3db228d7b9bd30cd10e2a711ae692' ],
+      [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.12.0-deb-1nodesource1_arm64.deb', 'bf639d9ea3fb15c76086a9e9f8813d7b7659fcc6f318ad3e192cbea346f463f5' ],
+      // update at 2020/10/22, to find download from: `npm view npm@latest-6`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
       [ 'https://registry.npmjs.org/npm/-/npm-6.14.15.tgz', 'dkcQc4n+DiJAMYG2haNAMyJbmuvevjXz+WC9dCUzodw8EovwTIc6CATSsTEplCY6c0jG4OshxFGFJsrnKJguWA==:sha512:base64' ],
-      [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.20.tgz', 'OIuK7hAIXg/jhtBTTUU8QLlQ6ee8+T2EXkXJJ+Bi5hQNl49mD/ZnMDkdxI4E0rITQdB5k3GhzQ+3/RuBpbVe5g==:sha512:base64', 'dr-js-###.tgz' ], // NOTE: fix filename
+      [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.21.tgz', 'EkodS/M0h3wGt70LBShb5GHR1xtH2XqZ6iNLJ94O+nfZ5MJzG+PY6UR1hU6aE/0+eU2nRtnhu1sGfcoHne8r1g==:sha512:base64', 'dr-js-###.tgz' ], // NOTE: fix filename
       [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.24.tgz', '/r7pkshosf5iJcHcfDrD+k8ecZURzMkzF5zcv+xEFSvn5DlCoVvmMw4zdc0hqWEtFm6y6Mpv3BQZXjFNpzBTJQ==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
     ]
     const RES_FLAVOR_BIN_NGINX = [
