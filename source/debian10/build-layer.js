@@ -49,9 +49,9 @@ runKit(async (kit) => {
     // update at 2021/10/13, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
     // and: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
     const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.18.1-deb-1nodesource1_amd64.deb', 'cada48735333aa8f2e50b4099bb2bfccac8e1b1dc00d693cc86b06c3d19d6008' ]
-    // update at 2020/09/07, to find download from: `npm view npm@latest-6`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
+    // update at 2020/10/22, to find download from: `npm view npm@latest-6`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
     const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.15.tgz', 'dkcQc4n+DiJAMYG2haNAMyJbmuvevjXz+WC9dCUzodw8EovwTIc6CATSsTEplCY6c0jG4OshxFGFJsrnKJguWA==:sha512:base64' ]
-    const TGZ_DR_JS = [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.20.tgz', 'OIuK7hAIXg/jhtBTTUU8QLlQ6ee8+T2EXkXJJ+Bi5hQNl49mD/ZnMDkdxI4E0rITQdB5k3GhzQ+3/RuBpbVe5g==:sha512:base64', 'dr-js-###.tgz' ] // NOTE: fix filename
+    const TGZ_DR_JS = [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.21.tgz', 'EkodS/M0h3wGt70LBShb5GHR1xtH2XqZ6iNLJ94O+nfZ5MJzG+PY6UR1hU6aE/0+eU2nRtnhu1sGfcoHne8r1g==:sha512:base64', 'dr-js-###.tgz' ] // NOTE: fix filename
     const TGZ_DR_DEV = [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.23.tgz', 'hqmvFoMWH4QT4Uc1smuQr1w0DwuFWy04townNdjUNnxTicyMRksMG5LQHR3fL7dkhEzdWp3IPjayJRc2NNCo5Q==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
 
     // update at 2021/06/18, to find download from: https://nginx.org/en/download.html
