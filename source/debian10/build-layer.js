@@ -49,22 +49,22 @@ runKit(async (kit) => {
     // update at 2021/10/13, to find download from: https://deb.nodesource.com/node_14.x/dists/buster/main/binary-amd64/Packages
     // and: https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/
     const DEB_NODEJS = [ 'https://deb.nodesource.com/node_14.x/pool/main/n/nodejs/nodejs_14.18.1-deb-1nodesource1_amd64.deb', 'cada48735333aa8f2e50b4099bb2bfccac8e1b1dc00d693cc86b06c3d19d6008' ]
-    // update at 2020/10/22, to find download from: `npm view npm@latest-6`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
+    // update at 2021/11/26, to find download from: `npm view npm@latest-6`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
     const TGZ_NPM = [ 'https://registry.npmjs.org/npm/-/npm-6.14.15.tgz', 'dkcQc4n+DiJAMYG2haNAMyJbmuvevjXz+WC9dCUzodw8EovwTIc6CATSsTEplCY6c0jG4OshxFGFJsrnKJguWA==:sha512:base64' ]
-    const TGZ_DR_JS = [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.21.tgz', 'EkodS/M0h3wGt70LBShb5GHR1xtH2XqZ6iNLJ94O+nfZ5MJzG+PY6UR1hU6aE/0+eU2nRtnhu1sGfcoHne8r1g==:sha512:base64', 'dr-js-###.tgz' ] // NOTE: fix filename
-    const TGZ_DR_DEV = [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.23.tgz', 'hqmvFoMWH4QT4Uc1smuQr1w0DwuFWy04townNdjUNnxTicyMRksMG5LQHR3fL7dkhEzdWp3IPjayJRc2NNCo5Q==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
+    const TGZ_DR_JS = [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.22.tgz', 'vK8Uh1WXLdY+9hUw15ep9Y6xnVfFrZ7lpgtbL5Ygi22tLnwRsxhlbukD7I6ss6lera072i4o3Cuq2fAsELii2g==:sha512:base64', 'dr-js-###.tgz' ] // NOTE: fix filename
+    const TGZ_DR_DEV = [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.26.tgz', 'U2zoGE2uxcgQJLsradDifsMRC14BA9GWWuDjAkESdnZm+BSuXotyCKzHxaW+jdfQtgvSRt+/YLYJP/1lmB3sBQ==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
 
-    // update at 2021/06/18, to find download from: https://nginx.org/en/download.html
+    // update at 2021/11/26, to find download from: https://nginx.org/en/download.html
     // and: https://github.com/google/ngx_brotli
-    const TGZ_NGINX = [ 'https://nginx.org/download/nginx-1.20.1.tar.gz', 'e462e11533d5c30baa05df7652160ff5979591d291736cfa5edb9fd2edb48c49' ] // TODO: need to calc hash yourself
+    const TGZ_NGINX = [ 'https://nginx.org/download/nginx-1.20.2.tar.gz', '958876757782190a1653e14dc26dfc7ba263de310e04c113e11e97d1bef45a42' ] // TODO: need to calc hash yourself
     const ZIP_BROTLI = [ 'https://github.com/google/brotli/archive/e61745a6.zip', '4a79fd9fd30bae4d08dab373326cfb21ab0d6b50e0e55564043e35dde7210219', 'brotli.zip' ] // specify filename // TODO: need to calc hash yourself
     const ZIP_NGX_BROTLI = [ 'https://github.com/google/ngx_brotli/archive/9aec15e2.zip', '9ec37453ef1a4866590e96bc8df41657382281afcdcc0d368947544e9950d8f9', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
-    // update at 2021/10/13, to find download from: https://golang.org/dl/
-    const TGZ_GO = [ 'https://golang.org/dl/go1.17.2.linux-amd64.tar.gz', 'f242a9db6a0ad1846de7b6d94d507915d14062660616a61ef7c808a76e4f1676' ]
-    // update at 2021/04/23, to find download from: https://www.ruby-lang.org/en/downloads/releases/
-    const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.4.tar.gz', '3043099089608859fc8cce7f9fdccaa1f53a462457e3838ec3b25a7d609fbc5b' ]
-    // update at 2021/06/18, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
-    const TGZ_JRUBY = [ 'https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.2.19.0/jruby-dist-9.2.19.0-bin.tar.gz', '1f74885a2d3fa589fcbeb292a39facf7f86be3eac1ab015e32c65d32acf3f3bf' ]
+    // update at 2021/11/26, to find download from: https://golang.org/dl/
+    const TGZ_GO = [ 'https://golang.org/dl/go1.17.3.linux-amd64.tar.gz', '550f9845451c0c94be679faf116291e7807a8d78b43149f9506c1b15eb89008c' ]
+    // update at 2021/11/26, to find download from: https://www.ruby-lang.org/en/downloads/releases/
+    const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.5.tar.gz', '2755b900a21235b443bb16dadd9032f784d4a88f143d852bc5d154f22b8781f1' ]
+    // update at 2021/11/26, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
+    const TGZ_JRUBY = [ 'https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.3.1.0/jruby-dist-9.3.1.0-bin.tar.gz', '4a9778c114452c0227e10e6718b2c5e128b310b9c6551be93bdd938888f3c418' ]
 
     const fromOutputResource = (...args) => kit.fromOutput(PATH_BUILD, 'build-layer-resource/', ...args)
     await resetDirectory(fromOutputResource())

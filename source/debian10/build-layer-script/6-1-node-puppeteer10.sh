@@ -2,7 +2,7 @@
 
 source ./0-1-base-apt.sh
 
-PUPPETEER_VERSION="10.0.0" # check version at: https://github.com/puppeteer/puppeteer/releases
+PUPPETEER_VERSION="10.4.0" # check version at: https://github.com/puppeteer/puppeteer/releases
 PUPPETEER_ROOT="/media/node-puppeteer10/"
 
 # NOTE: disable "/usr/lib/x86_64-linux-gnu/libjemalloc.so.2" (5.1.0-3)

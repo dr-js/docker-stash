@@ -5,7 +5,7 @@ source ./0-3-base-ruby.sh
 # MNT
 MNT_TGZ_RUBY="$(echo /mnt/build-layer-resource/ruby-*.tar.gz)"
 
-GEM_VERSION="3.2.27" # check version at: https://rubygems.org/pages/download
+GEM_VERSION="3.2.32" # check version at: https://rubygems.org/pages/download
 BUNDLER_MAJOR_VERSION="2"
 
 apt-update
