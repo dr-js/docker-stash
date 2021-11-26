@@ -8,11 +8,11 @@ MNT_PUPPETEER_VERSION="$(cat /mnt/build-layer-resource/PUPPETEER_VERSION.txt)"
 PUPPETEER_ROOT="/media/node-puppeteer10/"
 
 # TODO: check if resolved
-# # NOTE: disable "/usr/lib/x86_64-linux-gnu/libjemalloc.so.2" (5.1.0-3)
+# # NOTE: disable "/usr/lib/x86_64-linux-gnu/libjemalloc.so.2" (5.2.1-3, 5.1.0-3)
 # #   as chromium will frequently crash (every 10min) with `SEGV_MAPERR`
 # #   and down the outer node process
 # #   also check: https://blog.chromium.org/2021/04/efficient-and-safe-allocations-everywhere.html
-# echo "" > /etc/ld.so.preload # TODO: disable when test become stable again
+echo "" > /etc/ld.so.preload # TODO: disable when test become stable again
 
 mkdir -p "${PUPPETEER_ROOT}"
 ( cd "${PUPPETEER_ROOT}"
