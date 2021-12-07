@@ -65,41 +65,27 @@ debian:11-core
                 └─java
                   ├─ruby
                   └─jruby
-debian:10-core
-└─node
-  └─bin-common
-    └─bin-sshd
-      └─bin-nginx
-        └─bin-git
-          └─bin-etc (layer from here & above is light, layer below will add 50MiB+ each)
-            ├─go
-            └─dep-chrome
-              └─dep-font
-                ├─node-puppeteer10
-                └─java
-                  ├─ruby
-                  └─jruby
 ```
 
 
-#### build `debian10`
+#### build `debian11`
 
-First create config file `source/debian10/BUILD_REPO.json`
-  and `source/debian10/BUILD_REPO_GHCR.json`.
+First create config file `source/debian11/BUILD_REPO.json`
+  and `source/debian11/BUILD_REPO_GHCR.json`.
 
 For this repo it's created with: (check the [CI file](.github/workflows/ci-tag-build.yml))
 ```
-echo '"drjs/debian"' > source/debian10/BUILD_REPO.json
-echo '"ghcr.io/dr-js/debian"' > source/debian10/BUILD_REPO_GHCR.json
+echo '"drjs/debian"' > source/debian11/BUILD_REPO.json
+echo '"ghcr.io/dr-js/debian"' > source/debian11/BUILD_REPO_GHCR.json
 ```
 
 Then run:
 ```shell script
-npm run build-debian10
+npm run build-debian11
 
 # or for CN mirror
-npm run build-debian10-cn
-npm run build-debian10-cn-proxy
+npm run build-debian11-cn
+npm run build-debian11-cn-proxy
 ```
 
 Use `build-proxy*` for slow fetch, the config can also be in `.npmrc` like:

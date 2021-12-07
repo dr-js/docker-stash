@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - { uses: "actions/checkout@v2" } # https://github.com/actions/checkout
-      - { uses: "actions/setup-node@v2", with: { node-version: "14.x" } } # https://github.com/actions/setup-node
+      - { uses: "actions/setup-node@v2", with: { node-version: "16.x" } } # https://github.com/actions/setup-node
       - run: npx @dr-js/dev@0.4 -eI .github/ci-patch.js
       - run: bash .github/setup-docker.sh
       - run: |
@@ -20,6 +20,6 @@ jobs:
           GHCR_PASSWORD: ${{ secrets.GHCR_DRJS_PAT_PASSWORD }}
       - run: npm ci
       - run: npm test
-      - run: npm run build-debian10
-      - run: npm run build-debian10-cn
-      - run: npm run push-debian10-all
+      - run: npm run build-debian11
+      - run: npm run build-debian11-cn
+      - run: npm run push-debian11-all
