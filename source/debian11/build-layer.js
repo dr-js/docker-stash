@@ -53,8 +53,9 @@ runKit(async (kit) => {
       // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-arm64/Packages
       [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.13.1-deb-1nodesource1_amd64.deb', 'f7336a4baa5556611f726267384edc3fdafb62a65ee7f03db5eae5b8ab01f91b' ],
       [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.13.1-deb-1nodesource1_arm64.deb', '9f54f7cc2037a41fec5ebf0d303618c231cbc33e66bb05e0b812048c069cd595' ],
-      // update at 2020/11/26, to find download from: `npm view npm@latest-6`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
+      // update at 2022/01/17, to find download from: `npm view npm@latest-6`, `npm view @min-pack/npm@latest`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
       [ 'https://registry.npmjs.org/npm/-/npm-6.14.15.tgz', 'dkcQc4n+DiJAMYG2haNAMyJbmuvevjXz+WC9dCUzodw8EovwTIc6CATSsTEplCY6c0jG4OshxFGFJsrnKJguWA==:sha512:base64' ],
+      [ 'https://registry.npmjs.org/@min-pack/npm/-/npm-0.1.0.tgz', 'jOHF4bgh5cG9yPz8TT/ZBamzecEPhH3awQ7scf86Ivgl6wGrC/mmAbUgRfk0kfIge/if0Cf/3Zde3HA6nvq2Cw==:sha512:base64', 'min-pack-npm-###.tgz' ], // NOTE: fix filename
       [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.22.tgz', 'vK8Uh1WXLdY+9hUw15ep9Y6xnVfFrZ7lpgtbL5Ygi22tLnwRsxhlbukD7I6ss6lera072i4o3Cuq2fAsELii2g==:sha512:base64', 'dr-js-###.tgz' ], // NOTE: fix filename
       [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.26.tgz', 'U2zoGE2uxcgQJLsradDifsMRC14BA9GWWuDjAkESdnZm+BSuXotyCKzHxaW+jdfQtgvSRt+/YLYJP/1lmB3sBQ==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
     ]
