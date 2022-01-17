@@ -11,5 +11,5 @@ jobs:
     steps:
       - { uses: "actions/checkout@v2" } # https://github.com/actions/checkout
       - run: npx @dr-js/dev@0.4 -eI .github/ci-patch.js
-      - run: npm ci
+      - run: npm8 ci
       - run: npm test
