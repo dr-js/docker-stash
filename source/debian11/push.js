@@ -28,12 +28,12 @@ runKit(async (kit) => {
   const toGitHubTag = (tag) => tag.replace(DEBIAN11_BUILD_REPO, DEBIAN11_BUILD_REPO_GHCR)
 
   const TAG_LIST_BASE = [
-    loadDebian11TagCore(''), ...DEBIAN11_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN11_BUILD_REPO}:11-${flavorName}-${BUILD_VERSION}`),
-    loadDebian11TagCore('CN'), ...DEBIAN11_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN11_BUILD_REPO}:11-${flavorName}-${BUILD_VERSION}-cn`)
+    loadDebian11TagCore(''), ...DEBIAN11_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN11_BUILD_REPO}:11-${flavorName}-${BUILD_VERSION}`)
+    // loadDebian11TagCore('CN'), ...DEBIAN11_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN11_BUILD_REPO}:11-${flavorName}-${BUILD_VERSION}-cn`)
   ]
   const TAG_LIST_BASE_CACHE = [ // only use cache from BASE for now
-    ...DEBIAN11_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN11_BUILD_REPO}:11-${flavorName}-${TAG_LAYER_CACHE}`),
-    ...DEBIAN11_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN11_BUILD_REPO}:11-${flavorName}-${TAG_LAYER_CACHE}-cn`)
+    ...DEBIAN11_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN11_BUILD_REPO}:11-${flavorName}-${TAG_LAYER_CACHE}`)
+    // ...DEBIAN11_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN11_BUILD_REPO}:11-${flavorName}-${TAG_LAYER_CACHE}-cn`)
   ]
   const TAG_LIST_GHCR = TAG_LIST_BASE.map(toGitHubTag)
 

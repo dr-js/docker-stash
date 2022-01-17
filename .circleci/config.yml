@@ -2,24 +2,24 @@ version: 2
 
 jobs:
   build:
-    machine: { image: "ubuntu-2004:202101-01" } # https://circleci.com/docs/2.0/arm-resources/
+    machine: { image: "ubuntu-2004:202111-02" } # https://circleci.com/docs/2.0/arm-resources/
     resource_class: arm.medium # https://circleci.com/docs/2.0/arm-resources/#pricing-and-availability
     steps:
       - checkout
       - run:
           name: Setup
           command: |
-            curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+            curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
             sudo apt-get install -y nodejs
 
             npx @dr-js/dev@0.4 -eI .github/ci-patch.js
             bash .github/setup-docker.sh
             echo "${CIRCLECI_DOCKER_HUB_DRJS_PW}" | dr-js --docker -- login --username drjs --password-stdin
             echo "${CIRCLECI_GHCR_DRJS_PAT}" | dr-js --docker -- login --username dr-js --password-stdin ghcr.io
-      - run: npm ci
+      - run: npm8 ci
       - run: npm test
       - run: npm run build-debian11
-      - run: npm run build-debian11-cn
+      # - run: npm run build-debian11-cn
       - run: npm run push-debian11-all
 
 workflows:
