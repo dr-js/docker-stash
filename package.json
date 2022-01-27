@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@dr-js/core": "^0.4.24",
-    "@dr-js/dev": "^0.4.28",
-    "@dr-js/dev-eslint": "^0.4.28"
+    "@dr-js/dev": "^0.4.29",
+    "@dr-js/dev-eslint": "^0.4.29"
   }
 }
