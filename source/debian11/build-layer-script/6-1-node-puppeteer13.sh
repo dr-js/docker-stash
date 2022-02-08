@@ -17,8 +17,8 @@ echo "" > /etc/ld.so.preload # TODO: disable when test become stable again
 mkdir -p "${PUPPETEER_ROOT}"
 ( cd "${PUPPETEER_ROOT}"
   if [[ "${DOCKER_BUILD_MIRROR}" = "CN" ]] ; then
-    export NPM_CONFIG_REGISTRY=https://registry.npm.taobao.org
-    export PUPPETEER_DOWNLOAD_HOST=https://npm.taobao.org/mirrors
+    export NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
+    export PUPPETEER_DOWNLOAD_HOST=https://npmmirror.com/mirrors
   fi
 
   if [[ "${DOCKER_BUILD_ARCH}" = "amd64" ]] ; then
