@@ -53,9 +53,9 @@ runKit(async (kit) => {
       // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-arm64/Packages
       [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.13.2-deb-1nodesource1_amd64.deb', '2288af3c3eb7aeae19998dd2b263f17e7205581173edf1b4629dfa043e725e19' ],
       [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.13.2-deb-1nodesource1_arm64.deb', 'e0bbe0d40634d4a0c09e02800d480bda6caac0f99820f88feedc49d8de6dbcfa' ],
-      // update at 2022/01/27, to find download from: `npm view npm@latest-6`, `npm view @min-pack/npm@latest`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
+      // update at 2022/02/08, to find download from: `npm view npm@latest-6`, `npm view @min-pack/npm@latest`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
       [ 'https://registry.npmjs.org/npm/-/npm-6.14.16.tgz', 'LMiLGYsVNJfVPlQg7v2NYjG7iRIapcLv+oMunlq7fkXVx0BATCjRu7XyWl0G+iuZzHy4CjtM32QB8ox8juTgaw==:sha512:base64' ],
-      [ 'https://registry.npmjs.org/@min-pack/npm/-/npm-0.1.1.tgz', '4QiRLXQAMyRU+FfhDSEpiOdiW6XqqwSFTH3QqSM1CoetuGdP09TO2pZ7KapzhDJyd404cYspJBgekJXP5J2FTQ==:sha512:base64', 'min-pack-npm-###.tgz' ], // NOTE: fix filename
+      [ 'https://registry.npmjs.org/@min-pack/npm/-/npm-0.1.2.tgz', 'U14ZuWoHLc7M5oVeRDSacH3yBsZhNo3jx1EJoLWJXEeLzjhIQ5jPKojr8PYz90OvndEwjh/IbHr4h3Ailv2dUA==:sha512:base64', 'min-pack-npm-###.tgz' ], // NOTE: fix filename
       [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.24.tgz', 'gSlMJ83HgH2mAhpIcwxM8c9DGLfDceBdOXjd0cpUTtpGv1FkRy/ATLwOlQJdhcr250zWu22127wSYNCLBZztNw==:sha512:base64', 'dr-js-###.tgz' ], // NOTE: fix filename
       [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.29.tgz', '2JF6kiaD7bKW+hsQc1Nd9/VV4AOiKVNyO+8thwCCgOmpXGXpjqxUyUaLV7xznFr36sRR9C50t4WgsdPVMSYTng==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
     ]
@@ -80,8 +80,8 @@ runKit(async (kit) => {
     for (const [ text, file ] of [
       // update at 2021/10/13, check version at: https://github.com/puppeteer/puppeteer/releases
       BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER10 && [ '10.4.0', 'PUPPETEER_VERSION.txt' ],
-      // update at 2022/01/27, check version at: https://github.com/puppeteer/puppeteer/releases
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER13 && [ '13.1.2', 'PUPPETEER_VERSION.txt' ],
+      // update at 2022/02/08, check version at: https://github.com/puppeteer/puppeteer/releases
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER13 && [ '13.2.0', 'PUPPETEER_VERSION.txt' ],
       // update at 2022/01/27, check version at: https://rubygems.org/pages/download
       BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.6', 'GEM_VERSION.txt' ]
     ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
