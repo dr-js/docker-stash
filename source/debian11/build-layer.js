@@ -73,8 +73,8 @@ runKit(async (kit) => {
     ]
     // update at 2021/11/26, to find download from: https://www.ruby-lang.org/en/downloads/releases/
     const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.5.tar.gz', '2755b900a21235b443bb16dadd9032f784d4a88f143d852bc5d154f22b8781f1' ]
-    // update at 2022/01/27, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
-    const TGZ_JRUBY = [ 'https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.3.3.0/jruby-dist-9.3.3.0-bin.tar.gz', '3da828cbe287d5468507f1c2c42bef6cf34bc5361bcd6a5d99c207b21b9fdc5c' ]
+    // update at 2022/02/23, to find download from: https://www.jruby.org/download or https://github.com/jruby/jruby/releases/
+    const TGZ_JRUBY = [ 'https://repo1.maven.org/maven2/org/jruby/jruby-dist/9.3.1.0/jruby-dist-9.3.1.0-bin.tar.gz', '4a9778c114452c0227e10e6718b2c5e128b310b9c6551be93bdd938888f3c418' ] // TODO: WAIT-FIX: skip `9.3.3`, `9.3.2` for: https://github.com/jruby/jruby/issues/7069
 
     await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
     for (const [ text, file ] of [
