@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
@@ -40,8 +40,8 @@
     "npm": ">=8.3"
   },
   "devDependencies": {
-    "@dr-js/core": "^0.4.24",
-    "@dr-js/dev": "^0.4.29",
-    "@dr-js/dev-eslint": "^0.4.29"
+    "@dr-js/core": "^0.4.25",
+    "@dr-js/dev": "^0.4.32-dev.0",
+    "@dr-js/dev-eslint": "^0.4.32-dev.0"
   }
 }
