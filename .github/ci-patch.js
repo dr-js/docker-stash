@@ -10,6 +10,6 @@ runKit(async (kit) => {
   kit.padLog('Patch install "@dr-js/core" globally')
   kit.RUN_SUDO_NPM('install --global @dr-js/core@0.4')
 
-  kit.padLog('Patch install "@min-pack/npm" globally')
-  kit.RUN_SUDO_NPM('install --global @min-pack/npm@0.1')
+  kit.padLog('Patch install "npm@8" globally')
+  kit.RUN_SUDO_NPM('install --global npm@8')
 }, { title: 'ci-patch' })
