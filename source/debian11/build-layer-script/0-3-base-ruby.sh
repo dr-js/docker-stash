@@ -9,7 +9,6 @@ function gem-clear {
   shopt -s nullglob
   rm -rf \
     /usr/local/lib/ruby/gems/*/cache/ \
-    /usr/share/jruby/lib/ruby/gems/*/cache/ \
     /root/.gem/
   shopt -u nullglob # clear gem cache
 }

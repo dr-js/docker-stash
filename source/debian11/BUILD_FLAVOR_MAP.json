@@ -17,6 +17,5 @@
   "FLAVOR_NODE_PUPPETEER13": { "NAME": "node-puppeteer13", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "6-1-node-puppeteer13.sh" },
 
   "FLAVOR_JAVA": { "NAME": "java", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "7-0-java-install.sh" },
-  "FLAVOR_RUBY": { "NAME": "ruby", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-1-ruby-install.sh" },
-  "FLAVOR_JRUBY": { "NAME": "jruby", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-2-jruby-install.sh" }
+  "FLAVOR_RUBY": { "NAME": "ruby", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-1-ruby-install.sh" }
 }

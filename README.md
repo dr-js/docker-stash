@@ -64,8 +64,7 @@ debian:11-core
                 ├─node-puppeteer10
                 ├─node-puppeteer13
                 └─java
-                  ├─ruby
-                  └─jruby
+                  └─ruby
 ```
 
 
