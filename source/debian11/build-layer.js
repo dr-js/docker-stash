@@ -55,8 +55,8 @@ runKit(async (kit) => {
       [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.14.0-deb-1nodesource1_arm64.deb', 'bbd08307e2e6be9371f93b7a9c965d7e8b047d3140379a7fcd6bbc4b5638c1d2' ],
       // update at 2022/02/28, to find download from: `npm view npm@latest`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
       [ 'https://registry.npmjs.org/npm/-/npm-8.5.2.tgz', 'fQRPOSrQfO3AG1JEOgScVrYhOfprZbhSKAjY4goESGPKMflWHxyQt8djo6EZhNjxCNIUAPtT75hkCN902SeYAw==:sha512:base64' ],
-      [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.25.tgz', 'FAv/bogaBeRZCCoBNoXwPQafoNEraaSfTJMdx/+O7yk8Heo5wrJ0ybLrbfCdJRBWTpYdkZ3lPg7XhooQEoN5sA==:sha512:base64', 'dr-js-###.tgz' ], // NOTE: fix filename
-      [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.32.tgz', 'wHfYe+1Lek9ij2NbxFj0YNvc5XSSGvym2T7vYfZavYvRABBXQnwIM3ODCfbzVVHuqRJe6Lp7yAqe5dbaRzCCOA==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
+      [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.25.tgz', 'FAv/bogaBeRZCCoBNoXwPQafoNEraaSfTJMdx/+O7yk8Heo5wrJ0ybLrbfCdJRBWTpYdkZ3lPg7XhooQEoN5sA==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
+      [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.32.tgz', 'wHfYe+1Lek9ij2NbxFj0YNvc5XSSGvym2T7vYfZavYvRABBXQnwIM3ODCfbzVVHuqRJe6Lp7yAqe5dbaRzCCOA==:sha512:base64', 'dr-dev-@@@.tgz' ] // NOTE: fix filename
     ]
     const RES_FLAVOR_BIN_NGINX = [
       // update at 2021/11/26, to find download from: https://nginx.org/en/download.html
