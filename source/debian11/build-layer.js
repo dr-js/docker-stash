@@ -56,7 +56,7 @@ runKit(async (kit) => {
       // update at 2022/02/28, to find download from: `npm view npm@latest`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
       [ 'https://registry.npmjs.org/npm/-/npm-8.5.2.tgz', 'fQRPOSrQfO3AG1JEOgScVrYhOfprZbhSKAjY4goESGPKMflWHxyQt8djo6EZhNjxCNIUAPtT75hkCN902SeYAw==:sha512:base64' ],
       [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.25.tgz', 'FAv/bogaBeRZCCoBNoXwPQafoNEraaSfTJMdx/+O7yk8Heo5wrJ0ybLrbfCdJRBWTpYdkZ3lPg7XhooQEoN5sA==:sha512:base64', 'dr-js-###.tgz' ], // NOTE: fix filename
-      [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.31.tgz', '/MplBO0PKLsMHrYWpRQhUwnQilJQGMjqlHT6F8FRKg7OZFiqYx7xAyvI3BBTL84dtmMSD0CGEIaq5tkTf8YAYQ==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
+      [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.32.tgz', 'wHfYe+1Lek9ij2NbxFj0YNvc5XSSGvym2T7vYfZavYvRABBXQnwIM3ODCfbzVVHuqRJe6Lp7yAqe5dbaRzCCOA==:sha512:base64', 'dr-dev-###.tgz' ] // NOTE: fix filename
     ]
     const RES_FLAVOR_BIN_NGINX = [
       // update at 2021/11/26, to find download from: https://nginx.org/en/download.html
@@ -77,8 +77,8 @@ runKit(async (kit) => {
     for (const [ text, file ] of [
       // update at 2022/02/23, check version at: https://github.com/puppeteer/puppeteer/releases
       BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER13 && [ '13.4.0', 'PUPPETEER_VERSION.txt' ],
-      // update at 2022/02/23, check version at: https://rubygems.org/pages/download
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.7', 'GEM_VERSION.txt' ]
+      // update at 2022/02/28, check version at: https://rubygems.org/pages/download
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.8', 'GEM_VERSION.txt' ]
     ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
     await fetchFileListWithLocalCache([
       ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_FLAVOR_NODE : []),
