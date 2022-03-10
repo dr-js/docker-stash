@@ -14,12 +14,15 @@ jobs:
 
             npx @dr-js/dev@0.4 -eI .github/ci-patch.js
             bash .github/setup-docker.sh
-            echo "${CIRCLECI_DOCKER_HUB_DRJS_PW}" | dr-js --docker -- login --username drjs --password-stdin
-            echo "${CIRCLECI_GHCR_DRJS_PAT}" | dr-js --docker -- login --username dr-js --password-stdin ghcr.io
-      - run: npm8 ci
+      - run: npm ci
       - run: npm test
       - run: npm run build-debian11
       # - run: npm run build-debian11-cn
+      - run:
+          name: Docker Auth
+          command: |
+            echo "${CIRCLECI_DOCKER_HUB_DRJS_PW}" | dr-js --docker -- login --username drjs --password-stdin
+            echo "${CIRCLECI_GHCR_DRJS_PAT}" | dr-js --docker -- login --username dr-js --password-stdin ghcr.io
       - run: npm run push-debian11-all
 
 workflows:

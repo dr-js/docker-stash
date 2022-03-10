@@ -61,11 +61,9 @@ debian:11-core
             ├─go
             └─dep-chrome
               └─dep-font
-                ├─node-puppeteer10
                 ├─node-puppeteer13
                 └─java
-                  ├─ruby
-                  └─jruby
+                  └─ruby
 ```
 
 
@@ -89,7 +87,7 @@ npm run build-debian11-cn
 npm run build-debian11-cn-proxy
 ```
 
-Use `build-proxy*` for slow fetch, the config can also be in `.npmrc` like:
+Use `build-proxy*` for slow fetch, the config can also be added in `.npmrc` like:
 ```
 noproxy=127.0.0.1,localhost # exclude localhost
 proxy=http://127.0.0.1:1080 # for http
