@@ -36,7 +36,6 @@ apt-update
 
   # clear npm
   npm cache clean --force
-  rm -rf ~/.npm/
   dr-dev --package-trim-node-modules /usr/lib/node_modules/
 apt-clear
 

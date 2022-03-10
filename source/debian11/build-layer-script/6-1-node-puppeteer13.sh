@@ -32,7 +32,6 @@ mkdir -p "${PUPPETEER_ROOT}"
 
   # clear npm
   npm cache clean --force
-  rm -rf ~/.npm/
   dr-dev --package-trim-node-modules "${PUPPETEER_ROOT}"
 )
 

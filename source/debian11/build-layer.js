@@ -124,6 +124,7 @@ RUN \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-0,target=/var/log \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-1,target=/var/cache \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-2,target=/var/lib/apt \\
+  --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-3,target=/root \\
   --mount=type=bind,target=/mnt/,source=. \\
     cd /mnt/build-layer-script/ \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
@@ -134,6 +135,7 @@ RUN \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-0,target=/var/log \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-1,target=/var/cache \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-2,target=/var/lib/apt \\
+  --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-3,target=/root \\
   --mount=type=bind,target=/mnt/,source=. \\
     cd /mnt/build-layer-script/ \\
  && . ${BUILD_FLAVOR.LAYER_DEP_BUILD_SCRIPT}
