@@ -7,9 +7,10 @@ jobs:
   build:
     timeout-minutes: 5
     runs-on: ubuntu-latest
-    container: ghcr.io/dr-js/debian:11-bin-git-0.2.13
+    container: ghcr.io/dr-js/debian:11-bin-git-0.3.0-dev.0
     steps:
       - { uses: "actions/checkout@v2" } # https://github.com/actions/checkout
-      - run: npx @dr-js/dev@0.4 -eI .github/ci-patch.js
+      # - run: npx @dr-js/dev@0.4 -eI .github/ci-patch.js # TODO: npx from npm@8 will fail with `SystemError [ERR_SYSTEM_ERROR]: A system error occurred: uv_os_get_passwd returned ENOENT (no such file or directory)`
+      - run: dr-js -eI .github/ci-patch.js
       - run: npm ci
       - run: npm test
