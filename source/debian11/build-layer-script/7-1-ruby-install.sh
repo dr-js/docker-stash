@@ -34,7 +34,12 @@ apt-update
       libncurses-dev    libncurses6 \
       libffi-dev        libffi7 \
       libgdbm-dev       libgdbm6 \
+      libgmp-dev        libgmp10 \
       libdb-dev         libdb5.3
+
+    mkdir -p /usr/local/etc/
+    echo "install: --no-document" >> /usr/local/etc/gemrc
+    echo "update: --no-document" >> /usr/local/etc/gemrc
 
     autoconf # may re-generate configure
 
@@ -59,6 +64,7 @@ apt-update
       libncurses-dev \
       libffi-dev \
       libgdbm-dev \
+      libgmp-dev \
       libdb-dev
 
   ruby -r rbconfig -e "puts RbConfig::CONFIG['LIBS']"

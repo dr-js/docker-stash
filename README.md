@@ -63,7 +63,8 @@ debian:11-core
               └─dep-font
                 ├─node-puppeteer13
                 └─java
-                  └─ruby
+                  ├─ruby
+                  └─ruby3
 ```
 
 
