@@ -32,12 +32,12 @@ runKit(async (kit) => {
   }
 
   const DEB_FETCH_LIST = [
-    // update at 2021/09/07, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
-    [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20210119_all.deb', 'b2d488ad4d8d8adb3ba319fc9cb2cf9909fc42cb82ad239a26c570a2e749c389' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1k-1+deb11u1_amd64.deb', 'ed998755dabb96ffe107c2d41ce685ecbb4fa200f7825ff82c1092f8334bf3cb' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1k-1+deb11u1_arm64.deb', '326d1a5bfad9ccf890981efcf7c5b4ea4c5ee8b32b13fed829846c905bcacee5' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1k-1+deb11u1_amd64.deb', '82e6ded36e4fa4c28dcec00369b36ee242975f4c110f755a970a56d03d410ffb' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1k-1+deb11u1_arm64.deb', '5239df552b07dd56065d1fad4d825710c6f566eea10d49f80029dc4ef6f927d2' ],
+    // update at 2022/04/21, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
+    [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20200601~deb10u2_all.deb', 'a9e267a24088c793a9cf782455fd344db5fdced714f112a8857c5bfd07179387' ],
+    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1n-0+deb10u1_amd64.deb', '8f8f281e5e41ec1a79984da79bb04cea4b151bd23231f0e34fc2013372a531b8' ],
+    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1n-0+deb10u1_arm64.deb', 'd64691929a71ef9050cd39eeeef3fda62372626a3d46da2e6284d254c664e82d' ],
+    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1n-0+deb10u1_amd64.deb', '500d3941a0887f77395ad43f9cfc35730ddaa59647b8d8b46893b1060dd66062' ],
+    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1n-0+deb10u1_arm64.deb', '333ca69516fa6bff4172f84bad7072ef1ed2a121ae268557a284d8e7812119b4' ],
     // update at 2021/09/07, to find from: https://packages.debian.org/search?keywords=libjemalloc2
     [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_amd64.deb', 'dcb79555b137ad70c9d392ca31e04533e3a10b63aa0db02d5a26f464060cc0f5' ],
     [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_arm64.deb', '7e3537d43b3109183bec24be8e1154a7643ad6e03bb851f2ae0b5dc065954c99' ]
