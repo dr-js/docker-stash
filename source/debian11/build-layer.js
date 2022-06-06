@@ -78,7 +78,7 @@ runKit(async (kit) => {
     await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
     for (const [ text, file ] of [
       // update at 2022/05/23, check version at: https://github.com/puppeteer/puppeteer/releases
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER13 && [ '14.1.1', 'PUPPETEER_VERSION.txt' ],
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER14 && [ '14.2.1', 'PUPPETEER_VERSION.txt' ],
       // update at 2022/06/06, check version at: https://rubygems.org/pages/download
       BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.15', 'GEM_VERSION.txt' ],
       BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ '3.3.15', 'GEM_VERSION.txt' ]
