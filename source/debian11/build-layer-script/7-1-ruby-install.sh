@@ -12,6 +12,7 @@ apt-update
   # mostly borrowed from: https://github.com/docker-library/ruby/blob/master/2.5/buster/Dockerfile
 
   PATH_RUBY_BUILD="/root/.build-ruby"
+  rm -rf "${PATH_RUBY_BUILD}"
   mkdir -p "${PATH_RUBY_BUILD}"
   tar -xf "${MNT_TGZ_RUBY}" \
     -C "${PATH_RUBY_BUILD}" \

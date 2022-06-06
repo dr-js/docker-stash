@@ -22,6 +22,7 @@ MNT_ZIP_NGX_BROTLI="/mnt/build-layer-resource/ngx-brotli.zip"
     libpcre3-dev      libpcre3
 
   PATH_NGINX_BUILD="/root/.build-nginx"
+  rm -rf "${PATH_NGINX_BUILD}"
   mkdir -p "${PATH_NGINX_BUILD}"
   tar -xf "${MNT_TGZ_NGINX}" -C "${PATH_NGINX_BUILD}" # under `nginx-*`
   unzip "${MNT_ZIP_BROTLI}" -d "${PATH_NGINX_BUILD}" # under `brotli-*`
