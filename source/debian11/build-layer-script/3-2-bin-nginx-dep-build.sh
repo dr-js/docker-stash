@@ -9,17 +9,22 @@ MNT_ZIP_NGX_BROTLI="/mnt/build-layer-resource/ngx-brotli.zip"
 
 # EXPECT build layer
 
-#apt-update
+apt-update
   # apt-install nginx-light # this version do not have brotli module, and a bit outdated (Dec 2018)
 
   # NOTE: GCC: compile will crash on qemu-arm-over-x86 build, similar report: https://bugs.launchpad.net/ubuntu/+source/gcc-10/+bug/1890435
   # BUILD_DEP="make gcc"
   BUILD_DEP=""
 
+  # about why pcre2 is newer than pcre3: https://linux.debian.devel.narkive.com/s8mlB5Xw/pcre-package-naming and https://packages.debian.org/bullseye/libpcre2-dev
   apt-install ${BUILD_DEP} \
-    libssl-dev        libssl1.1 \
-    zlib1g-dev        zlib1g \
-    libpcre3-dev      libpcre3
+    libssl-dev \
+    zlib1g-dev\
+    libpcre2-dev
+  # apt-install ${BUILD_DEP} \
+  #   libssl-dev        libssl1.1 \
+  #   zlib1g-dev        zlib1g \
+  #   libpcre2-dev      libpcre2-8-0
 
   PATH_NGINX_BUILD="/root/.build-nginx"
   rm -rf "${PATH_NGINX_BUILD}"
