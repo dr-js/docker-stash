@@ -1,7 +1,7 @@
 name: ci-tag-build
 
 on: # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestbranchestags
-  push: { tags: [ 'v*' ] } # use `v0.0.0` tag pattern
+  push: { branches: [ '**' ] } # push: { tags: [ 'v*' ] } # use `v0.0.0` tag pattern
 
 jobs:
   build:
