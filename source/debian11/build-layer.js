@@ -8,7 +8,7 @@ const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN11_BUILD_FLAVOR_MAP, verifyDebian11BuildArg,
   fetchFileListWithLocalCache,
-  TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
+  TAG_LAYER_CACHE // , TAG_LAYER_MAIN_CACHE
 } = require('../function.js')
 
 const [
@@ -106,10 +106,13 @@ runKit(async (kit) => {
       'image', 'build',
       `--tag=${getFlavoredImageTag(BUILD_FLAVOR.NAME)}-${DOCKER_BUILD_ARCH_INFO.key}`,
       `--tag=${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}`, // NOTE: for layer to use as base, so version-bump won't change Dockerfile
-      `--cache-from=${[ ...new Set([ // cache tag
-        `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}`, // try same label first
-        `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_MAIN_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}` // try `main` next
-      ]) ].join(',')}`, // https://github.com/moby/moby/issues/34715#issuecomment-425933774
+      // TODO: disable for now. a loop in cache may stack-overflow dockerd (buildkit), possibly related:
+      //   https://github.com/moby/buildkit/issues/1902
+      //   https://github.com/moby/moby/issues/40993#issuecomment-634259286
+      // `--cache-from=${[ ...new Set([ // cache tag
+      //   `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}`, // try same label first
+      //   `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_MAIN_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}` // try `main` next
+      // ]) ].join(',')}`, // https://github.com/moby/moby/issues/34715#issuecomment-425933774
       '--build-arg=BUILDKIT_INLINE_CACHE=1', // save build cache metadata // https://docs.docker.com/engine/reference/commandline/build/#specifying-external-cache-sources
       `--file=./Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`,
       `--platform=${DOCKER_BUILD_ARCH_INFO.docker}`,
