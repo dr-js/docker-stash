@@ -13,7 +13,7 @@
   "FLAVOR_DEP_CHROME": { "NAME": "dep-chrome", "BASE_IMAGE": "bin-etc", "LAYER_SCRIPT": "5-0-dep-chrome.sh" },
   "FLAVOR_DEP_FONT": { "NAME": "dep-font", "BASE_IMAGE": "dep-chrome", "LAYER_SCRIPT": "6-0-dep-font.sh" },
 
-  "FLAVOR_NODE_PUPPETEER14": { "NAME": "node-puppeteer14", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "6-1-node-puppeteer14.sh" },
+  "FLAVOR_NODE_PUPPETEER15": { "NAME": "node-puppeteer15", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "6-1-node-puppeteer15.sh" },
 
   "FLAVOR_JAVA": { "NAME": "java", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "7-0-java-install.sh" },
   "FLAVOR_RUBY": { "NAME": "ruby", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-1-ruby-install.sh" },
