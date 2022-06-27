@@ -66,7 +66,7 @@ debian:11-core
             ├─go
             └─dep-chrome
               └─dep-font
-                ├─node-puppeteer15
+                ├─node-puppeteer2206
                 └─java
                   ├─ruby
                   └─ruby3
