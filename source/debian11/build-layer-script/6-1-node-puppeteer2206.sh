@@ -5,7 +5,7 @@ source ./0-1-base-apt.sh
 # MNT
 MNT_PUPPETEER_VERSION="$(cat /mnt/build-layer-resource/PUPPETEER_VERSION.txt)"
 
-PUPPETEER_ROOT="/media/node-puppeteer13/"
+PUPPETEER_ROOT="/media/node-puppeteer2206/"
 
 # TODO: check if resolved
 # # NOTE: disable "/usr/lib/x86_64-linux-gnu/libjemalloc.so.2" (5.2.1-3, 5.1.0-3)

@@ -8,7 +8,7 @@ const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN11_BUILD_FLAVOR_MAP, verifyDebian11BuildArg,
   fetchFileListWithLocalCache,
-  TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
+  TAG_LAYER_CACHE // , TAG_LAYER_MAIN_CACHE
 } = require('../function.js')
 
 const [
@@ -41,6 +41,7 @@ runKit(async (kit) => {
     '0-0-base.sh',
     '0-1-base-apt.sh',
     BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && '0-3-base-ruby.sh',
+    BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && '0-3-base-ruby.sh',
     BUILD_FLAVOR.LAYER_SCRIPT,
     BUILD_FLAVOR.LAYER_DEP_BUILD_SCRIPT
   ].filter(Boolean)) await modifyCopy(kit.fromRoot(__dirname, 'build-layer-script/', file), kit.fromOutput(PATH_BUILD, 'build-layer-script/', file))
@@ -48,43 +49,46 @@ runKit(async (kit) => {
   kit.padLog('assemble "build-layer-resource/"')
   {
     const RES_FLAVOR_NODE = [
-      // update at 2022/02/23, to find download:
+      // update at 2022/06/06, to find download:
       // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-amd64/Packages
       // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-arm64/Packages
-      [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.14.0-deb-1nodesource1_amd64.deb', 'a280f153813f7730242cc79d3e4fced8f6f23bc638bce91905983c2c1ccc3028' ],
-      [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.14.0-deb-1nodesource1_arm64.deb', 'bbd08307e2e6be9371f93b7a9c965d7e8b047d3140379a7fcd6bbc4b5638c1d2' ],
-      // update at 2022/03/10, to find download from: `npm view npm@latest`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
-      [ 'https://registry.npmjs.org/npm/-/npm-8.5.3.tgz', 'O+1j66Alx7ZQgWnUSSTaz8rTqQrJnqNb8Num5uQw2vYvc2RrxLaX7cWtRkDhvkPIL8Nf2WU9gx1oSu268QConA==:sha512:base64' ],
-      [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.4.26.tgz', '/2T9i/zLJcux2c09XEvg73Zw9JyvkWcBGVrMSoUegdrSOr3OrQUbMaBVuHIKQll0yACaFS9E/vX0QjjuFOq5ig==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
-      [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.4.33.tgz', 'EU5EWsxe71lSsDblfNYr9nVEOgUcIEUeFgUV6cvdNTtftAGan/YokFAed/qwTu1oshsXU/BjT2c9/Kko5Aeocw==:sha512:base64', 'dr-dev-@@@.tgz' ] // NOTE: fix filename
+      [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.15.1-deb-1nodesource1_amd64.deb', 'e574d2dc001af7fc05c3a021ca972fd018a7258225ef778ce3f6edeb26a4f3e4' ],
+      [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.15.1-deb-1nodesource1_arm64.deb', 'fca78c339e460091057858b9c71d2d281670e8aea5504e59977095f6f44b6b6d' ],
+      // update at 2022/06/24, to find download from: `npm view npm@latest`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
+      [ 'https://registry.npmjs.org/npm/-/npm-8.13.1.tgz', 'Di4hLSvlImxAslovZ8yRXOhwmd6hXzgRFjwfF4QuwuPT9RUvpLIZ5nubhrY34Pc3elqaU0iyBVWgGZ3jELFP8w==:sha512:base64' ],
+      [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.2.tgz', 'b+gJskV+u5+Kb8s4SXDO0vF24zaYgUTqSrjOaRNrNwZ7LWAHP4hqoZVw2hNtxXChS62nep/FYlFQJZyAh/CTmA==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
+      [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.5.2.tgz', 'ifXz7yEtDTm7GDSR5sazfdrLyMdnk8CWCDSSEdoPZDCR+9t899wdrtSeldcg1HWVc30iG/oq/LOdtwf6a79EtA==:sha512:base64', 'dr-dev-@@@.tgz' ] // NOTE: fix filename
     ]
     const RES_FLAVOR_BIN_NGINX = [
-      // update at 2021/11/26, to find download from: https://nginx.org/en/download.html
+      // update at 2022/06/06, to find download from: https://nginx.org/en/download.html
       // and: https://github.com/google/ngx_brotli
-      [ 'https://nginx.org/download/nginx-1.20.2.tar.gz', '958876757782190a1653e14dc26dfc7ba263de310e04c113e11e97d1bef45a42' ], // TODO: need to calc hash yourself
-      [ 'https://github.com/google/brotli/archive/e61745a6.zip', '4a79fd9fd30bae4d08dab373326cfb21ab0d6b50e0e55564043e35dde7210219', 'brotli.zip' ], // specify filename // TODO: need to calc hash yourself
-      [ 'https://github.com/google/ngx_brotli/archive/9aec15e2.zip', '9ec37453ef1a4866590e96bc8df41657382281afcdcc0d368947544e9950d8f9', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
+      [ 'https://nginx.org/download/nginx-1.22.0.tar.gz', 'b33d569a6f11a01433a57ce17e83935e953ad4dc77cdd4d40f896c88ac26eb53' ], // TODO: need to calc hash yourself
+      [ 'https://github.com/google/brotli/archive/f4153a09.zip', '126fdd3252db2428bf6ced066dd73298dc151d46a0f17f3d050eebe7cd3032ca', 'brotli.zip' ], // specify filename // TODO: need to calc hash yourself
+      [ 'https://github.com/google/ngx_brotli/archive/6e975bcb.zip', '62914aceb8cb8c87d09e2879e6de3627d50a7d1bd6a4b1460cb393a3891b684d', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
     ]
     const RES_FLAVOR_GO = [
-      // update at 2022/03/10, to find download from: https://go.dev/dl/
-      [ 'https://go.dev/dl/go1.17.8.linux-amd64.tar.gz', '980e65a863377e69fd9b67df9d8395fd8e93858e7a24c9f55803421e453f4f99' ],
-      [ 'https://go.dev/dl/go1.17.8.linux-arm64.tar.gz', '57a9171682e297df1a5bd287be056ed0280195ad079af90af16dcad4f64710cb' ]
+      // update at 2022/06/06, to find download from: https://go.dev/dl/
+      [ 'https://go.dev/dl/go1.18.3.linux-amd64.tar.gz', '956f8507b302ab0bb747613695cdae10af99bbd39a90cae522b7c0302cc27245' ],
+      [ 'https://go.dev/dl/go1.18.3.linux-arm64.tar.gz', 'beacbe1441bee4d7978b900136d1d6a71d150f0a9bb77e9d50c822065623a35a' ]
     ]
-    // update at 2021/11/26, to find download from: https://www.ruby-lang.org/en/downloads/releases/
-    const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.5.tar.gz', '2755b900a21235b443bb16dadd9032f784d4a88f143d852bc5d154f22b8781f1' ]
+    // update at 2022/04/21, to find download from: https://www.ruby-lang.org/en/downloads/releases/
+    const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.6.tar.gz', 'e7203b0cc09442ed2c08936d483f8ac140ec1c72e37bb5c401646b7866cb5d10' ]
+    const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.2.tar.gz', '61843112389f02b735428b53bb64cf988ad9fb81858b8248e22e57336f24a83e' ]
 
     await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
     for (const [ text, file ] of [
-      // update at 2022/03/10, check version at: https://github.com/puppeteer/puppeteer/releases
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER13 && [ '13.5.1', 'PUPPETEER_VERSION.txt' ],
-      // update at 2022/03/10, check version at: https://rubygems.org/pages/download
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.9', 'GEM_VERSION.txt' ]
+      // update at 2022/06/27, check version at: https://github.com/puppeteer/puppeteer/releases
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '15.1.1', 'PUPPETEER_VERSION.txt' ],
+      // update at 2022/06/24, check version at: https://rubygems.org/pages/download
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.16', 'GEM_VERSION.txt' ],
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ '3.3.16', 'GEM_VERSION.txt' ]
     ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
     await fetchFileListWithLocalCache([
       ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_FLAVOR_NODE : []),
       ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? RES_FLAVOR_BIN_NGINX : []),
       ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_GO ? RES_FLAVOR_GO : []),
-      ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY ? [ TGZ_RUBY ] : [])
+      ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY ? [ TGZ_RUBY ] : []),
+      ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 ? [ TGZ_RUBY3 ] : [])
     ], {
       pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),
       pathCache: kit.fromTemp('debian11', 'layer-url')
@@ -102,10 +106,13 @@ runKit(async (kit) => {
       'image', 'build',
       `--tag=${getFlavoredImageTag(BUILD_FLAVOR.NAME)}-${DOCKER_BUILD_ARCH_INFO.key}`,
       `--tag=${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}`, // NOTE: for layer to use as base, so version-bump won't change Dockerfile
-      `--cache-from=${[ ...new Set([ // cache tag
-        `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}`, // try same label first
-        `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_MAIN_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}` // try `main` next
-      ]) ].join(',')}`, // https://github.com/moby/moby/issues/34715#issuecomment-425933774
+      // TODO: disable for now. a loop in cache may stack-overflow dockerd (buildkit), possibly related:
+      //   https://github.com/moby/buildkit/issues/1902
+      //   https://github.com/moby/moby/issues/40993#issuecomment-634259286
+      // `--cache-from=${[ ...new Set([ // cache tag
+      //   `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}`, // try same label first
+      //   `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_MAIN_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}` // try `main` next
+      // ]) ].join(',')}`, // https://github.com/moby/moby/issues/34715#issuecomment-425933774
       '--build-arg=BUILDKIT_INLINE_CACHE=1', // save build cache metadata // https://docs.docker.com/engine/reference/commandline/build/#specifying-external-cache-sources
       `--file=./Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`,
       `--platform=${DOCKER_BUILD_ARCH_INFO.docker}`,

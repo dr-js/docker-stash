@@ -9,8 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - { uses: "actions/checkout@v2" } # https://github.com/actions/checkout
-      - { uses: "actions/setup-node@v2", with: { node-version: "16.x" } } # https://github.com/actions/setup-node
-      - run: npx @dr-js/dev@0.4 -eI .github/ci-patch.js
+      - { uses: "actions/setup-node@v2", with: { node-version: "18.x" } } # https://github.com/actions/setup-node
+      - run: npx @dr-js/dev@0.5 -eI .github/ci-patch.js
       - run: bash .github/setup-docker.sh
       - run: npm ci
       - run: npm test

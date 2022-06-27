@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
@@ -11,12 +11,13 @@
     "version-bump": "dr-dev --version-bump-git-branch --git-commit --debug",
     "tag-push": "dr-dev --shell-alias quick-git-push-combo",
     "// build =======================": "",
-    "build-debian11": "node source/debian11/build.js build-layer.js",
-    "build-debian11-cn": "node source/debian11/build.js build-layer.js CN",
+    "build-debian11": "node source/debian11/build.js",
+    "build-debian11-cn": "node source/debian11/build.js CN",
     "build-proxy": "dr-dev --EE \"HTTP_PROXY=${npm_config_proxy-http://127.0.0.1:1080}&HTTPS_PROXY=${npm_config_https_proxy-http://127.0.0.1:1080}&NO_PROXY=127.0.0.1,localhost\" -E --",
     "build-debian11-cn-proxy": "npm run build-proxy -- dr-dev --rsl build-debian11-cn",
     "build-debian11-dev-core-proxy": "npm run build-proxy -- node source/debian11/build-core.js",
     "build-debian11-dev-core-cn-proxy": "npm run build-proxy -- node source/debian11/build-core.js CN",
+    "build-debian11-dev-layer": "node source/debian11/build-layer.js bin-nginx",
     "build-debian11-dev-layer-cn-proxy": "npm run build-proxy -- node source/debian11/build-layer.js ruby CN",
     "// push ========================": "",
     "push-debian11-all": "node source/debian11/push.js ALL",
@@ -40,8 +41,8 @@
     "npm": ">=8.3"
   },
   "devDependencies": {
-    "@dr-js/core": "^0.4.26",
-    "@dr-js/dev": "^0.4.33",
-    "@dr-js/dev-eslint": "^0.4.33"
+    "@dr-js/core": "^0.5.2",
+    "@dr-js/dev": "^0.5.2",
+    "@dr-js/dev-eslint": "^0.5.2"
   }
 }
