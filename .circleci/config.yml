@@ -2,7 +2,7 @@ version: 2
 
 jobs:
   build:
-    machine: { image: "ubuntu-2004:2022.04.1" } # https://circleci.com/docs/2.0/using-arm/
+    machine: { image: "ubuntu-2004:current" } # https://circleci.com/docs/2.0/using-arm/
     resource_class: arm.medium # https://circleci.com/docs/2.0/arm-resources/#pricing-and-availability
     steps:
       - checkout
