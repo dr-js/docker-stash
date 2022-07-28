@@ -54,8 +54,8 @@ runKit(async (kit) => {
       // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-arm64/Packages
       [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.15.1-deb-1nodesource1_amd64.deb', 'e574d2dc001af7fc05c3a021ca972fd018a7258225ef778ce3f6edeb26a4f3e4' ],
       [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.15.1-deb-1nodesource1_arm64.deb', 'fca78c339e460091057858b9c71d2d281670e8aea5504e59977095f6f44b6b6d' ],
-      // update at 2022/06/24, to find download from: `npm view npm@latest`, `npm view @dr-js/core@latest`, `npm view @dr-js/dev@latest`
-      [ 'https://registry.npmjs.org/npm/-/npm-8.13.1.tgz', 'Di4hLSvlImxAslovZ8yRXOhwmd6hXzgRFjwfF4QuwuPT9RUvpLIZ5nubhrY34Pc3elqaU0iyBVWgGZ3jELFP8w==:sha512:base64' ],
+      // update at 2022/07/28, to find download from: `npm view npm@latest; npm view @dr-js/core@latest; npm view @dr-js/dev@latest`
+      [ 'https://registry.npmjs.org/npm/-/npm-8.15.1.tgz', 'ZjVMjEn+PqdjpZg+VLMFz5lyzh7tW+SBt+KQzvoQC986U/clE897eg7YR0PLYw6RfjTsoPTuB95xQ8ubn9go6Q==:sha512:base64' ],
       [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.2.tgz', 'b+gJskV+u5+Kb8s4SXDO0vF24zaYgUTqSrjOaRNrNwZ7LWAHP4hqoZVw2hNtxXChS62nep/FYlFQJZyAh/CTmA==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
       [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.5.2.tgz', 'ifXz7yEtDTm7GDSR5sazfdrLyMdnk8CWCDSSEdoPZDCR+9t899wdrtSeldcg1HWVc30iG/oq/LOdtwf6a79EtA==:sha512:base64', 'dr-dev-@@@.tgz' ] // NOTE: fix filename
     ]
@@ -67,9 +67,9 @@ runKit(async (kit) => {
       [ 'https://github.com/google/ngx_brotli/archive/6e975bcb.zip', '62914aceb8cb8c87d09e2879e6de3627d50a7d1bd6a4b1460cb393a3891b684d', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
     ]
     const RES_FLAVOR_GO = [
-      // update at 2022/06/06, to find download from: https://go.dev/dl/
-      [ 'https://go.dev/dl/go1.18.3.linux-amd64.tar.gz', '956f8507b302ab0bb747613695cdae10af99bbd39a90cae522b7c0302cc27245' ],
-      [ 'https://go.dev/dl/go1.18.3.linux-arm64.tar.gz', 'beacbe1441bee4d7978b900136d1d6a71d150f0a9bb77e9d50c822065623a35a' ]
+      // update at 2022/07/28, to find download from: https://go.dev/dl/
+      [ 'https://go.dev/dl/go1.18.4.linux-amd64.tar.gz', 'c9b099b68d93f5c5c8a8844a89f8db07eaa58270e3a1e01804f17f4cf8df02f5' ],
+      [ 'https://go.dev/dl/go1.18.4.linux-arm64.tar.gz', '35014d92b50d97da41dade965df7ebeb9a715da600206aa59ce1b2d05527421f' ]
     ]
     // update at 2022/04/21, to find download from: https://www.ruby-lang.org/en/downloads/releases/
     const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.6.tar.gz', 'e7203b0cc09442ed2c08936d483f8ac140ec1c72e37bb5c401646b7866cb5d10' ]
@@ -77,11 +77,11 @@ runKit(async (kit) => {
 
     await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
     for (const [ text, file ] of [
-      // update at 2022/06/27, check version at: https://github.com/puppeteer/puppeteer/releases
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '15.1.1', 'PUPPETEER_VERSION.txt' ],
-      // update at 2022/06/24, check version at: https://rubygems.org/pages/download
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.16', 'GEM_VERSION.txt' ],
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ '3.3.16', 'GEM_VERSION.txt' ]
+      // update at 2022/07/28, check version at: https://github.com/puppeteer/puppeteer/releases
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '15.4.2', 'PUPPETEER_VERSION.txt' ],
+      // update at 2022/07/28, check version at: https://rubygems.org/pages/download
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.19', 'GEM_VERSION.txt' ],
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ '3.3.19', 'GEM_VERSION.txt' ]
     ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
     await fetchFileListWithLocalCache([
       ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_FLAVOR_NODE : []),
