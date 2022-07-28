@@ -49,11 +49,11 @@ runKit(async (kit) => {
   kit.padLog('assemble "build-layer-resource/"')
   {
     const RES_FLAVOR_NODE = [
-      // update at 2022/06/06, to find download:
-      // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-amd64/Packages
-      // - https://deb.nodesource.com/node_16.x/dists/bullseye/main/binary-arm64/Packages
-      [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.15.1-deb-1nodesource1_amd64.deb', 'e574d2dc001af7fc05c3a021ca972fd018a7258225ef778ce3f6edeb26a4f3e4' ],
-      [ 'https://deb.nodesource.com/node_16.x/pool/main/n/nodejs/nodejs_16.15.1-deb-1nodesource1_arm64.deb', 'fca78c339e460091057858b9c71d2d281670e8aea5504e59977095f6f44b6b6d' ],
+      // update at 2022/07/28, to find download:
+      // - https://deb.nodesource.com/node_18.x/dists/bullseye/main/binary-amd64/Packages
+      // - https://deb.nodesource.com/node_18.x/dists/bullseye/main/binary-arm64/Packages
+      [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.7.0-deb-1nodesource1_amd64.deb', 'ed9bca32dcade336fa280b23b1305ec060c34f62416cec1ef5f1a7548a906cbb' ],
+      [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.7.0-deb-1nodesource1_arm64.deb', '9e1a0390fc45737b9f5a5db2e05a0cc4150dd530de0be3b629c0a422ad90b0ea' ],
       // update at 2022/07/28, to find download from: `npm view npm@latest; npm view @dr-js/core@latest; npm view @dr-js/dev@latest`
       [ 'https://registry.npmjs.org/npm/-/npm-8.15.1.tgz', 'ZjVMjEn+PqdjpZg+VLMFz5lyzh7tW+SBt+KQzvoQC986U/clE897eg7YR0PLYw6RfjTsoPTuB95xQ8ubn9go6Q==:sha512:base64' ],
       [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.2.tgz', 'b+gJskV+u5+Kb8s4SXDO0vF24zaYgUTqSrjOaRNrNwZ7LWAHP4hqoZVw2hNtxXChS62nep/FYlFQJZyAh/CTmA==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
