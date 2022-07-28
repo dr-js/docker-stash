@@ -37,12 +37,12 @@
     "prepack": "echo \"Error: do not pack this package\" && exit 1"
   },
   "engines": {
-    "node": ">=16.13",
-    "npm": ">=8.3"
+    "node": ">=18.6",
+    "npm": ">=8.15"
   },
   "devDependencies": {
-    "@dr-js/core": "^0.5.2",
-    "@dr-js/dev": "^0.5.2",
-    "@dr-js/dev-eslint": "^0.5.2"
+    "@dr-js/core": "^0.5.3-dev.0",
+    "@dr-js/dev": "^0.5.3-dev.1",
+    "@dr-js/dev-eslint": "^0.5.3-dev.1"
   }
 }
