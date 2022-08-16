@@ -6,3 +6,5 @@ sudo systemctl restart docker
 
 echo '"drjs/debian"' > source/debian11/BUILD_REPO.json
 echo '"ghcr.io/dr-js/debian"' > source/debian11/BUILD_REPO_GHCR.json
+echo '"drjs/debian"' > source/debian12/BUILD_REPO.json
+echo '"ghcr.io/dr-js/debian"' > source/debian12/BUILD_REPO_GHCR.json
