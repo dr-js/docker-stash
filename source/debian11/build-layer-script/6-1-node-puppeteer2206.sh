@@ -4,6 +4,7 @@ source ./0-1-base-apt.sh
 
 # MNT
 MNT_PUPPETEER_VERSION="$(cat /mnt/build-layer-resource/PUPPETEER_VERSION.txt)"
+MNT_PUPPETEER_VERSION_ARM64="$(cat /mnt/build-layer-resource/PUPPETEER_VERSION_ARM64.txt)"
 
 PUPPETEER_ROOT="/media/node-puppeteer2206/"
 
@@ -25,9 +26,12 @@ mkdir -p "${PUPPETEER_ROOT}"
     npm install "puppeteer@${MNT_PUPPETEER_VERSION}"
   else
     apt-update
-      apt-install chromium # slightly out of date: 90.0.4430.212-1
+      # 14.2.0 (2022-06-01) chromium: roll to Chromium 103.0.5059.0 (r1002410)
+      # up-to 15.0.2
+      apt-install chromium # https://packages.debian.org/bullseye/chromium (103.0.5060.53-1~deb11u1)
     apt-clear
-    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install "puppeteer@${MNT_PUPPETEER_VERSION}"
+    # should run with `PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium` env
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install "puppeteer@${MNT_PUPPETEER_VERSION_ARM64}"
   fi
 
   # clear npm
@@ -43,4 +47,6 @@ if [[ "${DOCKER_BUILD_ARCH}" = "amd64" ]] ; then
   else
     echo "[ldd pass]"
   fi
+else
+  test -e "/usr/bin/chromium"
 fi

@@ -79,6 +79,7 @@ runKit(async (kit) => {
     for (const [ text, file ] of [
       // update at 2022/08/12, check version at: https://github.com/puppeteer/puppeteer/releases
       BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '16.1.0', 'PUPPETEER_VERSION.txt' ],
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '15.0.2', 'PUPPETEER_VERSION_ARM64.txt' ],
       // update at 2022/08/12, check version at: https://rubygems.org/pages/download
       BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.20', 'GEM_VERSION.txt' ],
       BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ '3.3.20', 'GEM_VERSION.txt' ]
