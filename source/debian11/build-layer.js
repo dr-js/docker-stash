@@ -32,7 +32,13 @@ runKit(async (kit) => {
   await resetDirectory(PATH_BUILD)
 
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
-    await writeText(kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`), getLayerDockerfileString({ DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, getFlavoredImageTag }))
+    const appendCommandList = [
+      DOCKER_BUILD_ARCH_INFO.key === 'arm64' && BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && 'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium'
+    ].filter(Boolean)
+    await writeText(
+      kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
+      getLayerDockerfileString({ DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, appendCommandList, getFlavoredImageTag })
+    )
   }
 
   kit.padLog('assemble "build-layer-script/"')
@@ -124,7 +130,7 @@ runKit(async (kit) => {
 }, { title: `build-${BUILD_FLAVOR_NAME}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR}`}` })
 
 const getLayerDockerfileString = ({
-  DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, getFlavoredImageTag
+  DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, appendCommandList = [], getFlavoredImageTag
 }) => !BUILD_FLAVOR.LAYER_DEP_BUILD_SCRIPT
   ? `# syntax = ${BUILDKIT_SYNTAX}
 FROM ${getFlavoredImageTag(BUILD_FLAVOR.BASE_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}
@@ -136,7 +142,7 @@ RUN \\
   --mount=type=bind,target=/mnt/,source=. \\
     cd /mnt/build-layer-script/ \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
-`
+${appendCommandList.join('\n')}`
   : `# syntax = ${BUILDKIT_SYNTAX}
 FROM ${getFlavoredImageTag(DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_DEP_BUILD.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS dep-build-layer
 RUN \\
@@ -155,4 +161,4 @@ RUN \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
 FROM ${getFlavoredImageTag(BUILD_FLAVOR.BASE_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}
 COPY --from=check-layer ${BUILD_FLAVOR.DEP_BUILD_COPY} ${BUILD_FLAVOR.DEP_BUILD_COPY}
-`
+${appendCommandList.join('\n')}`
