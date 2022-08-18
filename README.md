@@ -90,7 +90,7 @@ npm run build-debian11
 
 # or for CN mirror
 npm run build-debian11-cn
-npm run build-debian11-cn-proxy
+npm run pxybd-debian11-cn
 ```
 
 Use `build-proxy*` for slow fetch, the config can also be added in `.npmrc` like:
