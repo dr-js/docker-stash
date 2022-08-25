@@ -16,16 +16,16 @@ jobs:
             bash .github/setup-docker.sh
       - run: npm ci
       - run: npm test
-      - run: npm run build-debian11
       - run: npm run build-debian12
+      - run: npm run build-debian11
       # - run: npm run build-debian11-cn
       - run:
           name: Docker Auth
           command: |
             echo "${CIRCLECI_DOCKER_HUB_DRJS_PW}" | dr-js --docker -- login --username drjs --password-stdin
             echo "${CIRCLECI_GHCR_DRJS_PAT}" | dr-js --docker -- login --username dr-js --password-stdin ghcr.io
-      - run: npm run push-debian11-all
       - run: npm run push-debian12-all
+      - run: npm run push-debian11-all
 
 workflows:
   version: 2
