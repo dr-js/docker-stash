@@ -55,13 +55,13 @@ runKit(async (kit) => {
   kit.padLog('assemble "build-layer-resource/"')
   {
     const RES_FLAVOR_NODE = [
-      // update at 2022/08/12, to find download:
+      // update at 2022/08/25, to find download:
       // - https://deb.nodesource.com/node_18.x/dists/bullseye/main/binary-amd64/Packages
       // - https://deb.nodesource.com/node_18.x/dists/bullseye/main/binary-arm64/Packages
-      [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.7.0-deb-1nodesource1_amd64.deb', 'ed9bca32dcade336fa280b23b1305ec060c34f62416cec1ef5f1a7548a906cbb' ],
-      [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.7.0-deb-1nodesource1_arm64.deb', '9e1a0390fc45737b9f5a5db2e05a0cc4150dd530de0be3b629c0a422ad90b0ea' ],
-      // update at 2022/08/12, to find download from: `npm view npm@latest; npm view @dr-js/core@latest; npm view @dr-js/dev@latest`
-      [ 'https://registry.npmjs.org/npm/-/npm-8.17.0.tgz', 'tIcfZd541v86Sqrf+t/GW6ivqiT8b/2b3EAjNw3vRe+eVnL4mlkVwu17hjCOrsPVntLb5C6tQG4jPUE5Oveeyw==:sha512:base64' ],
+      [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.8.0-deb-1nodesource1_amd64.deb', '70fac91c422f2439979cf2e9fdff053907ab8d7eedb26c8be172b8d00241c39a' ],
+      [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.8.0-deb-1nodesource1_arm64.deb', 'f36f1b9f77795924389cc345953954004444e26a342f9c58030d3af60202e60f' ],
+      // update at 2022/08/25, to find download from: `npm view npm@latest; npm view @dr-js/core@latest; npm view @dr-js/dev@latest`
+      [ 'https://registry.npmjs.org/npm/-/npm-8.18.0.tgz', 'G07/yKvNUwhwxYhk8BxcuDPB/4s+y755i6CnH3lf9LQBHP5siUx66WbuNGWEnN3xaBER4+IR3OWApKX7eBO5Dw==:sha512:base64' ],
       [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.4.tgz', 'USlagAMD2/tWfu1PZx5NlUEHeMJcsr8nsK9m/iilH20zHFxAbQTJOCDe+TrVpOvbkp5Zt5OnuxK/RBsu29c2EA==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
       [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.5.3.tgz', 'E54N5n8eiaqL3RNhYXY5Lh56kvAd3UPJs7TmKHpHJ6zaRbxPW7OVMvTSSoFlbmYgtz2J0QN6iCnlTOLD0np9ew==:sha512:base64', 'dr-dev-@@@.tgz' ] // NOTE: fix filename
     ]
@@ -83,12 +83,12 @@ runKit(async (kit) => {
 
     await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
     for (const [ text, file ] of [
-      // update at 2022/08/12, check version at: https://github.com/puppeteer/puppeteer/releases
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '16.1.0', 'PUPPETEER_VERSION.txt' ],
+      // update at 2022/08/25, check version at: https://github.com/puppeteer/puppeteer/releases
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '16.2.0', 'PUPPETEER_VERSION.txt' ],
       BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '15.0.2', 'PUPPETEER_VERSION_ARM64.txt' ],
-      // update at 2022/08/12, check version at: https://rubygems.org/pages/download
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.20', 'GEM_VERSION.txt' ],
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ '3.3.20', 'GEM_VERSION.txt' ]
+      // update at 2022/08/25, check version at: https://rubygems.org/pages/download
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.21', 'GEM_VERSION.txt' ],
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ '3.3.21', 'GEM_VERSION.txt' ]
     ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
     await fetchFileListWithLocalCache([
       ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_FLAVOR_NODE : []),

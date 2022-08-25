@@ -16,7 +16,7 @@ apt-update
   # BUILD_DEP="make gcc"
   BUILD_DEP=""
 
-  # about why pcre2 is newer than pcre3: https://linux.debian.devel.narkive.com/s8mlB5Xw/pcre-package-naming and https://packages.debian.org/bullseye/libpcre2-dev
+  # about why pcre2 is newer than pcre3: https://linux.debian.devel.narkive.com/s8mlB5Xw/pcre-package-naming and https://packages.debian.org/bookworm/libpcre2-dev
   apt-install ${BUILD_DEP} \
     libssl-dev \
     zlib1g-dev\
