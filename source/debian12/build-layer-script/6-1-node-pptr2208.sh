@@ -28,7 +28,7 @@ mkdir -p "${PUPPETEER_ROOT}"
     apt-update
       # 15.1.0 (2022-06-24) #chromium: roll to Chromium 104.0.5109.0 (r1011831)
       # up-to 15.4.2
-      apt-install chromium # https://packages.debian.org/bookworm/chromium (104.0.5112.79-1)
+      apt-install chromium # https://packages.debian.org/bookworm/chromium (104.0.5112.101-1)
     apt-clear
     # should run with `PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium` env
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install "puppeteer@${MNT_PUPPETEER_VERSION_ARM64}"

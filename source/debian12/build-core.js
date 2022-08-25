@@ -32,15 +32,15 @@ runKit(async (kit) => {
   }
 
   const DEB_FETCH_LIST = [
-    // update at 2022/07/28, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
+    // update at 2022/08/25, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
     [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20211016_all.deb', 'd7abcfaa67bc16c4aed960c959ca62849102c8a0a61b9af9a23fcc870ebc3c57' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.4-2_amd64.deb', 'ae1d288e33d0f5dc536f7cee15ef44ca62120b67f8e9d5e1db51d624da1497d9' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.4-2_arm64.deb', '6a3f90bbaded44d99355b3efdbc93ba099cd60502d477b956868211e9b9e4cbb' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3_3.0.4-2_amd64.deb', '45bf21cb585cc28ebf4a14c1288f9a433085880b5cc4a401311a3bba112374f5' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3_3.0.4-2_arm64.deb', '2ab79dfc2294039f7f4c082db69caf6bec0de8becce6c7c3d070f90a1989f774' ],
-    // update at 2022/05/23, to find from: https://packages.debian.org/search?keywords=libjemalloc2
-    [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-4_amd64.deb', '81868bd6651d848559de0e705b48406c7e7419522cc473a6887955c0c1e0ef4f' ],
-    [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-4_arm64.deb', '368f0da41ddcb59eaec33cbffeae42fd94a92285dd0906785dc671a3564c70f7' ]
+    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.5-2_amd64.deb', 'd67bb6da8256863c85866059c8c2b93f1571ed7e2574b007241de35a2f0120d9' ],
+    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.5-2_arm64.deb', 'dbd935c68c6a8483aacd777cb171992e86846985e1b17af05ceccb767e6d8587' ],
+    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3_3.0.5-2_amd64.deb', '1b6c27131c8b23866fbeb445ad51358040b1370440513285d489f95e201e232a' ],
+    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3_3.0.5-2_arm64.deb', '88bbc0b14fb4346d31beaf6fce914c64b201a4b32a621bdcf3ccd0b1f639edd7' ],
+    // update at 2022/08/25, to find from: https://packages.debian.org/search?keywords=libjemalloc2
+    [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-5_amd64.deb', 'b0f5dd705e5d0b927a29d28b985648cbd6a275840eaceb5fcdffbb417e9b9046' ],
+    [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-5_arm64.deb', '5b10cfc1f59fe72e7aa6198c9aa4070947d27b5930d5461eccc1d52555ec8abb' ]
   ]
 
   const coreImageBufferMap = await fetchGitHubBufferMapWithLocalCache(URL_CORE_IMAGE_MAP, URL_CACHE_HASH, kit.fromTemp('debian12', 'core-github'))
