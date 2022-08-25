@@ -28,7 +28,7 @@ apt-update
     # https://github.com/rbenv/ruby-build/wiki#suggested-build-environment
     apt-install \
       autoconf bison make gcc \
-      libssl-dev        libssl1.1 \
+      libssl-dev        libssl3 \
       libyaml-dev       libyaml-0-2 \
       libreadline-dev   libreadline8 \
       zlib1g-dev        zlib1g \
