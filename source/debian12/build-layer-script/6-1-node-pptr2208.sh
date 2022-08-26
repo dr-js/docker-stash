@@ -6,7 +6,7 @@ source ./0-1-base-apt.sh
 MNT_PUPPETEER_VERSION="$(cat /mnt/build-layer-resource/PUPPETEER_VERSION.txt)"
 MNT_PUPPETEER_VERSION_ARM64="$(cat /mnt/build-layer-resource/PUPPETEER_VERSION_ARM64.txt)"
 
-PUPPETEER_ROOT="/media/node-puppeteer2206/"
+PUPPETEER_ROOT="/media/node-pptr2208/"
 
 # TODO: check if resolved
 # # NOTE: disable "/usr/lib/x86_64-linux-gnu/libjemalloc.so.2" (5.2.1-3, 5.1.0-3)
@@ -26,9 +26,9 @@ mkdir -p "${PUPPETEER_ROOT}"
     npm install "puppeteer@${MNT_PUPPETEER_VERSION}"
   else
     apt-update
-      # 14.2.0 (2022-06-01) chromium: roll to Chromium 103.0.5059.0 (r1002410)
-      # up-to 15.0.2
-      apt-install chromium # https://packages.debian.org/bullseye/chromium (103.0.5060.53-1~deb11u1)
+      # 15.1.0 (2022-06-24) #chromium: roll to Chromium 104.0.5109.0 (r1011831)
+      # up-to 15.4.2
+      apt-install chromium # https://packages.debian.org/bookworm/chromium (104.0.5112.101-1)
     apt-clear
     # should run with `PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium` env
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install "puppeteer@${MNT_PUPPETEER_VERSION_ARM64}"

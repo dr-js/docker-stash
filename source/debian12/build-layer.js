@@ -6,7 +6,7 @@ const { runKit } = require('@dr-js/core/library/node/kit.js')
 const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
-  DEBIAN11_BUILD_FLAVOR_MAP, verifyDebian11BuildArg,
+  DEBIAN12_BUILD_FLAVOR_MAP, verifyDebian12BuildArg,
   fetchFileListWithLocalCache,
   TAG_LAYER_CACHE // , TAG_LAYER_MAIN_CACHE
 } = require('../function.js')
@@ -19,10 +19,10 @@ const [
 ] = process.argv
 
 runKit(async (kit) => {
-  const { BUILD_FLAVOR, getFlavoredTag, getFlavoredImageTag } = verifyDebian11BuildArg({ BUILD_FLAVOR_NAME, DOCKER_BUILD_MIRROR })
+  const { BUILD_FLAVOR, getFlavoredTag, getFlavoredImageTag } = verifyDebian12BuildArg({ BUILD_FLAVOR_NAME, DOCKER_BUILD_MIRROR })
 
   const BUILD_TAG = getFlavoredTag(BUILD_FLAVOR.NAME)
-  const PATH_BUILD = kit.fromOutput('debian11-layer', `${BUILD_FLAVOR.NAME}${DOCKER_BUILD_MIRROR}`) // leave less file around
+  const PATH_BUILD = kit.fromOutput('debian12-layer', `${BUILD_FLAVOR.NAME}${DOCKER_BUILD_MIRROR}`) // leave less file around
 
   kit.padLog('build config')
   kit.log('BUILD_TAG:', BUILD_TAG)
@@ -33,7 +33,7 @@ runKit(async (kit) => {
 
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
     const appendCommandList = [
-      DOCKER_BUILD_ARCH_INFO.key === 'arm64' && BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && 'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium'
+      DOCKER_BUILD_ARCH_INFO.key === 'arm64' && BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium'
     ].filter(Boolean)
     await writeText(
       kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
@@ -41,13 +41,16 @@ runKit(async (kit) => {
     )
   }
 
+  for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
+    await writeText(kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`), getLayerDockerfileString({ DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, getFlavoredImageTag }))
+  }
+
   kit.padLog('assemble "build-layer-script/"')
   await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-script/'))
   for (const file of [
     '0-0-base.sh',
     '0-1-base-apt.sh',
-    BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && '0-3-base-ruby.sh',
-    BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && '0-3-base-ruby.sh',
+    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && '0-3-base-ruby.sh',
     BUILD_FLAVOR.LAYER_SCRIPT,
     BUILD_FLAVOR.LAYER_DEP_BUILD_SCRIPT
   ].filter(Boolean)) await modifyCopy(kit.fromRoot(__dirname, 'build-layer-script/', file), kit.fromOutput(PATH_BUILD, 'build-layer-script/', file))
@@ -56,8 +59,8 @@ runKit(async (kit) => {
   {
     const RES_FLAVOR_NODE = [
       // update at 2022/08/25, to find download:
-      // - https://deb.nodesource.com/node_18.x/dists/bullseye/main/binary-amd64/Packages
-      // - https://deb.nodesource.com/node_18.x/dists/bullseye/main/binary-arm64/Packages
+      // - https://deb.nodesource.com/node_18.x/dists/bookworm/main/binary-amd64/Packages
+      // - https://deb.nodesource.com/node_18.x/dists/bookworm/main/binary-arm64/Packages
       [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.8.0-deb-1nodesource1_amd64.deb', '70fac91c422f2439979cf2e9fdff053907ab8d7eedb26c8be172b8d00241c39a' ],
       [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.8.0-deb-1nodesource1_arm64.deb', 'f36f1b9f77795924389cc345953954004444e26a342f9c58030d3af60202e60f' ],
       // update at 2022/08/25, to find download from: `npm view npm@latest; npm view @dr-js/core@latest; npm view @dr-js/dev@latest`
@@ -78,27 +81,24 @@ runKit(async (kit) => {
       [ 'https://go.dev/dl/go1.19.linux-arm64.tar.gz', 'efa97fac9574fc6ef6c9ff3e3758fb85f1439b046573bf434cccb5e012bd00c8' ]
     ]
     // update at 2022/04/21, to find download from: https://www.ruby-lang.org/en/downloads/releases/
-    const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.6.tar.gz', 'e7203b0cc09442ed2c08936d483f8ac140ec1c72e37bb5c401646b7866cb5d10' ]
     const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.2.tar.gz', '61843112389f02b735428b53bb64cf988ad9fb81858b8248e22e57336f24a83e' ]
 
     await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
     for (const [ text, file ] of [
       // update at 2022/08/25, check version at: https://github.com/puppeteer/puppeteer/releases
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '16.2.0', 'PUPPETEER_VERSION.txt' ],
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '15.0.2', 'PUPPETEER_VERSION_ARM64.txt' ],
+      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && [ '16.2.0', 'PUPPETEER_VERSION.txt' ],
+      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && [ '15.4.2', 'PUPPETEER_VERSION_ARM64.txt' ],
       // update at 2022/08/25, check version at: https://rubygems.org/pages/download
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.21', 'GEM_VERSION.txt' ],
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ '3.3.21', 'GEM_VERSION.txt' ]
+      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ '3.3.21', 'GEM_VERSION.txt' ]
     ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
     await fetchFileListWithLocalCache([
-      ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_FLAVOR_NODE : []),
-      ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? RES_FLAVOR_BIN_NGINX : []),
-      ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_GO ? RES_FLAVOR_GO : []),
-      ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY ? [ TGZ_RUBY ] : []),
-      ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 ? [ TGZ_RUBY3 ] : [])
+      ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_FLAVOR_NODE : []),
+      ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? RES_FLAVOR_BIN_NGINX : []),
+      ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_GO ? RES_FLAVOR_GO : []),
+      ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 ? [ TGZ_RUBY3 ] : [])
     ], {
       pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),
-      pathCache: kit.fromTemp('debian11', 'layer-url')
+      pathCache: kit.fromTemp('debian12', 'layer-url')
     })
   }
 
@@ -106,7 +106,7 @@ runKit(async (kit) => {
     if (DOCKER_BUILD_ARCH_INFO.node !== process.arch) continue
     kit.padLog(`build image for ${DOCKER_BUILD_ARCH_INFO.key}`)
 
-    const PATH_LOG = kit.fromOutput('debian11-layer', `${BUILD_FLAVOR.NAME}${DOCKER_BUILD_MIRROR}.${DOCKER_BUILD_ARCH_INFO.key}.log`) // leave less file around
+    const PATH_LOG = kit.fromOutput('debian12-layer', `${BUILD_FLAVOR.NAME}${DOCKER_BUILD_MIRROR}.${DOCKER_BUILD_ARCH_INFO.key}.log`) // leave less file around
     kit.log('PATH_LOG:', PATH_LOG)
 
     await runDockerWithTee([
@@ -144,7 +144,7 @@ RUN \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
 ${appendCommandList.join('\n')}`
   : `# syntax = ${BUILDKIT_SYNTAX}
-FROM ${getFlavoredImageTag(DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_DEP_BUILD.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS dep-build-layer
+FROM ${getFlavoredImageTag(DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_DEP_BUILD.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS dep-build-layer
 RUN \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-0,target=/var/log \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-1,target=/var/cache \\

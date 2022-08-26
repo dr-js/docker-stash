@@ -36,6 +36,27 @@ const verifyDebian11BuildArg = ({ BUILD_FLAVOR_NAME, DOCKER_BUILD_MIRROR }) => {
   }
 }
 
+const DEBIAN12_BUILD_REPO = require('./debian12/BUILD_REPO.json')
+const DEBIAN12_BUILD_REPO_GHCR = require('./debian12/BUILD_REPO_GHCR.json')
+const DEBIAN12_BUILD_FLAVOR_MAP = require('./debian12/BUILD_FLAVOR_MAP.json')
+const DEBIAN12_BUILD_FLAVOR_LIST = Object.values(DEBIAN12_BUILD_FLAVOR_MAP)
+
+const saveDebian12TagCore = (DOCKER_BUILD_MIRROR = '', tag) => writeJSONSync(resolve(__dirname, `debian12/TAG_CORE${DOCKER_BUILD_MIRROR}.json`), tag)
+const loadDebian12TagCore = (DOCKER_BUILD_MIRROR = '') => readJSONSync(resolve(__dirname, `debian12/TAG_CORE${DOCKER_BUILD_MIRROR}.json`))
+const verifyDebian12BuildArg = ({ BUILD_FLAVOR_NAME, DOCKER_BUILD_MIRROR }) => {
+  oneOf(BUILD_FLAVOR_NAME, DEBIAN12_BUILD_FLAVOR_LIST.map(({ NAME }) => NAME))
+  oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
+  const BUILD_FLAVOR = DEBIAN12_BUILD_FLAVOR_LIST.find(({ NAME }) => BUILD_FLAVOR_NAME === NAME)
+  const getFlavoredTag = (name, version = PACKAGE_VERSION) => `12-${name}-${version}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR.toLowerCase()}`}`
+  const getFlavoredImageTag = (name, version = PACKAGE_VERSION) => name === '@CORE'
+    ? loadDebian12TagCore(DOCKER_BUILD_MIRROR)
+    : `${DEBIAN12_BUILD_REPO}:${getFlavoredTag(name, version)}`
+  return {
+    BUILD_FLAVOR,
+    getFlavoredTag, getFlavoredImageTag
+  }
+}
+
 const fetchBuffer = async (url) => {
   console.log(' - fetch:', url)
   return (await fetchWithJumpProxy(url, {
@@ -110,6 +131,10 @@ module.exports = {
   DEBIAN11_BUILD_REPO, DEBIAN11_BUILD_REPO_GHCR,
   DEBIAN11_BUILD_FLAVOR_MAP, DEBIAN11_BUILD_FLAVOR_LIST,
   saveDebian11TagCore, loadDebian11TagCore, verifyDebian11BuildArg,
+
+  DEBIAN12_BUILD_REPO, DEBIAN12_BUILD_REPO_GHCR,
+  DEBIAN12_BUILD_FLAVOR_MAP, DEBIAN12_BUILD_FLAVOR_LIST,
+  saveDebian12TagCore, loadDebian12TagCore, verifyDebian12BuildArg,
 
   fetchGitHubBufferMapWithLocalCache, fetchFileListWithLocalCache,
   TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE

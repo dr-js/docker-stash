@@ -14,6 +14,7 @@ jobs:
       - run: bash .github/setup-docker.sh
       - run: npm ci
       - run: npm test
+      - run: npm run build-debian12
       - run: npm run build-debian11
       # - run: npm run build-debian11-cn
       - run: |
@@ -22,4 +23,5 @@ jobs:
         env:
           PASSWORD: ${{ secrets.DOCKER_HUB_DRJS_PASSWORD }}
           GHCR_PASSWORD: ${{ secrets.GHCR_DRJS_PAT_PASSWORD }}
+      - run: npm run push-debian12-all
       - run: npm run push-debian11-all
