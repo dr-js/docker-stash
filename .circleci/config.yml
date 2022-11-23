@@ -12,7 +12,9 @@ jobs:
             curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
             sudo apt-get install -y nodejs
 
-            npx @dr-js/dev@0.5 -eI .github/ci-patch.js
+            # npx @dr-js/dev@0.5 -eI .github/ci-patch.js
+            npm i -g npm@8 @dr-js/dev@0.5
+            dr-dev -eI .github/ci-patch.js
             bash .github/setup-docker.sh
       - run: npm ci
       - run: npm test

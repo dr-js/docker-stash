@@ -8,9 +8,10 @@ jobs:
     timeout-minutes: 90
     runs-on: ubuntu-latest
     steps:
-      - { uses: "actions/checkout@v2" } # https://github.com/actions/checkout
-      - { uses: "actions/setup-node@v2", with: { node-version: "18.x" } } # https://github.com/actions/setup-node
-      - run: npx @dr-js/dev@0.5 -eI .github/ci-patch.js
+      - { uses: "actions/checkout@v3" } # https://github.com/actions/checkout
+      - { uses: "actions/setup-node@v3", with: { node-version: "18" } } # https://github.com/actions/setup-node
+      # - run: npx @dr-js/dev@0.5 -eI .github/ci-patch.js
+      - run: npm i -g npm@8 @dr-js/dev@0.5 && dr-dev -eI .github/ci-patch.js
       - run: bash .github/setup-docker.sh
       - run: npm ci
       - run: npm test
