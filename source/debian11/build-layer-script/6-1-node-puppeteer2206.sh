@@ -23,12 +23,12 @@ mkdir -p "${PUPPETEER_ROOT}"
   fi
 
   if [[ "${DOCKER_BUILD_ARCH}" = "amd64" ]] ; then
-    npm install "puppeteer@${MNT_PUPPETEER_VERSION}"
+    PUPPETEER_CACHE_DIR=/var/cache/puppeteer npm install "puppeteer@${MNT_PUPPETEER_VERSION}"
   else
     apt-update
-      # 14.2.0 (2022-06-01) chromium: roll to Chromium 103.0.5059.0 (r1002410)
-      # up-to 15.0.2
-      apt-install chromium # https://packages.debian.org/bullseye/chromium (103.0.5060.53-1~deb11u1)
+      # 15.1.0 (2022-06-24) chromium: roll to 104.0.5109.0 (r1011831)
+      # up-to 15.4.2
+      apt-install chromium # https://packages.debian.org/bullseye/chromium (104.0.5112.79-1~deb11u1)
     apt-clear
     # should run with `PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium` env
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install "puppeteer@${MNT_PUPPETEER_VERSION_ARM64}"
