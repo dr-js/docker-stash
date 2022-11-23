@@ -33,7 +33,7 @@ runKit(async (kit) => {
 
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
     const appendCommandList = [
-      DOCKER_BUILD_ARCH_INFO.key === 'arm64' && BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium'
+      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV PUPPETEER_EXECUTABLE_PATH=/media/node-pptr2208-bin'
     ].filter(Boolean)
     await writeText(
       kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
