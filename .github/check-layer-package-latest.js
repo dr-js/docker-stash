@@ -25,7 +25,7 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
     // <tr><th>SHA256 checksum</th>\t<td><tt>d7abcfaa67bc16c4aed960c959ca62849102c8a0a61b9af9a23fcc870ebc3c57</tt></td>
     // <li><a href="http://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.5-2_amd64.deb">ftp.debian.org/debian</a></li>
     // <tr><th>SHA256 checksum</th>\t<td><tt>d67bb6da8256863c85866059c8c2b93f1571ed7e2574b007241de35a2f0120d9</tt></td>
-    const dlUrl = /:\/\/(ftp\.debian\.org\/debian\/pool\/.*\.deb)">/.exec(textDlPage)[ 1 ]
+    const dlUrl = 'https://' + /:\/\/(ftp\.debian\.org\/debian\/pool\/.*\.deb)">/.exec(textDlPage)[ 1 ]
     const dlSha256 = /SHA256 checksum<\/th>\s*<td><tt>(\w+)<\/tt>/.exec(textDlPage)[ 1 ]
     pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
   }
@@ -33,7 +33,7 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
 }
 
 const getNodesourceDeb = async (dist = 'buster') => {
-  const pkgDlList = [] // { dlArch, dlUrl, dlSha256 }
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
   for (const dlArch of [
     'amd64',
     'arm64'
@@ -41,32 +41,40 @@ const getNodesourceDeb = async (dist = 'buster') => {
     const textDlPage = await getText(`https://deb.nodesource.com/node_18.x/dists/${dist}/main/binary-${dlArch}/Packages`)
     // Filename: pool/main/n/nodejs/nodejs_18.9.1-deb-1nodesource1_amd64.deb
     // SHA256: 84a8f21dfdb429c37fa63b3c3d8138cae775295b22b0b8ab92971ed6b33a733b
-    const dlUrl = /Filename: (pool\/main\/n\/nodejs\/nodejs_[.\d]+-deb-\w+.deb)/.exec(textDlPage)[ 1 ]
+    const dlUrl = 'https://deb.nodesource.com/node_18.x/' + /Filename: (pool\/main\/n\/nodejs\/nodejs_[.\d]+-deb-\w+.deb)/.exec(textDlPage)[ 1 ]
     const dlSha256 = /SHA256: (\w+)/.exec(textDlPage)[ 1 ]
-    pkgDlList.push({ dlArch, dlUrl, dlSha256 })
+    pkgDlList.push({ pkgName: 'nodejs', dlArch, dlUrl, dlSha256 })
   }
   return pkgDlList
 }
 
-runKit(async (kit) => {
-  // NOTE: skip, not change so often
-  // kit.padLog('debian11/bullseye')
-  // console.log(await getDebianDeb('bullseye', 'ca-certificates'))
-  // console.log(await getDebianDeb('bullseye', 'openssl'))
-  // console.log(await getDebianDeb('bullseye', 'libssl1.1'))
-  // console.log(await getDebianDeb('bullseye', 'libjemalloc2'))
-  // console.log(await getDebianDeb('bullseye', 'chromium'))
+const log = (pkgDlList) => {
+  for (const { pkgName, dlArch, dlUrl, dlSha256 } of pkgDlList) {
+    console.log(`  [${dlArch}] ${pkgName}`)
+    console.log(`    ${dlUrl}`)
+    console.log(`    ${dlSha256}`)
+  }
+}
 
-  kit.padLog('nodesource/bullseye')
-  console.log(await getNodesourceDeb('bullseye'))
+runKit(async (kit) => {
+  kit.padLog('debian11/bullseye')
+  // log(await getDebianDeb('bullseye', 'ca-certificates')) // NOTE: skip, not change so often
+  // log(await getDebianDeb('bullseye', 'openssl')) // NOTE: skip, not change so often
+  // log(await getDebianDeb('bullseye', 'libssl1.1')) // NOTE: skip, not change so often
+  // log(await getDebianDeb('bullseye', 'libjemalloc2')) // NOTE: skip, not change so often
+  log(await getDebianDeb('bullseye', 'chromium'))
 
   kit.padLog('debian12/bookworm')
-  console.log(await getDebianDeb('bookworm', 'ca-certificates'))
-  console.log(await getDebianDeb('bookworm', 'openssl'))
-  console.log(await getDebianDeb('bookworm', 'libssl3'))
-  console.log(await getDebianDeb('bookworm', 'libjemalloc2'))
-  console.log(await getDebianDeb('bookworm', 'chromium'))
+  log(await getDebianDeb('bookworm', 'ca-certificates'))
+  log(await getDebianDeb('bookworm', 'openssl'))
+  log(await getDebianDeb('bookworm', 'libssl3'))
+  log(await getDebianDeb('bookworm', 'libjemalloc2'))
+  log(await getDebianDeb('bookworm', 'chromium'))
+
+  // NOTE: skip, same deb as bookworm
+  // kit.padLog('nodesource/bullseye')
+  // log(await getNodesourceDeb('bullseye'))
 
   kit.padLog('nodesource/bookworm')
-  console.log(await getNodesourceDeb('bookworm'))
+  log(await getNodesourceDeb('bookworm'))
 }, { title: 'ci-patch' })
