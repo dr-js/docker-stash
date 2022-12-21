@@ -15,6 +15,10 @@ const [
 ] = process.argv
 
 runKit(async (kit) => {
+  const ARCH_INFO = DOCKER_BUILD_ARCH_INFO_LIST.find((ai) => ai.node === process.arch)
+  if (ARCH_INFO === undefined) { throw new Error(`unsupported Arch: ${process.arch}`) } else kit.log(`arch: ${ARCH_INFO.key}`)
+  const toArch = (tag) => `${tag}-${ARCH_INFO.key}`
+
   const PUSH_TARGET_MAP = {
     'ALL': [ 'BASE', 'GHCR' ],
     'BASE-ONLY': [ 'BASE' ],
@@ -37,23 +41,17 @@ runKit(async (kit) => {
   ]
   const TAG_LIST_GHCR = TAG_LIST_BASE.map(toGitHubTag)
 
-  for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
-    if (DOCKER_BUILD_ARCH_INFO.node !== process.arch) continue
+  if (hasTarget('GHCR')) {
+    kit.padLog(`re-tag to: ${DEBIAN11_BUILD_REPO_GHCR}`)
+    for (const tag of TAG_LIST_BASE) runDockerSync([ 'image', 'tag', toArch(tag), toGitHubTag(toArch(tag)) ])
+  }
 
-    const toArch = (tag) => `${tag}-${DOCKER_BUILD_ARCH_INFO.key}`
-
-    if (hasTarget('GHCR')) {
-      kit.padLog(`re-tag to: ${DEBIAN11_BUILD_REPO_GHCR}`)
-      for (const tag of TAG_LIST_BASE) runDockerSync([ 'image', 'tag', toArch(tag), toGitHubTag(toArch(tag)) ])
-    }
-
-    kit.padLog('push image')
-    for (const tag of [
-      ...(hasTarget('GHCR') ? [ ...TAG_LIST_GHCR ].reverse() : []), // faster in CI
-      ...(hasTarget('BASE') ? [ ...TAG_LIST_BASE, ...TAG_LIST_BASE_CACHE ].reverse() : [])
-    ]) {
-      kit.log(`push tag: ${toArch(tag)}`)
-      runDockerSync([ 'image', 'push', toArch(tag) ])
-    }
+  kit.padLog('push image')
+  for (const tag of [
+    ...(hasTarget('GHCR') ? [ ...TAG_LIST_GHCR ].reverse() : []), // faster in CI
+    ...(hasTarget('BASE') ? [ ...TAG_LIST_BASE, ...TAG_LIST_BASE_CACHE ].reverse() : [])
+  ]) {
+    kit.log(`push tag: ${toArch(tag)}`)
+    runDockerSync([ 'image', 'push', toArch(tag) ])
   }
 }, { title: 'push-debian11' })
