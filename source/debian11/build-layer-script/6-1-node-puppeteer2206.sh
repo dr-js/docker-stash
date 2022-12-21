@@ -31,9 +31,9 @@ mkdir -p "${PUPPETEER_ROOT}"
     ln -sfT "${PUPPETEER_DOWNLOAD_PATH}/linux-"*"/chrome-linux/chrome" "${PUPPETEER_BIN}"
   else
     apt-update
-      # 15.1.0 (2022-06-24) chromium: roll to 104.0.5109.0 (r1011831)
-      # up-to 15.4.2
-      apt-install chromium # https://packages.debian.org/bullseye/chromium (104.0.5112.79-1~deb11u1)
+      # 19.2.0 (2022-10-26) chromium: roll to Chromium 108.0.5351.0 (r1056772)
+      # up-to 19.3.0
+      apt-install chromium # https://packages.debian.org/bullseye/chromium (108.0.5359.94-1~deb11u1)
     apt-clear
     export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
     npm install "puppeteer@${MNT_PUPPETEER_VERSION_ARM64}"
