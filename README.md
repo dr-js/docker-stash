@@ -4,8 +4,8 @@
 
 A collection of strange docker scripts
 
-[i:ci]: https://github.com/dr-js/docker-stash/workflows/ci-test/badge.svg
-[l:ci]: https://github.com/dr-js/docker-stash/actions?query=workflow:ci-test
+[i:ci]: https://img.shields.io/github/actions/workflow/status/dr-js/docker-stash/.github/workflows/ci-tag-build.yml
+[l:ci]: https://github.com/dr-js/docker-stash/actions?query=workflow:ci-tag-build
 
 [//]: # (NON_PACKAGE_CONTENT)
 
