@@ -29,8 +29,6 @@ runKit(async (kit) => {
   const TAG_LIST_BASE = [ // NOTE: skip core tag, as local push will need build or manual edit to keep up with latest
     // loadDebian12TagCore(''),
     ...DEBIAN12_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN12_BUILD_REPO}:12-${flavorName}-${BUILD_VERSION}`)
-    // loadDebian12TagCore('CN'),
-    // ...DEBIAN12_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN12_BUILD_REPO}:12-${flavorName}-${BUILD_VERSION}-cn`)
   ]
   const TAG_LIST_GHCR = TAG_LIST_BASE.map(toGitHubTag)
 

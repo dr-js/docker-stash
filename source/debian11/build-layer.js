@@ -14,15 +14,14 @@ const {
 const [
   , // node
   , // script.js
-  BUILD_FLAVOR_NAME = '',
-  DOCKER_BUILD_MIRROR = '' // now support "CN" only
+  BUILD_FLAVOR_NAME = ''
 ] = process.argv
 
 runKit(async (kit) => {
-  const { BUILD_FLAVOR, getFlavoredTag, getFlavoredImageTag } = verifyDebian11BuildArg({ BUILD_FLAVOR_NAME, DOCKER_BUILD_MIRROR })
+  const { BUILD_FLAVOR, getFlavoredTag, getFlavoredImageTag } = verifyDebian11BuildArg({ BUILD_FLAVOR_NAME })
 
   const BUILD_TAG = getFlavoredTag(BUILD_FLAVOR.NAME)
-  const PATH_BUILD = kit.fromOutput('debian11-layer', `${BUILD_FLAVOR.NAME}${DOCKER_BUILD_MIRROR}`) // leave less file around
+  const PATH_BUILD = kit.fromOutput('debian11-layer', BUILD_FLAVOR.NAME) // leave less file around
 
   kit.padLog('build config')
   kit.log('BUILD_TAG:', BUILD_TAG)
@@ -106,7 +105,7 @@ runKit(async (kit) => {
     if (DOCKER_BUILD_ARCH_INFO.node !== process.arch) continue
     kit.padLog(`build image for ${DOCKER_BUILD_ARCH_INFO.key}`)
 
-    const PATH_LOG = kit.fromOutput('debian11-layer', `${BUILD_FLAVOR.NAME}${DOCKER_BUILD_MIRROR}.${DOCKER_BUILD_ARCH_INFO.key}.log`) // leave less file around
+    const PATH_LOG = kit.fromOutput('debian11-layer', `${BUILD_FLAVOR.NAME}.${DOCKER_BUILD_ARCH_INFO.key}.log`) // leave less file around
     kit.log('PATH_LOG:', PATH_LOG)
 
     await runDockerWithTee([
@@ -127,7 +126,7 @@ runKit(async (kit) => {
       '.' // context is always CWD
     ], { cwd: PATH_BUILD }, PATH_LOG)
   }
-}, { title: `build-${BUILD_FLAVOR_NAME}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR}`}` })
+}, { title: `build-${BUILD_FLAVOR_NAME}` })
 
 const getLayerDockerfileString = ({
   DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, appendCommandList = [], getFlavoredImageTag

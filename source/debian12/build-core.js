@@ -1,4 +1,3 @@
-const { oneOf } = require('@dr-js/core/library/common/verify.js')
 const { calcHash } = require('@dr-js/core/library/node/data/Buffer.js')
 const { writeBuffer, writeText } = require('@dr-js/core/library/node/fs/File.js')
 const { resetDirectory } = require('@dr-js/core/library/node/fs/Directory.js')
@@ -10,14 +9,6 @@ const {
   DEBIAN12_BUILD_REPO, saveDebian12TagCore,
   fetchGitHubBufferMapWithLocalCache, fetchFileListWithLocalCache
 } = require('../function.js')
-
-const [
-  , // node
-  , // script.js
-  DOCKER_BUILD_MIRROR = '' // now support "CN" only
-] = process.argv
-
-oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
 
 runKit(async (kit) => {
   const BUILD_REPO = DEBIAN12_BUILD_REPO
@@ -44,14 +35,14 @@ runKit(async (kit) => {
   ]
 
   const coreImageBufferMap = await fetchGitHubBufferMapWithLocalCache(URL_CORE_IMAGE_MAP, URL_CACHE_HASH, kit.fromTemp('debian12', 'core-github'))
-  const dockerfileBufferMap = Object.fromEntries(DOCKER_BUILD_ARCH_INFO_LIST.map((DOCKER_BUILD_ARCH_INFO) => [ DOCKER_BUILD_ARCH_INFO.key, Buffer.from(getDockerfileString({ DOCKER_BUILD_ARCH_INFO, DOCKER_BUILD_MIRROR })) ]))
+  const dockerfileBufferMap = Object.fromEntries(DOCKER_BUILD_ARCH_INFO_LIST.map((DOCKER_BUILD_ARCH_INFO) => [ DOCKER_BUILD_ARCH_INFO.key, Buffer.from(getDockerfileString({ DOCKER_BUILD_ARCH_INFO })) ]))
 
   const SOURCE_HASH = calcHash(Buffer.concat([
     ...Object.values(coreImageBufferMap),
     ...Object.values(dockerfileBufferMap),
     Buffer.from(JSON.stringify(DEB_FETCH_LIST))
   ])).replace(/\W/g, '')
-  const BUILD_TAG = `12-${BUILD_FLAVOR}-${SOURCE_HASH}${DOCKER_BUILD_MIRROR ? `-${DOCKER_BUILD_MIRROR.toLowerCase()}` : ''}`
+  const BUILD_TAG = `12-${BUILD_FLAVOR}-${SOURCE_HASH}`
   const PATH_BUILD = kit.fromOutput('debian12-core', BUILD_TAG)
 
   kit.padLog('build config')
@@ -100,23 +91,17 @@ runKit(async (kit) => {
   }
 
   kit.padLog('save core image tag')
-  saveDebian12TagCore(DOCKER_BUILD_MIRROR, `${BUILD_REPO}:${BUILD_TAG}`)
+  saveDebian12TagCore(`${BUILD_REPO}:${BUILD_TAG}`)
 }, { title: 'build-core' })
 
 const getDockerfileString = ({
-  DOCKER_BUILD_ARCH_INFO,
-  DOCKER_BUILD_MIRROR = '',
-  debianMirror = DOCKER_BUILD_MIRROR === 'CN'
-    ? 'https://mirrors.tuna.tsinghua.edu.cn' // https://mirrors.tuna.tsinghua.edu.cn/help/debian/
-    : 'http://deb.debian.org' // https://wiki.debian.org/SourcesList#Example_sources.list
+  DOCKER_BUILD_ARCH_INFO
 }) => `# syntax = ${BUILDKIT_SYNTAX}
 FROM scratch
 
 ${_ && 'use prepared fs'}
 ADD "rootfs.tar.xz.${DOCKER_BUILD_ARCH_INFO.key}" /
 
-LABEL arg.DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
-ENV DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
 LABEL arg.DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
 ENV DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
 WORKDIR /root/
@@ -128,10 +113,10 @@ ENV LC_ALL C.UTF-8
 
 RUN set -ex \\
  && { \\${_ && 'reset apt source list with bookworm-backports'}
-       echo 'deb ${debianMirror}/debian bookworm main'; \\
-       echo 'deb ${debianMirror}/debian bookworm-updates main'; \\
-       echo 'deb ${debianMirror}/debian bookworm-backports main'; \\
-       echo 'deb ${debianMirror}/debian-security/ bookworm-security main'; \\
+       echo 'deb http://deb.debian.org/debian bookworm main'; \\
+       echo 'deb http://deb.debian.org/debian bookworm-updates main'; \\
+       echo 'deb http://deb.debian.org/debian bookworm-backports main'; \\
+       echo 'deb http://deb.debian.org/debian-security/ bookworm-security main'; \\
     } > /etc/apt/sources.list \\
  && { \\${_ && 'set apt to use bookworm-backports by default'}
       echo 'Package: *'; \\

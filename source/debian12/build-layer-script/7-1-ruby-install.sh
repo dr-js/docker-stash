@@ -72,21 +72,10 @@ apt-update
 apt-clear
 
 # gem
-  if [[ "${DOCKER_BUILD_MIRROR}" = "CN" ]] ; then
-    gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/
-    # gem sources --add https://mirrors.tuna.tsinghua.edu.cn/rubygems/ --remove https://rubygems.org/
-    gem sources -l # check list sources
-  fi
-
   gem update --no-document --system "${MNT_GEM_VERSION}"
   gem-uninstall rubygems-update # remove gem update dependency
 
   gem install --no-document --force bundler -v "~> ${BUNDLER_MAJOR_VERSION}" # use latest bundler # https://github.com/rubygems/rubygems/issues/2058
-
-  if [[ "${DOCKER_BUILD_MIRROR}" = "CN" ]] ; then
-    bundle config mirror.https://rubygems.org https://gems.ruby-china.com
-    # bundle config mirror.https://rubygems.org https://mirrors.tuna.tsinghua.edu.cn/rubygems
-  fi
 gem-clear
 
 dr-dev --package-trim-ruby-gem /usr/local/lib/ruby/gems/*/gems/
