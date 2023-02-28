@@ -9,7 +9,7 @@
   "scripts": {
     "// repo ========================": "",
     "version-bump": "dr-dev --version-bump-git-branch --git-commit --debug",
-    "tag-push": "dr-dev --shell-alias quick-git-push-combo",
+    "tag-push": "dr-dev --version-bump-push-check --git-commit",
     "// build =======================": "",
     "build-debian11": "node source/debian11/build.js",
     "build-debian11-cn": "node source/debian11/build.js CN",
@@ -47,8 +47,8 @@
     "npm": ">=8.19"
   },
   "devDependencies": {
-    "@dr-js/core": "^0.5.6",
-    "@dr-js/dev": "^0.5.3",
-    "@dr-js/dev-eslint": "^0.5.3"
+    "@dr-js/core": "^0.5.7",
+    "@dr-js/dev": "^0.5.6",
+    "@dr-js/dev-eslint": "^0.5.6"
   }
 }
