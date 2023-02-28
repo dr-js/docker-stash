@@ -33,7 +33,7 @@ runKit(async (kit) => {
 
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
     const appendCommandList = [
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && 'ENV PUPPETEER_EXECUTABLE_PATH=/media/node-pptr2206-bin'
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2206 && 'ENV PUPPETEER_EXECUTABLE_PATH=/media/node-pptr2206-bin'
     ].filter(Boolean)
     await writeText(
       kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
@@ -84,8 +84,8 @@ runKit(async (kit) => {
     await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
     for (const [ text, file ] of [
       // update at 2022/12/21, check version at: https://github.com/puppeteer/puppeteer/releases
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '19.4.1', 'PUPPETEER_VERSION.txt' ],
-      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PUPPETEER2206 && [ '19.3.0', 'PUPPETEER_VERSION_ARM64.txt' ],
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2206 && [ '19.4.1', 'PUPPETEER_VERSION.txt' ],
+      BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2206 && [ '19.3.0', 'PUPPETEER_VERSION_ARM64.txt' ],
       // update at 2022/11/23, check version at: https://rubygems.org/pages/download
       BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY && [ '3.3.26', 'GEM_VERSION.txt' ],
       BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ '3.3.26', 'GEM_VERSION.txt' ]

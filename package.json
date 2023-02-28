@@ -14,7 +14,7 @@
     "build-debian11": "node source/debian11/build.js",
     "build-debian11-cn": "node source/debian11/build.js CN",
     "build-debian11-core": "node source/debian11/build-core.js",
-    "build-debian11-layer": "node source/debian11/build-layer.js node-puppeteer2206",
+    "build-debian11-layer": "node source/debian11/build-layer.js node-pptr2206",
     "_pxy": "dr-dev --EE \"HTTP_PROXY=${npm_config_proxy-http://127.0.0.1:1080}&HTTPS_PROXY=${npm_config_https_proxy-http://127.0.0.1:1080}&NO_PROXY=127.0.0.1,localhost\" -E --",
     "pxybd-debian11-cn": "npm run _pxy -- node source/debian11/build.js CN",
     "pxybd-debian11-dev-core": "npm run _pxy -- node source/debian11/build-core.js",
