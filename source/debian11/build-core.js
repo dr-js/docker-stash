@@ -4,6 +4,7 @@ const { resetDirectory } = require('@dr-js/core/library/node/fs/Directory.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee, checkPullImage } = require('@dr-js/dev/library/docker.js')
+const { DEB11_FETCH_LIST } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN11_BUILD_REPO, saveDebian11TagCore,
@@ -22,25 +23,13 @@ runKit(async (kit) => {
     'arm64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/bullseye/slim/rootfs.tar.xz'
   }
 
-  const DEB_FETCH_LIST = [
-    // update at 2022/07/28, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
-    [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20210119_all.deb', 'b2d488ad4d8d8adb3ba319fc9cb2cf9909fc42cb82ad239a26c570a2e749c389' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1n-0+deb11u3_amd64.deb', '3691cf432febeb8dd621c6a36e3cc66b45fc119016532ffb33c742861aec868b' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1n-0+deb11u3_arm64.deb', 'ff9a7649fa24c5d1fa5ddcbd4c4e9fd5facb205ddc7b796f61de1107dabb00fd' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1n-0+deb11u3_amd64.deb', 'c3480bf90725c993187de02e5144e90ea81226e7e2538ba24687f5a0adc8ca5c' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1n-0+deb11u3_arm64.deb', '8d4ef5a06719fabd90a6a27729ade7b9dde1a1c923a89ba1406af6489fa7c82f' ],
-    // update at 2022/05/23, to find from: https://packages.debian.org/search?keywords=libjemalloc2
-    [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_amd64.deb', 'dcb79555b137ad70c9d392ca31e04533e3a10b63aa0db02d5a26f464060cc0f5' ],
-    [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_arm64.deb', '7e3537d43b3109183bec24be8e1154a7643ad6e03bb851f2ae0b5dc065954c99' ]
-  ]
-
   const coreImageBufferMap = await fetchGitHubBufferMapWithLocalCache(URL_CORE_IMAGE_MAP, URL_CACHE_HASH, kit.fromTemp('debian11', 'core-github'))
   const dockerfileBufferMap = Object.fromEntries(DOCKER_BUILD_ARCH_INFO_LIST.map((DOCKER_BUILD_ARCH_INFO) => [ DOCKER_BUILD_ARCH_INFO.key, Buffer.from(getDockerfileString({ DOCKER_BUILD_ARCH_INFO })) ]))
 
   const SOURCE_HASH = calcHash(Buffer.concat([
     ...Object.values(coreImageBufferMap),
     ...Object.values(dockerfileBufferMap),
-    Buffer.from(JSON.stringify(DEB_FETCH_LIST))
+    Buffer.from(JSON.stringify(DEB11_FETCH_LIST))
   ])).replace(/\W/g, '')
   const BUILD_TAG = `11-${BUILD_FLAVOR}-${SOURCE_HASH}`
   const PATH_BUILD = kit.fromOutput('debian11-core', BUILD_TAG)
@@ -65,7 +54,7 @@ runKit(async (kit) => {
     }
 
     kit.padLog('assemble "build-core/"')
-    await fetchFileListWithLocalCache(DEB_FETCH_LIST, {
+    await fetchFileListWithLocalCache(DEB11_FETCH_LIST, {
       pathOutput: kit.fromOutput(PATH_BUILD, 'build-core/'),
       pathCache: kit.fromTemp('debian11', 'core-url')
     })
