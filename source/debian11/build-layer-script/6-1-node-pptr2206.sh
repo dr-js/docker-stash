@@ -6,8 +6,7 @@ source ./0-1-base-apt.sh
 MNT_PUPPETEER_VERSION="$(cat /mnt/build-layer-resource/PUPPETEER_VERSION.txt)"
 MNT_PUPPETEER_VERSION_ARM64="$(cat /mnt/build-layer-resource/PUPPETEER_VERSION_ARM64.txt)"
 
-PUPPETEER_ROOT="/media/node-puppeteer2206"
-PUPPETEER_ROOT_ALIAS="/media/node-pptr2206"
+PUPPETEER_ROOT="/media/node-pptr2206"
 PUPPETEER_BIN="/media/node-pptr2206-bin"
 
 # TODO: check if resolved
@@ -18,7 +17,6 @@ PUPPETEER_BIN="/media/node-pptr2206-bin"
 echo "" > /etc/ld.so.preload # TODO: disable when test become stable again
 
 mkdir -p "${PUPPETEER_ROOT}"
-ln -sfT "${PUPPETEER_ROOT}" "${PUPPETEER_ROOT_ALIAS}"
 ( cd "${PUPPETEER_ROOT}"
   if [[ "${DOCKER_BUILD_ARCH}" = "amd64" ]] ; then
     export PUPPETEER_CACHE_DIR="/var/cache/puppeteer"
@@ -39,6 +37,11 @@ ln -sfT "${PUPPETEER_ROOT}" "${PUPPETEER_ROOT_ALIAS}"
   npm cache clean --force
   dr-dev --package-trim-node-modules "${PUPPETEER_ROOT}"
 )
+
+# symlink to support older layout
+ln -sfT "${PUPPETEER_ROOT}" "/media/node-puppeteer2206"
+ln -sfT "${PUPPETEER_ROOT}" "/media/node-pptr"
+ln -sfT "${PUPPETEER_BIN}" "/media/node-pptr-bin"
 
 # should run with `PUPPETEER_EXECUTABLE_PATH="/media/node-pptr2206-bin"` env
 test -e "${PUPPETEER_BIN}"

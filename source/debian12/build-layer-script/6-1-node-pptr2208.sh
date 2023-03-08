@@ -38,6 +38,13 @@ mkdir -p "${PUPPETEER_ROOT}"
   dr-dev --package-trim-node-modules "${PUPPETEER_ROOT}"
 )
 
+# symlink to support older layout
+ln -sfT "${PUPPETEER_ROOT}" "/media/node-puppeteer2206"
+ln -sfT "${PUPPETEER_ROOT}" "/media/node-pptr2206"
+ln -sfT "${PUPPETEER_ROOT}" "/media/node-pptr"
+ln -sfT "${PUPPETEER_BIN}" "/media/node-pptr2206-bin"
+ln -sfT "${PUPPETEER_BIN}" "/media/node-pptr-bin"
+
 # should run with `PUPPETEER_EXECUTABLE_PATH="/media/node-pptr2208-bin"` env
 test -e "${PUPPETEER_BIN}"
 if ldd "${PUPPETEER_BIN}" | grep "not found" ; then
