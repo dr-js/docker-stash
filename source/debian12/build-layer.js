@@ -41,10 +41,6 @@ runKit(async (kit) => {
     )
   }
 
-  for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
-    await writeText(kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`), getLayerDockerfileString({ DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, getFlavoredImageTag }))
-  }
-
   kit.padLog('assemble "build-layer-script/"')
   await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-script/'))
   for (const file of [
