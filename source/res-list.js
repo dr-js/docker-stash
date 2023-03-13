@@ -47,7 +47,10 @@ const RES_FLAVOR_GO = [
 ]
 // update at 2023/02/28, to find download from: https://www.ruby-lang.org/en/downloads/releases/
 const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.7.tar.gz', 'e10127db691d7ff36402cfe88f418c8d025a3f1eea92044b162dd72f0b8c7b90' ]
-const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.1.tar.gz', '13d67901660ee3217dbd9dd56059346bd4212ce64a69c306ef52df64935f8dbd' ]
+// TODO: NOTE:
+//   temp revert & wait for "Compatibility issues" fix since "3.2.0": https://www.ruby-lang.org/en/news/2022/12/25/ruby-3-2-0-released/
+//   const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.1.tar.gz', '13d67901660ee3217dbd9dd56059346bd4212ce64a69c306ef52df64935f8dbd' ]
+const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.3.tar.gz', '5ea498a35f4cd15875200a52dde42b6eb179e1264e17d78732c3a57cd1c6ab9e' ]
 
 // update at 2023/03/07, check version at: https://github.com/puppeteer/puppeteer/releases
 const PPTR_VERSION = '19.7.3'
