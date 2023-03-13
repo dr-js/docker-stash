@@ -23,11 +23,11 @@ const DEB12_FETCH_LIST = [
 ]
 
 const RES_FLAVOR_NODE = [
-  // update at 2023/02/28, to find download:
+  // update at 2023/03/13, to find download:
   // - https://deb.nodesource.com/node_18.x/dists/bullseye/main/binary-amd64/Packages // https://deb.nodesource.com/node_18.x/dists/bookworm/main/binary-amd64/Packages
   // - https://deb.nodesource.com/node_18.x/dists/bullseye/main/binary-arm64/Packages // https://deb.nodesource.com/node_18.x/dists/bookworm/main/binary-arm64/Packages
-  [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.14.2-deb-1nodesource1_amd64.deb', '610d7f2ff37545119792a4924b6be5e5af8bd5782349e3737c9b9207eba13f75' ],
-  [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.14.2-deb-1nodesource1_arm64.deb', 'd2c11ad79baf0651ba4c4948f81b8a7f79eaccb0527979074b7d3805c6b58e45' ],
+  [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.15.0-deb-1nodesource1_amd64.deb', 'c253e9021faf026115d45ae8ea56f5c587483baebeab1394578c3cd1d44d9c64' ],
+  [ 'https://deb.nodesource.com/node_18.x/pool/main/n/nodejs/nodejs_18.15.0-deb-1nodesource1_arm64.deb', '3d65172723241314da098e976a37801ebd179caa10806147b257e201c66db86b' ],
   // update at 2023/03/07, to find download from: `npm view npm@8; npm view @dr-js/core@latest; npm view @dr-js/dev@latest`
   [ 'https://registry.npmjs.org/npm/-/npm-8.19.4.tgz', '3HANl8i9DKnUA89P4KEgVNN28EjSeDCmvEqbzOAuxCFDzdBZzjUl99zgnGpOUumvW5lvJo2HKcjrsc+tfyv1Hw==:sha512:base64' ],
   [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.8.tgz', 'KlVEDEEXtgAjAt2u82TComdIGSRfbMBcyt59zxw0/rjCaw3w270u3OEHWvhCz+SO4rFCjy6rZxA1+UopbCIzFg==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
@@ -41,26 +41,26 @@ const RES_FLAVOR_BIN_NGINX = [
   [ 'https://github.com/google/ngx_brotli/archive/6e975bcb.zip', '62914aceb8cb8c87d09e2879e6de3627d50a7d1bd6a4b1460cb393a3891b684d', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
 ]
 const RES_FLAVOR_GO = [
-  // update at 2023/02/28, to find download from: https://go.dev/dl/
-  [ 'https://go.dev/dl/go1.20.1.linux-amd64.tar.gz', '000a5b1fca4f75895f78befeb2eecf10bfff3c428597f3f1e69133b63b911b02' ],
-  [ 'https://go.dev/dl/go1.20.1.linux-arm64.tar.gz', '5e5e2926733595e6f3c5b5ad1089afac11c1490351855e87849d0e7702b1ec2e' ]
+  // update at 2023/03/13, to find download from: https://go.dev/dl/
+  [ 'https://go.dev/dl/go1.20.2.linux-amd64.tar.gz', '4eaea32f59cde4dc635fbc42161031d13e1c780b87097f4b4234cfce671f1768' ],
+  [ 'https://go.dev/dl/go1.20.2.linux-arm64.tar.gz', '78d632915bb75e9a6356a47a42625fd1a785c83a64a643fedd8f61e31b1b3bef' ]
 ]
-// update at 2023/02/28, to find download from: https://www.ruby-lang.org/en/downloads/releases/
+// update at 2023/03/13, to find download from: https://www.ruby-lang.org/en/downloads/releases/
 const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.7.tar.gz', 'e10127db691d7ff36402cfe88f418c8d025a3f1eea92044b162dd72f0b8c7b90' ]
 // TODO: NOTE:
 //   temp revert & wait for "Compatibility issues" fix since "3.2.0": https://www.ruby-lang.org/en/news/2022/12/25/ruby-3-2-0-released/
 //   const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.1.tar.gz', '13d67901660ee3217dbd9dd56059346bd4212ce64a69c306ef52df64935f8dbd' ]
 const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.3.tar.gz', '5ea498a35f4cd15875200a52dde42b6eb179e1264e17d78732c3a57cd1c6ab9e' ]
 
-// update at 2023/03/07, check version at: https://github.com/puppeteer/puppeteer/releases
-const PPTR_VERSION = '19.7.3'
+// update at 2023/03/13, check version at: https://github.com/puppeteer/puppeteer/releases
+const PPTR_VERSION = '19.7.4'
 // [up-to 19.3.0] 19.2.0 (2022-10-26) chromium: roll to Chromium 108.0.5351.0 (r1056772)
-const DEB11_PPTR_VERSION_ARM64 = '19.3.0' // https://packages.debian.org/buster/chromium (108.0.5359.94-1~deb11u1)
-// [up-to 19.6.3] 19.6.0 (2023-01-23) chromium: roll to Chromium 110.0.5479.0 (r1083080)
-const DEB12_PPTR_VERSION_ARM64 = '19.6.3' // https://packages.debian.org/bullseye/chromium chromium (110.0.5481.177-1)
+const DEB11_PPTR_VERSION_ARM64 = '19.3.0' // https://packages.debian.org/bullseye/chromium (108.0.5359.94-1~deb11u1)
+// [up-to 19.7.4] 19.7.0 (2023-02-13) chromium: roll to Chromium 111.0.5556.0 (r1095492)
+const DEB12_PPTR_VERSION_ARM64 = '19.7.4' // https://packages.debian.org/bookworm/chromium chromium (111.0.5563.64-1)
 
-// update at 2023/02/28, check version at: https://rubygems.org/pages/download
-const GEM_VERSION = '3.4.7'
+// update at 2023/03/13, check version at: https://rubygems.org/pages/download
+const GEM_VERSION = '3.4.8'
 
 module.exports = {
   DEB11_FETCH_LIST,
