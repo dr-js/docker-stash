@@ -44,8 +44,6 @@ apt-update
 
     autoconf # may re-generate configure
 
-    CFLAGS="-s -g0" \
-    LDFLAGS="-s" \
     ./configure \
       --build="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
       --disable-install-doc \
