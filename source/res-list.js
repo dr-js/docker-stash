@@ -11,8 +11,8 @@ const DEB11_FETCH_LIST = [
 ]
 
 const DEB12_FETCH_LIST = [
-  // update at 2023/02/28, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
-  [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20211016_all.deb', 'd7abcfaa67bc16c4aed960c959ca62849102c8a0a61b9af9a23fcc870ebc3c57' ],
+  // update at 2023/03/23, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
+  [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20230311_all.deb', '5308b9bd88eebe2a48be3168cb3d87677aaec5da9c63ad0cf561a29b8219115c' ],
   [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.8-1_amd64.deb', 'a3b6e179fe997a60f3ba2a01b1fac5fe60ffcccccd290cfc16607736701825c1' ],
   [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.8-1_arm64.deb', '9fa3ae14420e8a214eb5916648529de9abecd6f172925f9c9fa0b0cece8f95ce' ],
   [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3_3.0.8-1_amd64.deb', '9335d0762564401f6cb3f1ddd7f8d9de4a10c93975b77ddf82f048002f17798d' ],
@@ -52,15 +52,15 @@ const TGZ_RUBY = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.7.tar.gz',
 //   const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.1.tar.gz', '13d67901660ee3217dbd9dd56059346bd4212ce64a69c306ef52df64935f8dbd' ]
 const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.3.tar.gz', '5ea498a35f4cd15875200a52dde42b6eb179e1264e17d78732c3a57cd1c6ab9e' ]
 
-// update at 2023/03/13, check version at: https://github.com/puppeteer/puppeteer/releases
-const PPTR_VERSION = '19.7.4'
+// update at 2023/03/23, check version at: https://github.com/puppeteer/puppeteer/releases
+const PPTR_VERSION = '19.7.5'
 // [up-to 19.3.0] 19.2.0 (2022-10-26) chromium: roll to Chromium 108.0.5351.0 (r1056772)
 const DEB11_PPTR_VERSION_ARM64 = '19.3.0' // https://packages.debian.org/bullseye/chromium (108.0.5359.94-1~deb11u1)
-// [up-to 19.7.4] 19.7.0 (2023-02-13) chromium: roll to Chromium 111.0.5556.0 (r1095492)
-const DEB12_PPTR_VERSION_ARM64 = '19.7.4' // https://packages.debian.org/bookworm/chromium chromium (111.0.5563.64-1)
+// [up-to 19.7.5] 19.7.0 (2023-02-13) chromium: roll to Chromium 111.0.5556.0 (r1095492)
+const DEB12_PPTR_VERSION_ARM64 = '19.7.5' // https://packages.debian.org/bookworm/chromium chromium (111.0.5563.64-1)
 
-// update at 2023/03/13, check version at: https://rubygems.org/pages/download
-const GEM_VERSION = '3.4.8'
+// update at 2023/03/23, check version at: https://rubygems.org/pages/download
+const GEM_VERSION = '3.4.9'
 // update at 2023/03/23, check version at: https://rubygems.org/gems/bundler
 const BUNDLER_VERSION = '2.4.9'
 
