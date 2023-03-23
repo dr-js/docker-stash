@@ -4,7 +4,7 @@ const { modifyCopy } = require('@dr-js/core/library/node/fs/Modify.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
-const { RES_FLAVOR_NODE, RES_FLAVOR_BIN_NGINX, RES_FLAVOR_GO, TGZ_RUBY3, PPTR_VERSION, DEB12_PPTR_VERSION_ARM64, GEM_VERSION } = require('../res-list.js')
+const { RES_FLAVOR_NODE, RES_FLAVOR_BIN_NGINX, RES_FLAVOR_GO, TGZ_RUBY3, PPTR_VERSION, DEB12_PPTR_VERSION_ARM64, GEM_VERSION, BUNDLER_VERSION } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN12_BUILD_FLAVOR_MAP, verifyDebian12BuildArg,
@@ -56,7 +56,8 @@ runKit(async (kit) => {
   for (const [ text, file ] of [
     BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && [ PPTR_VERSION, 'PUPPETEER_VERSION.txt' ],
     BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && [ DEB12_PPTR_VERSION_ARM64, 'PUPPETEER_VERSION_ARM64.txt' ],
-    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ GEM_VERSION, 'GEM_VERSION.txt' ]
+    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ GEM_VERSION, 'GEM_VERSION.txt' ],
+    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ BUNDLER_VERSION, 'BUNDLER_VERSION.txt' ]
   ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
   await fetchFileListWithLocalCache([
     ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_FLAVOR_NODE : []),

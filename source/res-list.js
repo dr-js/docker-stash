@@ -61,6 +61,8 @@ const DEB12_PPTR_VERSION_ARM64 = '19.7.4' // https://packages.debian.org/bookwor
 
 // update at 2023/03/13, check version at: https://rubygems.org/pages/download
 const GEM_VERSION = '3.4.8'
+// update at 2023/03/23, check version at: https://rubygems.org/gems/bundler
+const BUNDLER_VERSION = '2.4.9'
 
 module.exports = {
   DEB11_FETCH_LIST,
@@ -77,5 +79,6 @@ module.exports = {
   DEB11_PPTR_VERSION_ARM64,
   DEB12_PPTR_VERSION_ARM64,
 
-  GEM_VERSION
+  GEM_VERSION,
+  BUNDLER_VERSION
 }
