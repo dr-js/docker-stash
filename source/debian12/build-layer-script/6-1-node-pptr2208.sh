@@ -18,11 +18,6 @@ echo "" > /etc/ld.so.preload # TODO: disable when test become stable again
 
 mkdir -p "${PUPPETEER_ROOT}"
 ( cd "${PUPPETEER_ROOT}"
-  if [[ "${DOCKER_BUILD_MIRROR}" = "CN" ]] ; then
-    export NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
-    export PUPPETEER_DOWNLOAD_HOST=https://npmmirror.com/mirrors
-  fi
-
   if [[ "${DOCKER_BUILD_ARCH}" = "amd64" ]] ; then
     export PUPPETEER_CACHE_DIR="/var/cache/puppeteer"
     export PUPPETEER_DOWNLOAD_PATH="${PUPPETEER_ROOT}/chrome"
@@ -31,9 +26,7 @@ mkdir -p "${PUPPETEER_ROOT}"
     ln -sfT "${PUPPETEER_DOWNLOAD_PATH}/linux-"*"/chrome-linux/chrome" "${PUPPETEER_BIN}"
   else
     apt-update
-      # 19.2.0 (2022-10-26) chromium: roll to Chromium 108.0.5351.0 (r1056772)
-      # up-to 19.3.0
-      apt-install chromium # https://packages.debian.org/bookworm/chromium (108.0.5359.124-1)
+      apt-install chromium
     apt-clear
     export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
     npm install "puppeteer@${MNT_PUPPETEER_VERSION_ARM64}"
@@ -44,6 +37,13 @@ mkdir -p "${PUPPETEER_ROOT}"
   npm cache clean --force
   dr-dev --package-trim-node-modules "${PUPPETEER_ROOT}"
 )
+
+# symlink to support older layout
+ln -sfT "${PUPPETEER_ROOT}" "/media/node-puppeteer2206"
+ln -sfT "${PUPPETEER_ROOT}" "/media/node-pptr2206"
+ln -sfT "${PUPPETEER_ROOT}" "/media/node-pptr"
+ln -sfT "${PUPPETEER_BIN}" "/media/node-pptr2206-bin"
+ln -sfT "${PUPPETEER_BIN}" "/media/node-pptr-bin"
 
 # should run with `PUPPETEER_EXECUTABLE_PATH="/media/node-pptr2208-bin"` env
 test -e "${PUPPETEER_BIN}"

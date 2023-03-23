@@ -20,15 +20,14 @@ const DEBIAN11_BUILD_REPO_GHCR = require('./debian11/BUILD_REPO_GHCR.json')
 const DEBIAN11_BUILD_FLAVOR_MAP = require('./debian11/BUILD_FLAVOR_MAP.json')
 const DEBIAN11_BUILD_FLAVOR_LIST = Object.values(DEBIAN11_BUILD_FLAVOR_MAP)
 
-const saveDebian11TagCore = (DOCKER_BUILD_MIRROR = '', tag) => writeJSONSync(resolve(__dirname, `debian11/TAG_CORE${DOCKER_BUILD_MIRROR}.json`), tag)
-const loadDebian11TagCore = (DOCKER_BUILD_MIRROR = '') => readJSONSync(resolve(__dirname, `debian11/TAG_CORE${DOCKER_BUILD_MIRROR}.json`))
-const verifyDebian11BuildArg = ({ BUILD_FLAVOR_NAME, DOCKER_BUILD_MIRROR }) => {
+const saveDebian11TagCore = (tag) => writeJSONSync(resolve(__dirname, 'debian11/TAG_CORE.json'), tag)
+const loadDebian11TagCore = () => readJSONSync(resolve(__dirname, 'debian11/TAG_CORE.json'))
+const verifyDebian11BuildArg = ({ BUILD_FLAVOR_NAME }) => {
   oneOf(BUILD_FLAVOR_NAME, DEBIAN11_BUILD_FLAVOR_LIST.map(({ NAME }) => NAME))
-  oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
   const BUILD_FLAVOR = DEBIAN11_BUILD_FLAVOR_LIST.find(({ NAME }) => BUILD_FLAVOR_NAME === NAME)
-  const getFlavoredTag = (name, version = PACKAGE_VERSION) => `11-${name}-${version}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR.toLowerCase()}`}`
+  const getFlavoredTag = (name, version = PACKAGE_VERSION) => `11-${name}-${version}`
   const getFlavoredImageTag = (name, version = PACKAGE_VERSION) => name === '@CORE'
-    ? loadDebian11TagCore(DOCKER_BUILD_MIRROR)
+    ? loadDebian11TagCore()
     : `${DEBIAN11_BUILD_REPO}:${getFlavoredTag(name, version)}`
   return {
     BUILD_FLAVOR,
@@ -41,15 +40,14 @@ const DEBIAN12_BUILD_REPO_GHCR = require('./debian12/BUILD_REPO_GHCR.json')
 const DEBIAN12_BUILD_FLAVOR_MAP = require('./debian12/BUILD_FLAVOR_MAP.json')
 const DEBIAN12_BUILD_FLAVOR_LIST = Object.values(DEBIAN12_BUILD_FLAVOR_MAP)
 
-const saveDebian12TagCore = (DOCKER_BUILD_MIRROR = '', tag) => writeJSONSync(resolve(__dirname, `debian12/TAG_CORE${DOCKER_BUILD_MIRROR}.json`), tag)
-const loadDebian12TagCore = (DOCKER_BUILD_MIRROR = '') => readJSONSync(resolve(__dirname, `debian12/TAG_CORE${DOCKER_BUILD_MIRROR}.json`))
-const verifyDebian12BuildArg = ({ BUILD_FLAVOR_NAME, DOCKER_BUILD_MIRROR }) => {
+const saveDebian12TagCore = (tag) => writeJSONSync(resolve(__dirname, 'debian12/TAG_CORE.json'), tag)
+const loadDebian12TagCore = () => readJSONSync(resolve(__dirname, 'debian12/TAG_CORE.json'))
+const verifyDebian12BuildArg = ({ BUILD_FLAVOR_NAME }) => {
   oneOf(BUILD_FLAVOR_NAME, DEBIAN12_BUILD_FLAVOR_LIST.map(({ NAME }) => NAME))
-  oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
   const BUILD_FLAVOR = DEBIAN12_BUILD_FLAVOR_LIST.find(({ NAME }) => BUILD_FLAVOR_NAME === NAME)
-  const getFlavoredTag = (name, version = PACKAGE_VERSION) => `12-${name}-${version}${DOCKER_BUILD_MIRROR && `-${DOCKER_BUILD_MIRROR.toLowerCase()}`}`
+  const getFlavoredTag = (name, version = PACKAGE_VERSION) => `12-${name}-${version}`
   const getFlavoredImageTag = (name, version = PACKAGE_VERSION) => name === '@CORE'
-    ? loadDebian12TagCore(DOCKER_BUILD_MIRROR)
+    ? loadDebian12TagCore()
     : `${DEBIAN12_BUILD_REPO}:${getFlavoredTag(name, version)}`
   return {
     BUILD_FLAVOR,

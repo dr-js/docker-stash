@@ -5,8 +5,7 @@ source ./0-3-base-ruby.sh
 # MNT
 MNT_TGZ_RUBY="$(echo /mnt/build-layer-resource/ruby-*.tar.gz)"
 MNT_GEM_VERSION="$(cat /mnt/build-layer-resource/GEM_VERSION.txt)"
-
-BUNDLER_MAJOR_VERSION="2"
+MNT_BUNDLER_VERSION="$(cat /mnt/build-layer-resource/BUNDLER_VERSION.txt)"
 
 apt-update
   # mostly borrowed from: https://github.com/docker-library/ruby/blob/master/2.5/buster/Dockerfile
@@ -44,8 +43,6 @@ apt-update
 
     autoconf # may re-generate configure
 
-    CFLAGS="-s -g0" \
-    LDFLAGS="-s" \
     ./configure \
       --build="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
       --disable-install-doc \
@@ -72,21 +69,10 @@ apt-update
 apt-clear
 
 # gem
-  if [[ "${DOCKER_BUILD_MIRROR}" = "CN" ]] ; then
-    gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/
-    # gem sources --add https://mirrors.tuna.tsinghua.edu.cn/rubygems/ --remove https://rubygems.org/
-    gem sources -l # check list sources
-  fi
-
   gem update --no-document --system "${MNT_GEM_VERSION}"
   gem-uninstall rubygems-update # remove gem update dependency
 
-  gem install --no-document --force bundler -v "~> ${BUNDLER_MAJOR_VERSION}" # use latest bundler # https://github.com/rubygems/rubygems/issues/2058
-
-  if [[ "${DOCKER_BUILD_MIRROR}" = "CN" ]] ; then
-    bundle config mirror.https://rubygems.org https://gems.ruby-china.com
-    # bundle config mirror.https://rubygems.org https://mirrors.tuna.tsinghua.edu.cn/rubygems
-  fi
+  gem install --no-document --force bundler -v "${MNT_BUNDLER_VERSION}" # update bundler # https://github.com/rubygems/rubygems/issues/2058
 gem-clear
 
 dr-dev --package-trim-ruby-gem /usr/local/lib/ruby/gems/*/gems/

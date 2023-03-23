@@ -1,23 +1,15 @@
-const { oneOf } = require('@dr-js/core/library/common/verify.js')
 const { calcHash } = require('@dr-js/core/library/node/data/Buffer.js')
 const { writeBuffer, writeText } = require('@dr-js/core/library/node/fs/File.js')
 const { resetDirectory } = require('@dr-js/core/library/node/fs/Directory.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee, checkPullImage } = require('@dr-js/dev/library/docker.js')
+const { DEB12_FETCH_LIST } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN12_BUILD_REPO, saveDebian12TagCore,
   fetchGitHubBufferMapWithLocalCache, fetchFileListWithLocalCache
 } = require('../function.js')
-
-const [
-  , // node
-  , // script.js
-  DOCKER_BUILD_MIRROR = '' // now support "CN" only
-] = process.argv
-
-oneOf(DOCKER_BUILD_MIRROR, [ '', 'CN' ])
 
 runKit(async (kit) => {
   const BUILD_REPO = DEBIAN12_BUILD_REPO
@@ -31,27 +23,15 @@ runKit(async (kit) => {
     'arm64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/bookworm/slim/rootfs.tar.xz'
   }
 
-  const DEB_FETCH_LIST = [
-    // update at 2022/11/23, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
-    [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20211016_all.deb', 'd7abcfaa67bc16c4aed960c959ca62849102c8a0a61b9af9a23fcc870ebc3c57' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.7-1_amd64.deb', '6b149908d8f7c33806274ffed964008f73141ed17971666e9eb983571870c8e4' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.7-1_arm64.deb', '4960871eac77750a34ec168b8bf46b95f0dfab29163d5ac8f9d074f82517fb28' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3_3.0.7-1_amd64.deb', '83b44b9624711f954d91a4b0414b2f8d46fbc00a222e4c20614c16337a872762' ],
-    [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3_3.0.7-1_arm64.deb', 'dc3fc30805351460c714edb5fa51011abcdcf8e639c958c96cf79af8e26d3b79' ],
-    // update at 2022/08/25, to find from: https://packages.debian.org/search?keywords=libjemalloc2
-    [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-5_amd64.deb', 'b0f5dd705e5d0b927a29d28b985648cbd6a275840eaceb5fcdffbb417e9b9046' ],
-    [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-5_arm64.deb', '5b10cfc1f59fe72e7aa6198c9aa4070947d27b5930d5461eccc1d52555ec8abb' ]
-  ]
-
   const coreImageBufferMap = await fetchGitHubBufferMapWithLocalCache(URL_CORE_IMAGE_MAP, URL_CACHE_HASH, kit.fromTemp('debian12', 'core-github'))
-  const dockerfileBufferMap = Object.fromEntries(DOCKER_BUILD_ARCH_INFO_LIST.map((DOCKER_BUILD_ARCH_INFO) => [ DOCKER_BUILD_ARCH_INFO.key, Buffer.from(getDockerfileString({ DOCKER_BUILD_ARCH_INFO, DOCKER_BUILD_MIRROR })) ]))
+  const dockerfileBufferMap = Object.fromEntries(DOCKER_BUILD_ARCH_INFO_LIST.map((DOCKER_BUILD_ARCH_INFO) => [ DOCKER_BUILD_ARCH_INFO.key, Buffer.from(getDockerfileString({ DOCKER_BUILD_ARCH_INFO })) ]))
 
   const SOURCE_HASH = calcHash(Buffer.concat([
     ...Object.values(coreImageBufferMap),
     ...Object.values(dockerfileBufferMap),
-    Buffer.from(JSON.stringify(DEB_FETCH_LIST))
+    Buffer.from(JSON.stringify(DEB12_FETCH_LIST))
   ])).replace(/\W/g, '')
-  const BUILD_TAG = `12-${BUILD_FLAVOR}-${SOURCE_HASH}${DOCKER_BUILD_MIRROR ? `-${DOCKER_BUILD_MIRROR.toLowerCase()}` : ''}`
+  const BUILD_TAG = `12-${BUILD_FLAVOR}-${SOURCE_HASH}`
   const PATH_BUILD = kit.fromOutput('debian12-core', BUILD_TAG)
 
   kit.padLog('build config')
@@ -74,7 +54,7 @@ runKit(async (kit) => {
     }
 
     kit.padLog('assemble "build-core/"')
-    await fetchFileListWithLocalCache(DEB_FETCH_LIST, {
+    await fetchFileListWithLocalCache(DEB12_FETCH_LIST, {
       pathOutput: kit.fromOutput(PATH_BUILD, 'build-core/'),
       pathCache: kit.fromTemp('debian12', 'core-url')
     })
@@ -100,23 +80,17 @@ runKit(async (kit) => {
   }
 
   kit.padLog('save core image tag')
-  saveDebian12TagCore(DOCKER_BUILD_MIRROR, `${BUILD_REPO}:${BUILD_TAG}`)
+  saveDebian12TagCore(`${BUILD_REPO}:${BUILD_TAG}`)
 }, { title: 'build-core' })
 
 const getDockerfileString = ({
-  DOCKER_BUILD_ARCH_INFO,
-  DOCKER_BUILD_MIRROR = '',
-  debianMirror = DOCKER_BUILD_MIRROR === 'CN'
-    ? 'https://mirrors.tuna.tsinghua.edu.cn' // https://mirrors.tuna.tsinghua.edu.cn/help/debian/
-    : 'http://deb.debian.org' // https://wiki.debian.org/SourcesList#Example_sources.list
+  DOCKER_BUILD_ARCH_INFO
 }) => `# syntax = ${BUILDKIT_SYNTAX}
 FROM scratch
 
 ${_ && 'use prepared fs'}
 ADD "rootfs.tar.xz.${DOCKER_BUILD_ARCH_INFO.key}" /
 
-LABEL arg.DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
-ENV DOCKER_BUILD_MIRROR=${JSON.stringify(DOCKER_BUILD_MIRROR)}
 LABEL arg.DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
 ENV DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
 WORKDIR /root/
@@ -128,10 +102,10 @@ ENV LC_ALL C.UTF-8
 
 RUN set -ex \\
  && { \\${_ && 'reset apt source list with bookworm-backports'}
-       echo 'deb ${debianMirror}/debian bookworm main'; \\
-       echo 'deb ${debianMirror}/debian bookworm-updates main'; \\
-       echo 'deb ${debianMirror}/debian bookworm-backports main'; \\
-       echo 'deb ${debianMirror}/debian-security/ bookworm-security main'; \\
+       echo 'deb http://deb.debian.org/debian bookworm main'; \\
+       echo 'deb http://deb.debian.org/debian bookworm-updates main'; \\
+       echo 'deb http://deb.debian.org/debian bookworm-backports main'; \\
+       echo 'deb http://deb.debian.org/debian-security/ bookworm-security main'; \\
     } > /etc/apt/sources.list \\
  && { \\${_ && 'set apt to use bookworm-backports by default'}
       echo 'Package: *'; \\

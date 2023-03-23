@@ -47,11 +47,8 @@ Each build will assemble a build folder with `Dockerfile` (the context).
 For small file changes, expect only the changed layer and after layer get rebuild,
   currently all layer will get rebuild in CI due to cache is reset every time.
 
-Most of build resource file is cached locally,
+Most build resource file is cached locally,
   or in buildx-cache for faster dev rebuild.
-
-The `CN` version will change some repo mirror in docker for faster build in CN,
-  but proxy will still help since the local resource file download will is still slow.
 
 Current layer stack:
 ```
@@ -66,7 +63,7 @@ debian:11-core
             ├─go
             └─dep-chrome
               └─dep-font
-                ├─node-puppeteer2206
+                ├─node-pptr2206
                 └─java
                   ├─ruby
                   └─ruby3
@@ -87,10 +84,6 @@ echo '"ghcr.io/dr-js/debian"' > source/debian11/BUILD_REPO_GHCR.json
 Then run:
 ```shell script
 npm run build-debian11
-
-# or for CN mirror
-npm run build-debian11-cn
-npm run pxybd-debian11-cn
 ```
 
 Use `build-proxy*` for slow fetch, the config can also be added in `.npmrc` like:
