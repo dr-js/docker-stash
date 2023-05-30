@@ -59,11 +59,6 @@ const PPTR_VERSION = '19.11.1' // ['112.0.5614.0', 'v19.8.0'] // https://github.
 const DEB11_PPTR_VERSION_ARM64 = '19.11.1' // https://packages.debian.org/bullseye/chromium (112.0.5615.138-1~deb11u1)
 const DEB12_PPTR_VERSION_ARM64 = '19.11.1' // https://packages.debian.org/bookworm/chromium (113.0.5672.126-1)
 
-// update at 2022/05/30, check version at: https://rubygems.org/pages/download
-const GEM_VERSION = '3.4.13'
-// update at 2022/05/30, check version at: https://rubygems.org/gems/bundler
-const BUNDLER_VERSION = '2.4.13'
-
 module.exports = {
   DEB11_FETCH_LIST,
   DEB12_FETCH_LIST,
@@ -77,8 +72,5 @@ module.exports = {
 
   PPTR_VERSION,
   DEB11_PPTR_VERSION_ARM64,
-  DEB12_PPTR_VERSION_ARM64,
-
-  GEM_VERSION,
-  BUNDLER_VERSION
+  DEB12_PPTR_VERSION_ARM64
 }
