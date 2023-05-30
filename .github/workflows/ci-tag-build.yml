@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - { uses: "actions/checkout@v3" } # https://github.com/actions/checkout
-      - { uses: "actions/setup-node@v3", with: { node-version: "18" } } # https://github.com/actions/setup-node
+      - { uses: "actions/setup-node@v3", with: { node-version: "20" } } # https://github.com/actions/setup-node
       - run: |
           bash .github/setup-docker.sh
           echo "$PASSWORD" | dr-js --docker -- login --username drjs --password-stdin

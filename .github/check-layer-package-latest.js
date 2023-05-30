@@ -3,7 +3,7 @@ const { fetchWithJump } = require('@dr-js/core/library/node/net.js')
 
 const getText = async (url) => (await fetchWithJump(url, {
   headers: { 'accept': '*/*', 'user-agent': 'docker-stash' }, // patch for sites require a UA, like GitHub
-  jumpMax: 4
+  jumpMax: 4, family: 4
 })).text()
 
 const getDebianDeb = async (dist = 'buster', pkg = '') => {
@@ -32,16 +32,16 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
   return pkgDlList
 }
 
-const getNodesourceDeb = async (dist = 'buster') => {
+const getNodesourceDeb = async (dist = 'buster', rel = '20') => {
   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
   for (const dlArch of [
     'amd64',
     'arm64'
   ]) {
-    const textDlPage = await getText(`https://deb.nodesource.com/node_18.x/dists/${dist}/main/binary-${dlArch}/Packages`)
+    const textDlPage = await getText(`https://deb.nodesource.com/node_${rel}.x/dists/${dist}/main/binary-${dlArch}/Packages`)
     // Filename: pool/main/n/nodejs/nodejs_18.9.1-deb-1nodesource1_amd64.deb
     // SHA256: 84a8f21dfdb429c37fa63b3c3d8138cae775295b22b0b8ab92971ed6b33a733b
-    const dlUrl = 'https://deb.nodesource.com/node_18.x/' + /Filename: (pool\/main\/n\/nodejs\/nodejs_[.\d]+-deb-\w+.deb)/.exec(textDlPage)[ 1 ]
+    const dlUrl = `https://deb.nodesource.com/node_${rel}.x/` + /Filename: (pool\/main\/n\/nodejs\/nodejs_[.\d]+-deb-\w+.deb)/.exec(textDlPage)[ 1 ]
     const dlSha256 = /SHA256: (\w+)/.exec(textDlPage)[ 1 ]
     pkgDlList.push({ pkgName: 'nodejs', dlArch, dlUrl, dlSha256 })
   }
@@ -58,10 +58,10 @@ const log = (pkgDlList) => {
 
 runKit(async (kit) => {
   kit.padLog('debian11/bullseye')
-  // log(await getDebianDeb('bullseye', 'ca-certificates')) // NOTE: skip, not change so often
-  // log(await getDebianDeb('bullseye', 'openssl')) // NOTE: skip, not change so often
-  // log(await getDebianDeb('bullseye', 'libssl1.1')) // NOTE: skip, not change so often
-  // log(await getDebianDeb('bullseye', 'libjemalloc2')) // NOTE: skip, not change so often
+  log(await getDebianDeb('bullseye', 'ca-certificates')) // NOTE: skip, not change so often
+  log(await getDebianDeb('bullseye', 'openssl')) // NOTE: skip, not change so often
+  log(await getDebianDeb('bullseye', 'libssl1.1')) // NOTE: skip, not change so often
+  log(await getDebianDeb('bullseye', 'libjemalloc2')) // NOTE: skip, not change so often
   log(await getDebianDeb('bullseye', 'chromium'))
 
   kit.padLog('debian12/bookworm')

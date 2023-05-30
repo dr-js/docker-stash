@@ -2,7 +2,7 @@ version: 2
 
 jobs:
   build:
-    machine: { image: "ubuntu-2004:current" } # https://circleci.com/docs/2.0/using-arm/
+    machine: { image: "ubuntu-2204:current" } # https://circleci.com/docs/2.0/using-arm/
     resource_class: arm.medium # https://circleci.com/docs/2.0/arm-resources/#pricing-and-availability
     steps:
       - checkout
@@ -10,7 +10,7 @@ jobs:
           name: Setup
           command: |
             sudo rm -rf /opt/circleci/.nvm/ # remove existing nvm & nodejs
-            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
             sudo apt-get install -y nodejs
             bash .github/setup-docker.sh
             echo "${CIRCLECI_DOCKER_HUB_DRJS_PW}" | dr-js --docker -- login --username drjs --password-stdin
