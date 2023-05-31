@@ -6,8 +6,8 @@ source ./0-1-base-apt.sh
 MNT_PUPPETEER_VERSION="$(cat /mnt/build-layer-resource/PUPPETEER_VERSION.txt)"
 MNT_PUPPETEER_VERSION_ARM64="$(cat /mnt/build-layer-resource/PUPPETEER_VERSION_ARM64.txt)"
 
-PUPPETEER_ROOT="/media/node-pptr2206"
-PUPPETEER_BIN="/media/node-pptr2206-bin"
+PUPPETEER_ROOT="/media/node-pptr2206" # where npm module is installed
+PUPPETEER_BIN="/media/node-pptr2206-bin" # symlink to 'chrome' bin
 
 # TODO: check if resolved
 # # NOTE: disable "/usr/lib/x86_64-linux-gnu/libjemalloc.so.2" (5.2.1-3, 5.1.0-3)
@@ -20,10 +20,9 @@ mkdir -p "${PUPPETEER_ROOT}"
 ( cd "${PUPPETEER_ROOT}"
   if [[ "${DOCKER_BUILD_ARCH}" = "amd64" ]] ; then
     export PUPPETEER_CACHE_DIR="/var/cache/puppeteer"
-    export PUPPETEER_DOWNLOAD_PATH="${PUPPETEER_ROOT}/chrome"
-    mkdir -p "${PUPPETEER_DOWNLOAD_PATH}"
     npm install "puppeteer@${MNT_PUPPETEER_VERSION}"
-    ln -sfT "${PUPPETEER_DOWNLOAD_PATH}/linux-"*"/chrome-linux/chrome" "${PUPPETEER_BIN}"
+    cp -aT "${PUPPETEER_CACHE_DIR}" "${PUPPETEER_ROOT}"
+    ln -sfT "${PUPPETEER_ROOT}/chrome/linux-"*"/chrome-linux/chrome" "${PUPPETEER_BIN}"
   else
     apt-update
       apt-install chromium
@@ -38,8 +37,8 @@ mkdir -p "${PUPPETEER_ROOT}"
   dr-dev --package-trim-node-modules "${PUPPETEER_ROOT}"
 )
 
-# symlink to support older layout
-ln -sfT "${PUPPETEER_ROOT}" "/media/node-puppeteer2206"
+# symlink
+ln -sfT "${PUPPETEER_ROOT}" "/media/node-puppeteer2206" # support older layout
 ln -sfT "${PUPPETEER_ROOT}" "/media/node-pptr"
 ln -sfT "${PUPPETEER_BIN}" "/media/node-pptr-bin"
 
