@@ -1,7 +1,7 @@
 const { runKit } = require('@dr-js/core/library/node/kit.js')
-const { fetchWithJump } = require('@dr-js/core/library/node/net.js')
+const { fetchWithJumpProxy } = require('@dr-js/core/library/node/module/Software/npm.js')
 
-const getText = async (url) => (await fetchWithJump(url, {
+const getText = async (url) => (await fetchWithJumpProxy(url, {
   headers: { 'accept': '*/*', 'user-agent': 'docker-stash' }, // patch for sites require a UA, like GitHub
   jumpMax: 4, family: 4
 })).text()
@@ -14,7 +14,9 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
   // name     <h1>Package: libjemalloc2 (5.2.1-5)\n</h1>
   // dl-url   <th><a href="/bookworm/amd64/libjemalloc2/download">amd64</a></th>
   //          <th><a href="/bookworm/arm64/libjemalloc2/download">arm64</a></th>
-  const pkgName = /<h1>Package:\s*(.+)\s*<\/h1>/.exec(textIndex)[ 1 ]
+  // name     <h1>Package: chromium (118.0.5993.70-1~deb11u1 and others)
+  //            [<strong class="pmarker" >security</strong>] </h1>
+  const pkgName = /<h1>Package:\s*(.+)\s*(?:\n.+)?<\/h1>/.exec(textIndex)[ 1 ]
   for (const dlArch of [
     textIndex.includes(`/${dist}/all/${pkg}/download`) && 'all',
     textIndex.includes(`/${dist}/amd64/${pkg}/download`) && 'amd64',
@@ -25,7 +27,8 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
     // <tr><th>SHA256 checksum</th>\t<td><tt>d7abcfaa67bc16c4aed960c959ca62849102c8a0a61b9af9a23fcc870ebc3c57</tt></td>
     // <li><a href="http://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.5-2_amd64.deb">ftp.debian.org/debian</a></li>
     // <tr><th>SHA256 checksum</th>\t<td><tt>d67bb6da8256863c85866059c8c2b93f1571ed7e2574b007241de35a2f0120d9</tt></td>
-    const dlUrl = 'https://' + /:\/\/(ftp\.debian\.org\/debian\/pool\/.*\.deb)">/.exec(textDlPage)[ 1 ]
+    // <ul><li><a href="http://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium_118.0.5993.70-1~deb11u1_amd64.deb">security.debian.org/debian-security</a></li></ul>
+    const dlUrl = 'https://' + /:\/\/((?:ftp|security)\.debian\.org\/debian(?:-security)?\/pool\/.*\.deb)">/.exec(textDlPage)[ 1 ]
     const dlSha256 = /SHA256 checksum<\/th>\s*<td><tt>(\w+)<\/tt>/.exec(textDlPage)[ 1 ]
     pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
   }
@@ -50,9 +53,8 @@ const getNodesourceDeb = async (dist = 'buster', rel = '20') => {
 
 const log = (pkgDlList) => {
   for (const { pkgName, dlArch, dlUrl, dlSha256 } of pkgDlList) {
-    console.log(`  [${dlArch}] ${pkgName}`)
-    console.log(`    ${dlUrl}`)
-    console.log(`    ${dlSha256}`)
+    console.log(`  // <${dlArch}> ${pkgName}`)
+    console.log(`  [ '${dlUrl}', '${dlSha256}' ]`)
   }
 }
 
