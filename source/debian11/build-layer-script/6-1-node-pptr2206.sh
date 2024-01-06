@@ -22,7 +22,8 @@ mkdir -p "${PUPPETEER_ROOT}"
     export PUPPETEER_CACHE_DIR="/var/cache/puppeteer"
     npm install "puppeteer@${MNT_PUPPETEER_VERSION}"
     cp -aT "${PUPPETEER_CACHE_DIR}" "${PUPPETEER_ROOT}"
-    ln -sfT "${PUPPETEER_ROOT}/chrome/linux-"*"/chrome-linux/chrome" "${PUPPETEER_BIN}"
+    # in 21.6.1 became: /media/node-pptr2208/chrome/linux-119.0.6045.105/chrome-linux64/chrome
+    ln -sfT "${PUPPETEER_ROOT}/chrome/linux-"*"/chrome-linux"*"/chrome" "${PUPPETEER_BIN}"
   else
     apt-update
       apt-install chromium
