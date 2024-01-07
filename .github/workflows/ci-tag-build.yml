@@ -1,15 +1,12 @@
-name: ci-tag-build
-
-on: # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestbranchestags
-  push: { tags: [ 'v*' ] } # use `v0.0.0` tag pattern
-
+name: "ci-tag-build"
+on: { push: { tags: [ 'v*' ] } } # use `v0.0.0` tag pattern # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestbranchestags
 jobs:
   build:
     timeout-minutes: 90
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-latest"
     steps:
-      - { uses: "actions/checkout@v3" } # https://github.com/actions/checkout
-      - { uses: "actions/setup-node@v3", with: { node-version: "20" } } # https://github.com/actions/setup-node
+      - { uses: "actions/checkout@v4" } # https://github.com/actions/checkout
+      - { uses: "actions/setup-node@v4", with: { node-version: "20" } } # https://github.com/actions/setup-node
       - run: |
           bash .github/setup-docker.sh
           echo "$PASSWORD" | dr-js --docker -- login --username drjs --password-stdin
