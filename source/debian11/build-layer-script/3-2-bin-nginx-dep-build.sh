@@ -40,6 +40,14 @@ apt-update
   rm -rf "${PATH_NGX_BROTLI}/deps/brotli"
   ln -sfT "${PATH_BROTLI}" "${PATH_NGX_BROTLI}/deps/brotli"
 
+  # build brotli, check: https://github.com/google/ngx_brotli/pull/150
+  ( cd "${PATH_NGX_BROTLI}/deps/brotli/"
+    mkdir -p "out/" && cd "out/"
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=./installed ..
+    cmake --build . --config Release --target brotlienc
+    # ls -al "${PATH_NGX_BROTLI}/deps/brotli/out/"
+  )
+
   ls -al "${PATH_NGINX_BUILD}"
   ( cd "${PATH_NGINX}"
     # check for parameters: https://nginx.org/en/docs/configure.html
