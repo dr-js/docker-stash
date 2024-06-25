@@ -44,9 +44,26 @@ const getNodesourceDeb = async (dist = 'buster', rel = '20') => {
     const textDlPage = await getText(`https://deb.nodesource.com/node_${rel}.x/dists/${dist}/main/binary-${dlArch}/Packages`)
     // Filename: pool/main/n/nodejs/nodejs_18.9.1-deb-1nodesource1_amd64.deb
     // SHA256: 84a8f21dfdb429c37fa63b3c3d8138cae775295b22b0b8ab92971ed6b33a733b
-    const dlUrl = `https://deb.nodesource.com/node_${rel}.x/` + /Filename: (pool\/main\/n\/nodejs\/nodejs_[.\d]+-deb-\w+.deb)/.exec(textDlPage)[ 1 ]
+    const dlUrl = `https://deb.nodesource.com/node_${rel}.x/` + /Filename: (pool\/main\/n\/nodejs\/nodejs_[.\d]+-deb-\w+\.deb)/.exec(textDlPage)[ 1 ]
     const dlSha256 = /SHA256: (\w+)/.exec(textDlPage)[ 1 ]
     pkgDlList.push({ pkgName: 'nodejs', dlArch, dlUrl, dlSha256 })
+  }
+  return pkgDlList
+}
+
+const getFluentBitDeb = async (dist = 'buster') => {
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
+  for (const dlArch of [
+    'amd64',
+    'arm64'
+  ]) {
+    const textDlPage = await getText(`https://packages.fluentbit.io/debian/${dist}/dists/${dist}/main/binary-${dlArch}/Packages`)
+    const textDlPkg0 = textDlPage.split('\n\n')[ 0 ] // pick first package
+    // Filename: pool/main/f/fluent-bit/fluent-bit_3.0.7_amd64.deb
+    // SHA256: 7284302d281e8b91fe17e00552fa8d794d0cc05ebaf976171e5e57316893be66
+    const dlUrl = `https://packages.fluentbit.io/debian/${dist}/` + /Filename: (pool\/main\/f\/fluent-bit\/fluent-bit_[.\d]+_\w+\.deb)/.exec(textDlPkg0)[ 1 ]
+    const dlSha256 = /SHA256: (\w+)/.exec(textDlPage)[ 1 ]
+    pkgDlList.push({ pkgName: 'fluent-bit', dlArch, dlUrl, dlSha256 })
   }
   return pkgDlList
 }
@@ -79,4 +96,9 @@ runKit(async (kit) => {
 
   kit.padLog('nodesource/bookworm')
   log(await getNodesourceDeb('bookworm'))
+
+  kit.padLog('fluent-bit/bullseye')
+  log(await getFluentBitDeb('bullseye'))
+  kit.padLog('fluent-bit/bookworm')
+  log(await getFluentBitDeb('bookworm'))
 }, { title: 'ci-patch' })

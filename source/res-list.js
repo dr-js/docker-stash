@@ -23,9 +23,7 @@ const DEB12_FETCH_LIST = [
 ]
 
 const RES_FLAVOR_NODE = [
-  // update at 2023/10/24, to find download:
-  // - https://deb.nodesource.com/node_20.x/dists/bullseye/main/binary-amd64/Packages // https://deb.nodesource.com/node_20.x/dists/bookworm/main/binary-amd64/Packages
-  // - https://deb.nodesource.com/node_20.x/dists/bullseye/main/binary-arm64/Packages // https://deb.nodesource.com/node_20.x/dists/bookworm/main/binary-arm64/Packages
+  // update at 2023/10/24, to find download, check: ".github/check-layer-package-latest.js"
   [ 'https://deb.nodesource.com/node_20.x/pool/main/n/nodejs/nodejs_20.5.1-deb-1nodesource1_amd64.deb', '73458dd3d0d562f84e453a21801e9d2a5e08dd026f6409756371b92de6026828' ],
   [ 'https://deb.nodesource.com/node_20.x/pool/main/n/nodejs/nodejs_20.5.1-deb-1nodesource1_arm64.deb', '9e819cc7a63471c88da1fe5f5fe44987d54e0c810b16312bf0671db323b80556' ],
   // update at 2024/06/25, to find download from: `{ npm view npm@next-9; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
@@ -44,6 +42,15 @@ const RES_FLAVOR_GO = [
   // update at 2024/06/25, to find download from: https://go.dev/dl/
   [ 'https://go.dev/dl/go1.22.4.linux-amd64.tar.gz', 'ba79d4526102575196273416239cca418a651e049c2b099f3159db85e7bade7d' ],
   [ 'https://go.dev/dl/go1.22.4.linux-arm64.tar.gz', 'a8e177c354d2e4a1b61020aca3562e27ea3e8f8247eca3170e3fa1e0c2f9e771' ]
+]
+// update at 2023/10/24, to find download, check: ".github/check-layer-package-latest.js"
+const RES_FLAVOR_FLUENTBIT_DEB11 = [
+  [ 'https://packages.fluentbit.io/debian/bullseye/pool/main/f/fluent-bit/fluent-bit_3.0.7_amd64.deb', '53930b0573d285047fc7c967a86f9b508505379e53b831666fdfed27447ca7ad' ],
+  [ 'https://packages.fluentbit.io/debian/bullseye/pool/main/f/fluent-bit/fluent-bit_3.0.7_arm64.deb', 'c05df7d7f3b68247a52808b865c36f38b6cd318642204ea02d58c3eda20cbc8e' ]
+]
+const RES_FLAVOR_FLUENTBIT_DEB12 = [
+  [ 'https://packages.fluentbit.io/debian/bookworm/pool/main/f/fluent-bit/fluent-bit_3.0.7_amd64.deb', '7284302d281e8b91fe17e00552fa8d794d0cc05ebaf976171e5e57316893be66' ],
+  [ 'https://packages.fluentbit.io/debian/bookworm/pool/main/f/fluent-bit/fluent-bit_3.0.7_arm64.deb', 'f1b29677c323be63a61cfb4b71a583ecbeeaab0f13942616aed7b61ba475b2f3' ]
 ]
 // update at 2024/06/25, to find download from: https://www.ruby-lang.org/en/downloads/releases/
 // TODO: Ruby 2.7 reaches EOL
@@ -67,6 +74,8 @@ module.exports = {
   RES_FLAVOR_NODE,
   RES_FLAVOR_BIN_NGINX,
   RES_FLAVOR_GO,
+  RES_FLAVOR_FLUENTBIT_DEB11,
+  RES_FLAVOR_FLUENTBIT_DEB12,
 
   TGZ_RUBY2,
   TGZ_RUBY3,

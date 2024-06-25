@@ -4,7 +4,7 @@ const { modifyCopy } = require('@dr-js/core/library/node/fs/Modify.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
-const { RES_FLAVOR_NODE, RES_FLAVOR_BIN_NGINX, RES_FLAVOR_GO, TGZ_RUBY3, PPTR_VERSION, DEB12_PPTR_VERSION_ARM64 } = require('../res-list.js')
+const { RES_FLAVOR_NODE, RES_FLAVOR_BIN_NGINX, RES_FLAVOR_GO, RES_FLAVOR_FLUENTBIT_DEB12, TGZ_RUBY3, PPTR_VERSION, DEB12_PPTR_VERSION_ARM64 } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN12_BUILD_FLAVOR_MAP, verifyDebian12BuildArg,
@@ -61,6 +61,7 @@ runKit(async (kit) => {
     ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_FLAVOR_NODE : []),
     ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? RES_FLAVOR_BIN_NGINX : []),
     ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_GO ? RES_FLAVOR_GO : []),
+    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_FLUENT_BIT ? RES_FLAVOR_FLUENTBIT_DEB12 : []),
     ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 ? [ TGZ_RUBY3 ] : [])
   ], {
     pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),

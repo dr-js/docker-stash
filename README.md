@@ -61,12 +61,13 @@ debian:11-core
         └─bin-nginx
           └─bin-etc (layer from here & above is light, layer below will add 50MiB+ each)
             ├─go
-            └─dep-chrome
-              └─dep-font
-                ├─node-pptr2206
-                └─java
-                  ├─ruby
-                  └─ruby3
+            └─fluent-bit
+              └─dep-chrome
+                └─dep-font
+                  ├─node-pptr2206
+                  └─java
+                    ├─ruby
+                    └─ruby3
 ```
 
 
