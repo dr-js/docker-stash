@@ -28,36 +28,37 @@ const RES_FLAVOR_NODE = [
   // - https://deb.nodesource.com/node_20.x/dists/bullseye/main/binary-arm64/Packages // https://deb.nodesource.com/node_20.x/dists/bookworm/main/binary-arm64/Packages
   [ 'https://deb.nodesource.com/node_20.x/pool/main/n/nodejs/nodejs_20.5.1-deb-1nodesource1_amd64.deb', '73458dd3d0d562f84e453a21801e9d2a5e08dd026f6409756371b92de6026828' ],
   [ 'https://deb.nodesource.com/node_20.x/pool/main/n/nodejs/nodejs_20.5.1-deb-1nodesource1_arm64.deb', '9e819cc7a63471c88da1fe5f5fe44987d54e0c810b16312bf0671db323b80556' ],
-  // update at 2023/10/24, to find download from: `{ npm view npm@next-9; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
-  [ 'https://registry.npmjs.org/npm/-/npm-9.9.2.tgz           '.trim(), 'D3tV+W0PzJOlwo8YmO6fNzaB1CrMVYd1V+2TURF6lbCbmZKqMsYgeQfPVvqiM3zbNSJPhFEnmlEXIogH2Vq7PQ==:sha512:base64' ],
-  [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.13.tgz '.trim(), '2dUE+lNroFxDItKflu1/t9ebBMV6lEuMPyvPF6z7JJ4Ngjxg9n9dEmhb2aUl09ckZSbAKDyjbYWAi9Z42odvjg==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
-  [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.5.12.tgz   '.trim(), 'yr5I6JUjfCn6rVI9v5uN8QX5pFKWvItMKyKvgnch53AymrAC01dbUdhe8UNECbsmTqth2KZkwZ9tznJywz/GIw==:sha512:base64', 'dr-dev-@@@.tgz' ] // NOTE: fix filename
+  // update at 2024/06/25, to find download from: `{ npm view npm@next-9; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
+  [ 'https://registry.npmjs.org/npm/-/npm-9.9.3.tgz           '.trim(), 'Z1l+rcQ5kYb17F3hHtO601arEpvdRYnCLtg8xo3AGtyj3IthwaraEOexI9903uANkifFbqHC8hT53KIrozWg8A==:sha512:base64' ],
+  [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.15.tgz '.trim(), 'dDIB/zXAxXVlpjLIYF+bYfLI7pwVvGQLQRjdh5MDfXgDJ3wgcbbh38h5Ic95Mai0Yf9CNu/gccihqgqxGOt3HQ==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
+  [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.5.14.tgz   '.trim(), 'KWwHsqxHrOtuVNPTq2chms7bXsQnti05UXp7dQIWUGVqOC+nQs6uN1KlIRqwJXZ5eo2pZnNCjk+GQ3RcpEyfjg==:sha512:base64', 'dr-dev-@@@.tgz' ] // NOTE: fix filename
 ]
 const RES_FLAVOR_BIN_NGINX = [
-  // update at 2023/05/30, to find download from: https://nginx.org/en/download.html
+  // update at 2024/06/25, to find download from: https://nginx.org/en/download.html
   // and: https://github.com/google/ngx_brotli
-  [ 'https://nginx.org/download/nginx-1.24.0.tar.gz             '.trim(), '77a2541637b92a621e3ee76776c8b7b40cf6d707e69ba53a940283e30ff2f55d' ], // TODO: need to calc hash yourself
+  [ 'https://nginx.org/download/nginx-1.26.1.tar.gz             '.trim(), 'f9187468ff2eb159260bfd53867c25ff8e334726237acf227b9e870e53d3e36b' ], // TODO: need to calc hash yourself
   [ 'https://github.com/google/brotli/archive/ed738e84.zip      '.trim(), 'a68ec12a898abc9cf248f21362620562041b7aab4d623ecd736f39bedf5002a0', 'brotli.zip' ], // specify filename // TODO: need to calc hash yourself
   [ 'https://github.com/google/ngx_brotli/archive/a71f9312.zip  '.trim(), '96f23eb72488ffc570cbc474a928000b05b72f2682456ae357aeaf3ce71c626e', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
 ]
 const RES_FLAVOR_GO = [
-  // update at 2023/10/24, to find download from: https://go.dev/dl/
-  [ 'https://go.dev/dl/go1.21.5.linux-amd64.tar.gz', 'e2bc0b3e4b64111ec117295c088bde5f00eeed1567999ff77bc859d7df70078e' ],
-  [ 'https://go.dev/dl/go1.21.5.linux-arm64.tar.gz', '841cced7ecda9b2014f139f5bab5ae31785f35399f236b8b3e75dff2a2978d96' ]
+  // update at 2024/06/25, to find download from: https://go.dev/dl/
+  [ 'https://go.dev/dl/go1.22.4.linux-amd64.tar.gz', 'ba79d4526102575196273416239cca418a651e049c2b099f3159db85e7bade7d' ],
+  [ 'https://go.dev/dl/go1.22.4.linux-arm64.tar.gz', 'a8e177c354d2e4a1b61020aca3562e27ea3e8f8247eca3170e3fa1e0c2f9e771' ]
 ]
-// update at 2023/05/30, to find download from: https://www.ruby-lang.org/en/downloads/releases/
+// update at 2024/06/25, to find download from: https://www.ruby-lang.org/en/downloads/releases/
 // TODO: Ruby 2.7 reaches EOL
 const TGZ_RUBY2 = [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.8.tar.gz', 'c2dab63cbc8f2a05526108ad419efa63a67ed4074dbbcf9fc2b1ca664cb45ba0' ]
 // TODO: NOTE:
+//   temp revert & wait for "Compatibility issues" fix since "3.3.0": https://www.ruby-lang.org/en/news/2023/12/25/ruby-3-3-0-released/
 //   temp revert & wait for "Compatibility issues" fix since "3.2.0": https://www.ruby-lang.org/en/news/2022/12/25/ruby-3-2-0-released/
-//   const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.2/ruby-3.2.2.tar.gz', '96c57558871a6748de5bc9f274e93f4b5aad06cd8f37befa0e8d94e7b8a423bc' ]
-const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.4.tar.gz', 'a3d55879a0dfab1d7141fdf10d22a07dbf8e5cdc4415da1bde06127d5cc3c7b6' ]
+//   const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.3.tar.gz', '83c05b2177ee9c335b631b29b8c077b4770166d02fa527f3a9f6a40d13f3cce2' ]
+const TGZ_RUBY3 = [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.6.tar.gz', '0d0dafb859e76763432571a3109d1537d976266be3083445651dc68deed25c22' ]
 
-// update at 2023/05/30, check version at: https://github.com/puppeteer/puppeteer/releases
+// update at 2024/06/25, check version at: https://github.com/puppeteer/puppeteer/releases
 // and version mapping from Chrome => Puppeteer: https://github.com/puppeteer/puppeteer/blob/main/versions.js
-const PPTR_VERSION = '21.6.1' // ['119.0.6045.105', 'v21.5.0'] // https://github.com/puppeteer/puppeteer/blob/puppeteer-v21.6.1/versions.js
-const DEB11_PPTR_VERSION_ARM64 = '21.6.1' // https://packages.debian.org/bullseye/chromium (120.0.6099.129-1~deb11u1)
-const DEB12_PPTR_VERSION_ARM64 = '21.6.1' // https://packages.debian.org/bookworm/chromium (120.0.6099.129-1~deb12u1)
+const PPTR_VERSION = '22.12.0' // ['126.0.6478.63', 'v22.12.0'] // https://github.com/puppeteer/puppeteer/blob/puppeteer-v22.12.0/versions.js
+const DEB11_PPTR_VERSION_ARM64 = '21.8.0' // https://packages.debian.org/bullseye/chromium (120.0.6099.224-1~deb11u1) ['120.0.6099.109', 'v21.8.0'],
+const DEB12_PPTR_VERSION_ARM64 = '22.12.0' // https://packages.debian.org/bookworm/chromium (126.0.6478.114-1~deb12u1)
 
 module.exports = {
   DEB11_FETCH_LIST,
