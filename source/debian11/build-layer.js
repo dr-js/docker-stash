@@ -4,7 +4,7 @@ const { modifyCopy } = require('@dr-js/core/library/node/fs/Modify.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
-const { RES_FLAVOR_NODE, RES_FLAVOR_BIN_NGINX, RES_FLAVOR_GO, RES_FLAVOR_FLUENTBIT_DEB11, TGZ_RUBY2, TGZ_RUBY3, PPTR_VERSION, DEB11_PPTR_VERSION_ARM64 } = require('../res-list.js')
+const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB11, RES_RUBY2, RES_RUBY3, PPTR_VER, PPTR_VER_ARM64_DEB11 } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN11_BUILD_FLAVOR_MAP, verifyDebian11BuildArg,
@@ -55,17 +55,17 @@ runKit(async (kit) => {
   kit.padLog('assemble "build-layer-resource/"')
   await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
   for (const [ text, file ] of [
-    BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2206 && [ PPTR_VERSION, 'PUPPETEER_VERSION.txt' ],
-    BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2206 && [ DEB11_PPTR_VERSION_ARM64, 'PUPPETEER_VERSION_ARM64.txt' ]
+    BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2206 && [ PPTR_VER, 'PUPPETEER_VERSION.txt' ],
+    BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2206 && [ PPTR_VER_ARM64_DEB11, 'PUPPETEER_VERSION_ARM64.txt' ]
   ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
   await fetchFileListWithLocalCache([
-    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_FLAVOR_NODE : []),
-    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? RES_FLAVOR_BIN_NGINX : []),
-    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_FLUENT_BIT ? RES_FLAVOR_FLUENTBIT_DEB11 : []),
-    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY ? [ TGZ_RUBY2 ] : []),
-    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY_GO ? RES_FLAVOR_GO : []),
-    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 ? [ TGZ_RUBY3 ] : []),
-    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3_GO ? RES_FLAVOR_GO : [])
+    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_NODE : []),
+    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? RES_NGINX : []),
+    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_FLUENT_BIT ? RES_F_BIT_DEB11 : []),
+    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY ? RES_RUBY2 : []),
+    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY_GO ? RES_GO : []),
+    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 ? RES_RUBY3 : []),
+    ...(BUILD_FLAVOR === DEBIAN11_BUILD_FLAVOR_MAP.FLAVOR_RUBY3_GO ? RES_GO : [])
   ], {
     pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),
     pathCache: kit.fromTemp('debian11', 'layer-url')

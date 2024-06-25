@@ -4,7 +4,7 @@ const { resetDirectory } = require('@dr-js/core/library/node/fs/Directory.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee, checkPullImage } = require('@dr-js/dev/library/docker.js')
-const { DEB12_FETCH_LIST } = require('../res-list.js')
+const { RES_CORE_DEB12 } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN12_BUILD_REPO, saveDebian12TagCore,
@@ -29,7 +29,7 @@ runKit(async (kit) => {
   const SOURCE_HASH = calcHash(Buffer.concat([
     ...Object.values(coreImageBufferMap),
     ...Object.values(dockerfileBufferMap),
-    Buffer.from(JSON.stringify(DEB12_FETCH_LIST))
+    Buffer.from(JSON.stringify(RES_CORE_DEB12))
   ])).replace(/\W/g, '')
   const BUILD_TAG = `12-${BUILD_FLAVOR}-${SOURCE_HASH}`
   const PATH_BUILD = kit.fromOutput('debian12-core', BUILD_TAG)
@@ -54,7 +54,7 @@ runKit(async (kit) => {
     }
 
     kit.padLog('assemble "build-core/"')
-    await fetchFileListWithLocalCache(DEB12_FETCH_LIST, {
+    await fetchFileListWithLocalCache(RES_CORE_DEB12, {
       pathOutput: kit.fromOutput(PATH_BUILD, 'build-core/'),
       pathCache: kit.fromTemp('debian12', 'core-url')
     })
