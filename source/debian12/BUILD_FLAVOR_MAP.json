@@ -8,7 +8,6 @@
   "FLAVOR_BIN_GIT": { "NAME": "bin-git", "BASE_IMAGE": "bin-nginx", "LAYER_SCRIPT": "3-3-bin-git.sh" },
   "FLAVOR_BIN_ETC": { "NAME": "bin-etc", "BASE_IMAGE": "bin-git", "LAYER_SCRIPT": "3-9-bin-etc.sh" },
 
-  "FLAVOR_GO": { "NAME": "go", "BASE_IMAGE": "bin-etc", "LAYER_SCRIPT": "4-0-go.sh" },
   "FLAVOR_FLUENT_BIT": { "NAME": "fluent-bit", "BASE_IMAGE": "bin-etc", "LAYER_SCRIPT": "4-0-fluent-bit.sh" },
 
   "FLAVOR_DEP_CHROME": { "NAME": "dep-chrome", "BASE_IMAGE": "fluent-bit", "LAYER_SCRIPT": "5-0-dep-chrome.sh" },
@@ -17,5 +16,6 @@
   "FLAVOR_NODE_PPTR2208": { "NAME": "node-pptr2208", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "6-1-node-pptr2208.sh" },
 
   "FLAVOR_JAVA": { "NAME": "java", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "7-0-java-install.sh" },
-  "FLAVOR_RUBY3": { "NAME": "ruby3", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-1-ruby-install.sh" }
+  "FLAVOR_RUBY3": { "NAME": "ruby3", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-1-ruby-install.sh" },
+  "FLAVOR_RUBY3_GO": { "NAME": "ruby3-go", "BASE_IMAGE": "ruby3", "LAYER_SCRIPT": "7-5-go.sh" }
 }

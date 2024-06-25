@@ -57,17 +57,18 @@ debian:11-core
   └─bin-common
     └─bin-sshd
       └─bin-git
-        ├─dep-build (big layer with C/C++ compiler tools)
+        ├─dep-build (big layer with C/C++ compiler tools +200MiB)
         └─bin-nginx
           └─bin-etc (layer from here & above is light, layer below will add 50MiB+ each)
-            ├─go
             └─fluent-bit
               └─dep-chrome
                 └─dep-font
                   ├─node-pptr2206
                   └─java
                     ├─ruby
+                    | └─ruby-go
                     └─ruby3
+                      └─ruby3-go
 ```
 
 
