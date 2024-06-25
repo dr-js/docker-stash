@@ -55,10 +55,10 @@ Current layer stack:
 debian:11-core
 └─node
   └─bin-common
+    ├─dep-build (big layer with C/C++ compiler tools +200MiB)
     └─bin-sshd
-      └─bin-git
-        ├─dep-build (big layer with C/C++ compiler tools +200MiB)
-        └─bin-nginx
+      └─bin-nginx
+        └─bin-git
           └─bin-etc (layer from here & above is light, layer below will add 50MiB+ each)
             └─fluent-bit
               └─dep-chrome
@@ -67,6 +67,26 @@ debian:11-core
                   └─java
                     ├─ruby
                     | └─ruby-go
+                    └─ruby3
+                      └─ruby3-go
+```
+
+```
+debian:12-core
+└─node
+  └─bin-common
+    ├─dep-build (big layer with C/C++ compiler tools +200MiB)
+    └─bin-sshd
+      └─bin-nginx
+        └─bin-git
+          └─bin-etc (layer from here & above is light, layer below will add 50MiB+ each)
+            └─fluent-bit
+              └─dep-chrome
+                └─dep-font
+                  ├─node-pptr2208
+                  └─java
+                    ├─ruby2
+                    | └─ruby2-go
                     └─ruby3
                       └─ruby3-go
 ```

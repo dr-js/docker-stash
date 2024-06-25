@@ -16,6 +16,8 @@
   "FLAVOR_NODE_PPTR2208": { "NAME": "node-pptr2208", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "6-1-node-pptr2208.sh" },
 
   "FLAVOR_JAVA": { "NAME": "java", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "7-0-java-install.sh" },
-  "FLAVOR_RUBY3": { "NAME": "ruby3", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-1-ruby-install.sh" },
+  "FLAVOR_RUBY2": { "NAME": "ruby2", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-1-ruby2-install.sh" },
+  "FLAVOR_RUBY2_GO": { "NAME": "ruby2-go", "BASE_IMAGE": "ruby2", "LAYER_SCRIPT": "7-5-go.sh" },
+  "FLAVOR_RUBY3": { "NAME": "ruby3", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-1-ruby3-install.sh" },
   "FLAVOR_RUBY3_GO": { "NAME": "ruby3-go", "BASE_IMAGE": "ruby3", "LAYER_SCRIPT": "7-5-go.sh" }
 }
