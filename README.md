@@ -114,3 +114,18 @@ noproxy=127.0.0.1,localhost # exclude localhost
 proxy=http://127.0.0.1:1080 # for http
 https-proxy=http://127.0.0.1:1080 # for https
 ```
+
+
+#### auth "ghcr.io" with PAT
+
+For now the doc's quite twisted,
+we need to use a Personal access token (PAT) to auth the "ghcr.io" repo,
+and the setup will be as following:
+
+The main doc (TLDR): https://docs.github.com/en/free-pro-team@latest/packages/guides/about-github-container-registry,
+and this section specifically: https://docs.github.com/en/free-pro-team@latest/packages/guides/about-github-container-registry#about-scopes-and-permissions-for-github-container-registry
+
+The doc for creating a PAT (follow this): https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token,
+and use the PAT to access the "ghcr.io" repo image, though proxy.
+
+And to create a PAT with `write:packages` scope only, use this url: https://github.com/settings/tokens/new?scopes=write:packages ([REF](https://github.com/github/docs/issues/2660#issuecomment-810766203))
