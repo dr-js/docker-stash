@@ -67,7 +67,7 @@ apt-update
 apt-clear
 
 # gem
-  gem install "rubygems-update:~>3.4" --no-document && update_rubygems # gem update --no-document --system # NOTE: v3.5 requires ruby@3, https://github.com/rubygems/rubygems/issues/2534
+  gem install rubygems-update -v 3.4.22 --no-document && update_rubygems # gem update --no-document --system # NOTE: v3.5 requires ruby@3, https://github.com/rubygems/rubygems/issues/2534
   gem-uninstall rubygems-update # remove gem update dependency
 gem-clear
 
