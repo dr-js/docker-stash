@@ -22,6 +22,7 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
     textIndex.includes(`/${dist}/amd64/${pkg}/download`) && 'amd64',
     textIndex.includes(`/${dist}/arm64/${pkg}/download`) && 'arm64'
   ].filter(Boolean)) {
+    // https://packages.debian.org/bookworm/amd64/openssl/download
     const textDlPage = await getText(`https://packages.debian.org/${dist}/${dlArch}/${pkg}/download`)
     // <li><a href="http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20211016_all.deb">ftp.debian.org/debian</a></li>
     // <tr><th>SHA256 checksum</th>\t<td><tt>d7abcfaa67bc16c4aed960c959ca62849102c8a0a61b9af9a23fcc870ebc3c57</tt></td>
@@ -41,10 +42,12 @@ const getNodesourceDeb = async (dist = 'buster', rel = '20') => {
     'amd64',
     'arm64'
   ]) {
+    // https://deb.nodesource.com/node_20.x/dists/nodistro/main/binary-amd64/Packages
     const textDlPage = await getText(`https://deb.nodesource.com/node_${rel}.x/dists/${dist}/main/binary-${dlArch}/Packages`)
-    // Filename: pool/main/n/nodejs/nodejs_18.9.1-deb-1nodesource1_amd64.deb
-    // SHA256: 84a8f21dfdb429c37fa63b3c3d8138cae775295b22b0b8ab92971ed6b33a733b
-    const dlUrl = `https://deb.nodesource.com/node_${rel}.x/` + /Filename: (pool\/main\/n\/nodejs\/nodejs_[.\d]+-deb-\w+\.deb)/.exec(textDlPage)[ 1 ]
+    const textDlPkg0 = textDlPage.split('\n\n')[ 0 ] // pick first package
+    // Filename: pool/main/n/nodejs/nodejs_20.15.0-1nodesource1_amd64.deb
+    // SHA256: 9fd6bc3754cfc5960ce9c08640dbefa4093c274cff4f15065f754849f275c5b8
+    const dlUrl = `https://deb.nodesource.com/node_${rel}.x/` + /Filename: (pool\/main\/n\/nodejs\/nodejs_[.\d]+-[-\w]+_a(rm|md)64\.deb)/.exec(textDlPkg0)[ 1 ]
     const dlSha256 = /SHA256: (\w+)/.exec(textDlPage)[ 1 ]
     pkgDlList.push({ pkgName: 'nodejs', dlArch, dlUrl, dlSha256 })
   }
@@ -57,11 +60,12 @@ const getFluentBitDeb = async (dist = 'buster') => {
     'amd64',
     'arm64'
   ]) {
+    // https://packages.fluentbit.io/debian/bookworm/dists/bookworm/main/binary-amd64/Packages
     const textDlPage = await getText(`https://packages.fluentbit.io/debian/${dist}/dists/${dist}/main/binary-${dlArch}/Packages`)
     const textDlPkg0 = textDlPage.split('\n\n')[ 0 ] // pick first package
     // Filename: pool/main/f/fluent-bit/fluent-bit_3.0.7_amd64.deb
     // SHA256: 7284302d281e8b91fe17e00552fa8d794d0cc05ebaf976171e5e57316893be66
-    const dlUrl = `https://packages.fluentbit.io/debian/${dist}/` + /Filename: (pool\/main\/f\/fluent-bit\/fluent-bit_[.\d]+_\w+\.deb)/.exec(textDlPkg0)[ 1 ]
+    const dlUrl = `https://packages.fluentbit.io/debian/${dist}/` + /Filename: (pool\/main\/f\/fluent-bit\/fluent-bit_[.\d]+_a(rm|md)64\.deb)/.exec(textDlPkg0)[ 1 ]
     const dlSha256 = /SHA256: (\w+)/.exec(textDlPage)[ 1 ]
     pkgDlList.push({ pkgName: 'fluent-bit', dlArch, dlUrl, dlSha256 })
   }
@@ -90,12 +94,9 @@ runKit(async (kit) => {
   log(await getDebianDeb('bookworm', 'libjemalloc2'))
   log(await getDebianDeb('bookworm', 'chromium'))
 
-  // NOTE: skip, same deb as bookworm
-  // kit.padLog('nodesource/bullseye')
-  // log(await getNodesourceDeb('bullseye'))
-
-  kit.padLog('nodesource/bookworm')
-  log(await getNodesourceDeb('bookworm'))
+  // NOTE: same deb for bullseye/bookworm
+  kit.padLog('nodesource/nodistro')
+  log(await getNodesourceDeb('nodistro'))
 
   kit.padLog('fluent-bit/bullseye')
   log(await getFluentBitDeb('bullseye'))
