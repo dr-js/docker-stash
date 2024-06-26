@@ -23,9 +23,9 @@ const RES_CORE_DEB12 = [
 ]
 
 const RES_NODE = [
-  // update at 2023/10/24, to find download, check: ".github/check-layer-package-latest.js"
-  [ 'https://deb.nodesource.com/node_20.x/pool/main/n/nodejs/nodejs_20.5.1-deb-1nodesource1_amd64.deb', '73458dd3d0d562f84e453a21801e9d2a5e08dd026f6409756371b92de6026828' ],
-  [ 'https://deb.nodesource.com/node_20.x/pool/main/n/nodejs/nodejs_20.5.1-deb-1nodesource1_arm64.deb', '9e819cc7a63471c88da1fe5f5fe44987d54e0c810b16312bf0671db323b80556' ],
+  // update at 2024/06/26, to find download, check: ".github/check-layer-package-latest.js"
+  [ 'https://deb.nodesource.com/node_20.x/pool/main/n/nodejs/nodejs_20.15.0-1nodesource1_amd64.deb', '9fd6bc3754cfc5960ce9c08640dbefa4093c274cff4f15065f754849f275c5b8' ],
+  [ 'https://deb.nodesource.com/node_20.x/pool/main/n/nodejs/nodejs_20.15.0-1nodesource1_arm64.deb', '1e84bd7eb0d0a2c323590d7690d97a14f28162867db18404e73631b59cac934b' ],
   // update at 2024/06/25, to find download from: `{ npm view npm@next-9; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
   [ 'https://registry.npmjs.org/npm/-/npm-9.9.3.tgz           '.trim(), 'Z1l+rcQ5kYb17F3hHtO601arEpvdRYnCLtg8xo3AGtyj3IthwaraEOexI9903uANkifFbqHC8hT53KIrozWg8A==:sha512:base64' ],
   [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.15.tgz '.trim(), 'dDIB/zXAxXVlpjLIYF+bYfLI7pwVvGQLQRjdh5MDfXgDJ3wgcbbh38h5Ic95Mai0Yf9CNu/gccihqgqxGOt3HQ==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
