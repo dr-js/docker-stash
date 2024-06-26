@@ -27,6 +27,13 @@ apt-update
   npm install --global "${MNT_TGZ_NPM}" # update npm
   npm install --global "${MNT_TGZ_DR_JS}" "${MNT_TGZ_DR_DEV}" # install package
 
+  # trim include files
+  rm -rf /usr/include/node/cppgc/
+  rm -rf /usr/include/node/libplatform/
+  rm -rf /usr/include/node/openssl/
+  rm -rf /usr/include/node/uv/
+  rm -rf /usr/include/node/*.h
+
   # trim npm files
   rm -rf /tmp/npm-*
   rm -rf /usr/lib/node_modules/npm/changelogs/
