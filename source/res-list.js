@@ -66,11 +66,11 @@ const RES_RUBY2 = [
 //   const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.3.tar.gz', '83c05b2177ee9c335b631b29b8c077b4770166d02fa527f3a9f6a40d13f3cce2' ] ]
 const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.6.tar.gz', '0d0dafb859e76763432571a3109d1537d976266be3083445651dc68deed25c22' ] ]
 
-// update at 2024/06/25, check version at: https://github.com/puppeteer/puppeteer/releases
+// update at 2024/06/27, check version at: https://github.com/puppeteer/puppeteer/releases/latest
 // and version mapping from Chrome => Puppeteer: https://github.com/puppeteer/puppeteer/blob/main/versions.js
-const PPTR_VER = '22.12.0' // ['126.0.6478.63', 'v22.12.0'] // https://github.com/puppeteer/puppeteer/blob/puppeteer-v22.12.0/versions.js
-const PPTR_VER_ARM64_DEB11 = '21.8.0' // https://packages.debian.org/bullseye/chromium (120.0.6099.224-1~deb11u1) ['120.0.6099.109', 'v21.8.0'],
-const PPTR_VER_ARM64_DEB12 = '22.12.0' // https://packages.debian.org/bookworm/chromium (126.0.6478.114-1~deb12u1)
+const PPTR_VER = '22.12.1' // ['126.0.6478.126', 'v22.12.1']
+const PPTR_VER_ARM64_DEB11 = '21.8.0' // ['120.0.6099.109', 'v21.8.0'] // https://packages.debian.org/bullseye/chromium (120.0.6099.224-1~deb11u1)
+const PPTR_VER_ARM64_DEB12 = '22.12.1' // ['126.0.6478.126', 'v22.12.1'] // https://packages.debian.org/bookworm/chromium (126.0.6478.126-1~deb12u1)
 
 module.exports = {
   RES_CORE_DEB11, RES_CORE_DEB12,

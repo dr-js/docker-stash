@@ -33,7 +33,11 @@ runKit(async (kit) => {
 
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
     const appendCommandList = [
-      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV PUPPETEER_EXECUTABLE_PATH=/media/node-pptr2208-bin'
+      // Tell Puppeteer to skip installing Chrome: https://github.com/puppeteer/puppeteer/blob/puppeteer-v22.12.0/docs/api/puppeteer.configuration.md
+      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV PUPPETEER_EXECUTABLE_PATH=/media/node-pptr2208-bin',
+      // Fix for pptr v22 launch error: https://github.com/puppeteer/puppeteer/issues/11023#issuecomment-1776247197
+      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV XDG_CONFIG_HOME=/tmp/.pptr',
+      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV XDG_CACHE_HOME=/tmp/.pptr'
     ].filter(Boolean)
     await writeText(
       kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
