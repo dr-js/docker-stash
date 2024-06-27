@@ -1,15 +1,3 @@
-const RES_CORE_DEB11 = [
-  // update at 2023/10/24, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
-  [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20210119_all.deb '.trim(), 'b2d488ad4d8d8adb3ba319fc9cb2cf9909fc42cb82ad239a26c570a2e749c389' ],
-  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1w-0+deb11u1_amd64.deb       '.trim(), '04873d74cbe86bad3a9901f6e57f1150040eba9891b443c5c975a72a97238e35' ],
-  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_1.1.1w-0+deb11u1_arm64.deb       '.trim(), 'd9159af073e95641e7eda440fa1d7623873b8c0034c9826a353f890bed107f3c' ],
-  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1w-0+deb11u1_amd64.deb     '.trim(), 'aadf8b4b197335645b230c2839b4517aa444fd2e8f434e5438c48a18857988f7' ],
-  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1w-0+deb11u1_arm64.deb     '.trim(), 'fe7a7d313c87e46e62e614a07137e4a476a79fc9e5aab7b23e8235211280fee3' ],
-  // update at 2022/05/23, to find from: https://packages.debian.org/search?keywords=libjemalloc2
-  [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_amd64.deb          '.trim(), 'dcb79555b137ad70c9d392ca31e04533e3a10b63aa0db02d5a26f464060cc0f5' ],
-  [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.2.1-3_arm64.deb          '.trim(), '7e3537d43b3109183bec24be8e1154a7643ad6e03bb851f2ae0b5dc065954c99' ]
-]
-
 const RES_CORE_DEB12 = [
   // update at 2023/10/24, to find download start from: https://packages.debian.org/search?keywords=ca-certificates
   [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20230311_all.deb '.trim(), '5308b9bd88eebe2a48be3168cb3d87677aaec5da9c63ad0cf561a29b8219115c' ],
@@ -44,10 +32,6 @@ const RES_GO = [
   [ 'https://go.dev/dl/go1.22.4.linux-arm64.tar.gz', 'a8e177c354d2e4a1b61020aca3562e27ea3e8f8247eca3170e3fa1e0c2f9e771' ]
 ]
 // update at 2023/10/24, to find download, check: ".github/check-layer-package-latest.js"
-const RES_F_BIT_DEB11 = [
-  [ 'https://packages.fluentbit.io/debian/bullseye/pool/main/f/fluent-bit/fluent-bit_3.0.7_amd64.deb', '53930b0573d285047fc7c967a86f9b508505379e53b831666fdfed27447ca7ad' ],
-  [ 'https://packages.fluentbit.io/debian/bullseye/pool/main/f/fluent-bit/fluent-bit_3.0.7_arm64.deb', 'c05df7d7f3b68247a52808b865c36f38b6cd318642204ea02d58c3eda20cbc8e' ]
-]
 const RES_F_BIT_DEB12 = [
   [ 'https://packages.fluentbit.io/debian/bookworm/pool/main/f/fluent-bit/fluent-bit_3.0.7_amd64.deb', '7284302d281e8b91fe17e00552fa8d794d0cc05ebaf976171e5e57316893be66' ],
   [ 'https://packages.fluentbit.io/debian/bookworm/pool/main/f/fluent-bit/fluent-bit_3.0.7_arm64.deb', 'f1b29677c323be63a61cfb4b71a583ecbeeaab0f13942616aed7b61ba475b2f3' ]
@@ -69,19 +53,18 @@ const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.6.tar.g
 // update at 2024/06/27, check version at: https://github.com/puppeteer/puppeteer/releases/latest
 // and version mapping from Chrome => Puppeteer: https://github.com/puppeteer/puppeteer/blob/main/versions.js
 const PPTR_VER = '22.12.1' // ['126.0.6478.126', 'v22.12.1']
-const PPTR_VER_ARM64_DEB11 = '21.8.0' // ['120.0.6099.109', 'v21.8.0'] // https://packages.debian.org/bullseye/chromium (120.0.6099.224-1~deb11u1)
 const PPTR_VER_ARM64_DEB12 = '22.12.1' // ['126.0.6478.126', 'v22.12.1'] // https://packages.debian.org/bookworm/chromium (126.0.6478.126-1~deb12u1)
 
 module.exports = {
-  RES_CORE_DEB11, RES_CORE_DEB12,
+  RES_CORE_DEB12,
 
   RES_NODE,
   RES_NGINX,
   RES_GO,
-  RES_F_BIT_DEB11, RES_F_BIT_DEB12,
+  RES_F_BIT_DEB12,
 
   RES_RUBY2,
   RES_RUBY3,
 
-  PPTR_VER, PPTR_VER_ARM64_DEB11, PPTR_VER_ARM64_DEB12
+  PPTR_VER, PPTR_VER_ARM64_DEB12
 }

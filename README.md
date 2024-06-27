@@ -52,26 +52,6 @@ Most build resource file is cached locally,
 
 Current layer stack:
 ```
-debian:11-core
-└─node
-  └─bin-common
-    ├─dep-build (big layer with C/C++ compiler tools +200MiB)
-    └─bin-sshd
-      └─bin-nginx
-        └─bin-git
-          └─bin-etc (layer from here & above is light, layer below will add 50MiB+ each)
-            └─fluent-bit
-              └─dep-chrome
-                └─dep-font
-                  ├─node-pptr2206
-                  └─java
-                    ├─ruby
-                    | └─ruby-go
-                    └─ruby3
-                      └─ruby3-go
-```
-
-```
 debian:12-core
 └─node
   └─bin-common
@@ -92,20 +72,20 @@ debian:12-core
 ```
 
 
-#### build `debian11`
+#### build `debian12`
 
-First create config file `source/debian11/BUILD_REPO.json`
-  and `source/debian11/BUILD_REPO_GHCR.json`.
+First create config file `source/debian12/BUILD_REPO.json`
+  and `source/debian12/BUILD_REPO_GHCR.json`.
 
 For this repo it's created with: (check the [CI file](.github/workflows/ci-tag-build.yml))
 ```
-echo '"drjs/debian"' > source/debian11/BUILD_REPO.json
-echo '"ghcr.io/dr-js/debian"' > source/debian11/BUILD_REPO_GHCR.json
+echo '"drjs/debian"' > source/debian12/BUILD_REPO.json
+echo '"ghcr.io/dr-js/debian"' > source/debian12/BUILD_REPO_GHCR.json
 ```
 
 Then run:
 ```shell script
-npm run build-debian11
+npm run build-debian12
 ```
 
 Use `build-proxy*` for slow fetch, the config can also be added in `.npmrc` like:

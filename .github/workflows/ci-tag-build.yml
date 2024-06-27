@@ -17,6 +17,4 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build-debian12
-      - run: npm run build-debian11
       - run: npm run push-debian12-all
-      - run: npm run push-debian11-all

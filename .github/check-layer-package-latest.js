@@ -80,13 +80,6 @@ const log = (pkgDlList) => {
 }
 
 runKit(async (kit) => {
-  kit.padLog('debian11/bullseye')
-  log(await getDebianDeb('bullseye', 'ca-certificates')) // NOTE: skip, not change so often
-  log(await getDebianDeb('bullseye', 'openssl')) // NOTE: skip, not change so often
-  log(await getDebianDeb('bullseye', 'libssl1.1')) // NOTE: skip, not change so often
-  log(await getDebianDeb('bullseye', 'libjemalloc2')) // NOTE: skip, not change so often
-  log(await getDebianDeb('bullseye', 'chromium'))
-
   kit.padLog('debian12/bookworm')
   log(await getDebianDeb('bookworm', 'ca-certificates'))
   log(await getDebianDeb('bookworm', 'openssl'))
@@ -98,8 +91,6 @@ runKit(async (kit) => {
   kit.padLog('nodesource/nodistro')
   log(await getNodesourceDeb('nodistro'))
 
-  kit.padLog('fluent-bit/bullseye')
-  log(await getFluentBitDeb('bullseye'))
   kit.padLog('fluent-bit/bookworm')
   log(await getFluentBitDeb('bookworm'))
 }, { title: 'ci-patch' })
