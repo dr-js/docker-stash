@@ -52,38 +52,40 @@ Most build resource file is cached locally,
 
 Current layer stack:
 ```
-debian:11-core
+debian:12-core
 └─node
   └─bin-common
+    ├─dep-build (big layer with C/C++ compiler tools +200MiB)
     └─bin-sshd
-      └─bin-git
-        ├─dep-build (big layer with C/C++ compiler tools)
-        └─bin-nginx
+      └─bin-nginx
+        └─bin-git
           └─bin-etc (layer from here & above is light, layer below will add 50MiB+ each)
-            ├─go
-            └─dep-chrome
-              └─dep-font
-                ├─node-pptr2206
-                └─java
-                  ├─ruby
-                  └─ruby3
+            └─fluent-bit
+              └─dep-chrome
+                └─dep-font
+                  ├─node-pptr2208
+                  └─java
+                    ├─ruby2
+                    | └─ruby2-go
+                    └─ruby3
+                      └─ruby3-go
 ```
 
 
-#### build `debian11`
+#### build `debian12`
 
-First create config file `source/debian11/BUILD_REPO.json`
-  and `source/debian11/BUILD_REPO_GHCR.json`.
+First create config file `source/debian12/BUILD_REPO.json`
+  and `source/debian12/BUILD_REPO_GHCR.json`.
 
 For this repo it's created with: (check the [CI file](.github/workflows/ci-tag-build.yml))
 ```
-echo '"drjs/debian"' > source/debian11/BUILD_REPO.json
-echo '"ghcr.io/dr-js/debian"' > source/debian11/BUILD_REPO_GHCR.json
+echo '"drjs/debian"' > source/debian12/BUILD_REPO.json
+echo '"ghcr.io/dr-js/debian"' > source/debian12/BUILD_REPO_GHCR.json
 ```
 
 Then run:
 ```shell script
-npm run build-debian11
+npm run build-debian12
 ```
 
 Use `build-proxy*` for slow fetch, the config can also be added in `.npmrc` like:
@@ -92,3 +94,18 @@ noproxy=127.0.0.1,localhost # exclude localhost
 proxy=http://127.0.0.1:1080 # for http
 https-proxy=http://127.0.0.1:1080 # for https
 ```
+
+
+#### auth "ghcr.io" with PAT
+
+For now the doc's quite twisted,
+we need to use a Personal access token (PAT) to auth the "ghcr.io" repo,
+and the setup will be as following:
+
+The main doc (TLDR): https://docs.github.com/en/free-pro-team@latest/packages/guides/about-github-container-registry,
+and this section specifically: https://docs.github.com/en/free-pro-team@latest/packages/guides/about-github-container-registry#about-scopes-and-permissions-for-github-container-registry
+
+The doc for creating a PAT (follow this): https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token,
+and use the PAT to access the "ghcr.io" repo image, though proxy.
+
+And to create a PAT with `write:packages` scope only, use this url: https://github.com/settings/tokens/new?scopes=write:packages ([REF](https://github.com/github/docs/issues/2660#issuecomment-810766203))

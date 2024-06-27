@@ -4,8 +4,6 @@ source ./0-3-base-ruby.sh
 
 # MNT
 MNT_TGZ_RUBY="$(echo /mnt/build-layer-resource/ruby-*.tar.gz)"
-MNT_GEM_VERSION="$(cat /mnt/build-layer-resource/GEM_VERSION.txt)"
-MNT_BUNDLER_VERSION="$(cat /mnt/build-layer-resource/BUNDLER_VERSION.txt)"
 
 apt-update
   # mostly borrowed from: https://github.com/docker-library/ruby/blob/master/2.5/buster/Dockerfile
@@ -65,14 +63,14 @@ apt-update
       libgmp-dev \
       libdb-dev
 
+  rm -rf /usr/local/share/man/*
+
   ruby -r rbconfig -e "puts RbConfig::CONFIG['LIBS']"
 apt-clear
 
 # gem
-  gem update --no-document --system "${MNT_GEM_VERSION}"
+  gem update --no-document --system
   gem-uninstall rubygems-update # remove gem update dependency
-
-  gem install --no-document --force bundler -v "${MNT_BUNDLER_VERSION}" # update bundler # https://github.com/rubygems/rubygems/issues/2058
 gem-clear
 
 dr-dev --package-trim-ruby-gem /usr/local/lib/ruby/gems/*/gems/

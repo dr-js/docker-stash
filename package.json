@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
@@ -11,15 +11,10 @@
     "version-bump": "dr-dev --version-bump-git-branch --git-commit --debug",
     "tag-push": "dr-dev --version-bump-push-check --git-commit",
     "// build =======================": "",
-    "build-debian11": "node source/debian11/build.js",
-    "build-debian11-core": "node source/debian11/build-core.js",
-    "build-debian11-layer": "node source/debian11/build-layer.js node-pptr2206",
     "build-debian12": "node source/debian12/build.js",
     "build-debian12-core": "node source/debian12/build-core.js",
     "build-debian12-layer": "node source/debian12/build-layer.js ruby3",
     "// push ========================": "",
-    "push-debian11-all": "node source/debian11/push.js ALL",
-    "push-debian11-manifest-all": "node source/debian11/push-manifest.js ALL",
     "push-debian12-all": "node source/debian12/push.js ALL",
     "push-debian12-manifest-all": "node source/debian12/push-manifest.js ALL",
     "// docker ======================": "",
@@ -37,8 +32,8 @@
     "npm": ">=8.19"
   },
   "devDependencies": {
-    "@dr-js/core": "^0.5.8",
-    "@dr-js/dev": "^0.5.7",
-    "@dr-js/dev-eslint": "^0.5.7"
+    "@dr-js/core": "^0.5.15",
+    "@dr-js/dev": "^0.5.14",
+    "@dr-js/dev-eslint": "^0.5.14"
   }
 }

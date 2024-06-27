@@ -3,10 +3,11 @@
 source ./0-1-base-apt.sh
 
 apt-update
-apt-install make gcc
+apt-install make gcc cmake
 # apt-clear # keep apt package list
 
 # log version & info
 cc --version
 ld --version
 make --version
+cmake --version

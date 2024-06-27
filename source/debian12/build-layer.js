@@ -4,7 +4,7 @@ const { modifyCopy } = require('@dr-js/core/library/node/fs/Modify.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
-const { RES_FLAVOR_NODE, RES_FLAVOR_BIN_NGINX, RES_FLAVOR_GO, TGZ_RUBY3, PPTR_VERSION, DEB12_PPTR_VERSION_ARM64, GEM_VERSION, BUNDLER_VERSION } = require('../res-list.js')
+const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB12, RES_RUBY2, RES_RUBY3, PPTR_VER, PPTR_VER_ARM64_DEB12 } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN12_BUILD_FLAVOR_MAP, verifyDebian12BuildArg,
@@ -33,7 +33,11 @@ runKit(async (kit) => {
 
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
     const appendCommandList = [
-      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV PUPPETEER_EXECUTABLE_PATH=/media/node-pptr2208-bin'
+      // Tell Puppeteer to skip installing Chrome: https://github.com/puppeteer/puppeteer/blob/puppeteer-v22.12.0/docs/api/puppeteer.configuration.md
+      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV PUPPETEER_EXECUTABLE_PATH=/media/node-pptr2208-bin',
+      // Fix for pptr v22 launch error: https://github.com/puppeteer/puppeteer/issues/11023#issuecomment-1776247197
+      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV XDG_CONFIG_HOME=/tmp/.pptr',
+      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV XDG_CACHE_HOME=/tmp/.pptr'
     ].filter(Boolean)
     await writeText(
       kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
@@ -46,6 +50,7 @@ runKit(async (kit) => {
   for (const file of [
     '0-0-base.sh',
     '0-1-base-apt.sh',
+    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY2 && '0-3-base-ruby.sh',
     BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && '0-3-base-ruby.sh',
     BUILD_FLAVOR.LAYER_SCRIPT,
     BUILD_FLAVOR.LAYER_DEP_BUILD_SCRIPT
@@ -54,16 +59,17 @@ runKit(async (kit) => {
   kit.padLog('assemble "build-layer-resource/"')
   await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
   for (const [ text, file ] of [
-    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && [ PPTR_VERSION, 'PUPPETEER_VERSION.txt' ],
-    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && [ DEB12_PPTR_VERSION_ARM64, 'PUPPETEER_VERSION_ARM64.txt' ],
-    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ GEM_VERSION, 'GEM_VERSION.txt' ],
-    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && [ BUNDLER_VERSION, 'BUNDLER_VERSION.txt' ]
+    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && [ PPTR_VER, 'PUPPETEER_VERSION.txt' ],
+    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && [ PPTR_VER_ARM64_DEB12, 'PUPPETEER_VERSION_ARM64.txt' ]
   ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
   await fetchFileListWithLocalCache([
-    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_FLAVOR_NODE : []),
-    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? RES_FLAVOR_BIN_NGINX : []),
-    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_GO ? RES_FLAVOR_GO : []),
-    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 ? [ TGZ_RUBY3 ] : [])
+    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_NODE : []),
+    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? RES_NGINX : []),
+    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_FLUENT_BIT ? RES_F_BIT_DEB12 : []),
+    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY2 ? RES_RUBY2 : []),
+    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY2_GO ? RES_GO : []),
+    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 ? RES_RUBY3 : []),
+    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3_GO ? RES_GO : [])
   ], {
     pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),
     pathCache: kit.fromTemp('debian12', 'layer-url')
