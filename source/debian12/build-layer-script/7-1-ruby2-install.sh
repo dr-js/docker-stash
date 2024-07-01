@@ -36,6 +36,7 @@ apt-update
       libgmp-dev        libgmp10 \
       libdb-dev         libdb5.3
 
+    # manual build openssl1.1 on Deb12, check: https://github.com/rbenv/ruby-build/discussions/1940#discussioncomment-3724881
     ( PATH_OSSL_BUILD="/root/.build-ossl"
       rm -rf "${PATH_OSSL_BUILD}"
       mkdir -p "${PATH_OSSL_BUILD}"
@@ -47,6 +48,15 @@ apt-update
         make -j "$(nproc)"
         make install
       )
+
+      # use system ssl config (`--openssldir` in config, check `OpenSSL::Config::DEFAULT_CONFIG_FILE` in irb)
+      # default path "/usr/local/ssl/" has no certs
+      rm -rf /usr/local/ssl/
+      ln -sfT /usr/lib/ssl /usr/local/ssl
+
+      # rm -rf /usr/local/include/openssl/ # keep for later vendor build
+      rm -rf /usr/local/share/doc/openssl/
+      rm -rf /usr/local/share/man/*
     )
 
     mkdir -p /usr/local/etc/
@@ -76,10 +86,6 @@ apt-update
       libgdbm-dev \
       libgmp-dev \
       libdb-dev
-
-  # rm -rf /usr/local/include/openssl/ # keep for later vendor build
-  rm -rf /usr/local/share/doc/openssl/
-  rm -rf /usr/local/share/man/*
 
   ruby -r rbconfig -e "puts RbConfig::CONFIG['LIBS']"
 apt-clear
