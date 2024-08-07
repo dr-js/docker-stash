@@ -62,6 +62,7 @@ apt-update
       --with-threads \
       --with-file-aio \
       --with-http_ssl_module \
+      --with-http_auth_request_module \
       --with-http_gzip_static_module \
       --without-http_fastcgi_module \
       --without-http_uwsgi_module \
