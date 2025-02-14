@@ -101,25 +101,21 @@ ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
 RUN set -ex \\
- && { \\${_ && 'reset apt source list with bookworm-backports'}
-       echo 'deb http://deb.debian.org/debian bookworm main'; \\
-       echo 'deb http://deb.debian.org/debian bookworm-updates main'; \\
-       echo 'deb http://deb.debian.org/debian bookworm-backports main'; \\
-       echo 'deb http://deb.debian.org/debian-security/ bookworm-security main'; \\
-    } > /etc/apt/sources.list \\
- && { \\${_ && 'set apt to use bookworm-backports by default'}
+\\${_ && 'apt: enable backports sources (for deb822 style config)'}
+ && sed -i 's/bookworm-updates/bookworm-updates bookworm-backports/' /etc/apt/sources.list.d/debian.sources \\
+ && { \\${_ && 'apt: use backports by default'}
       echo 'Package: *'; \\
       echo 'Pin: release a=bookworm-backports'; \\
       echo 'Pin-Priority: 800'; \\
     } > /etc/apt/preferences.d/backports \\
- && { \\${_ && 'reset dpkg file filter # https://askubuntu.com/a/628410'}
+ && { \\${_ && 'apt: reset dpkg file filter # https://askubuntu.com/a/628410'}
       echo 'path-exclude=/usr/share/doc/*'; \\
       echo 'path-include=/usr/share/doc/*/copyright'; \\
       echo 'path-exclude=/usr/share/locale/*/LC_MESSAGES/*.mo'; \\
       echo 'path-exclude=/usr/share/man/*'; \\
       echo 'path-exclude=/usr/share/info/*'; \\
     } > /etc/dpkg/dpkg.cfg.d/excludes \\
-\\${_ && 'prepare apt cache # https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md#example-cache-apt-packages'}
+\\${_ && 'apt: prepare apt cache # https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md#example-cache-apt-packages'}
  && shopt -s nullglob \\
  && rm -rf \\
       /etc/apt/apt.conf.d/docker-clean \\
@@ -128,7 +124,7 @@ RUN set -ex \\
       /var/lib/apt/* \\
  && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";'   > /etc/apt/apt.conf.d/keep-cache \\
  && shopt -u nullglob \\
-\\${_ && 'check system time, apt update will fail if the time is off too much'}
+\\${_ && 'apt: check system time, apt update will fail if the time is off too much'}
  && date -uIs
 
 RUN \\${_ && 'check: https://github.com/moby/buildkit/blob/v0.9.0/frontend/dockerfile/docs/syntax.md'}
