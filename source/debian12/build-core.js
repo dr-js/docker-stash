@@ -19,8 +19,8 @@ runKit(async (kit) => {
 
   const URL_CACHE_HASH = 'https://api.github.com/repos/debuerreotype/docker-debian-artifacts/git/refs/heads' // use all branch info as cache hash
   const URL_CORE_IMAGE_MAP = {
-    'amd64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/bookworm/slim/rootfs.tar.xz',
-    'arm64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/bookworm/slim/rootfs.tar.xz'
+    'amd64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/bookworm/slim/oci/blobs/rootfs.tar.gz',
+    'arm64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/bookworm/slim/oci/blobs/rootfs.tar.gz'
   }
 
   const coreImageBufferMap = await fetchGitHubBufferMapWithLocalCache(URL_CORE_IMAGE_MAP, URL_CACHE_HASH, kit.fromTemp('debian12', 'core-github'))
@@ -49,7 +49,7 @@ runKit(async (kit) => {
     kit.padLog('assemble "/" (context)')
     await resetDirectory(PATH_BUILD)
     for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
-      await writeBuffer(kit.fromOutput(PATH_BUILD, `rootfs.tar.xz.${DOCKER_BUILD_ARCH_INFO.key}`), coreImageBufferMap[ DOCKER_BUILD_ARCH_INFO.key ])
+      await writeBuffer(kit.fromOutput(PATH_BUILD, `rootfs.tar.gz.${DOCKER_BUILD_ARCH_INFO.key}`), coreImageBufferMap[ DOCKER_BUILD_ARCH_INFO.key ])
       await writeBuffer(kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`), dockerfileBufferMap[ DOCKER_BUILD_ARCH_INFO.key ])
     }
 
@@ -89,7 +89,7 @@ const getDockerfileString = ({
 FROM scratch
 
 ${_ && 'use prepared fs'}
-ADD "rootfs.tar.xz.${DOCKER_BUILD_ARCH_INFO.key}" /
+ADD "rootfs.tar.gz.${DOCKER_BUILD_ARCH_INFO.key}" /
 
 LABEL arg.DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
 ENV DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
