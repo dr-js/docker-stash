@@ -87,10 +87,12 @@ apt-update
       libgmp-dev \
       libdb-dev
 
+  rm -rf /usr/local/share/man/*
+
   ruby -r rbconfig -e "puts RbConfig::CONFIG['LIBS']"
 apt-clear
 
-# gem
+# gem # gem@3.4.22 bundler@2.4.22
   gem install rubygems-update -v 3.4.22 --no-document && update_rubygems # gem update --no-document --system # NOTE: v3.5 requires ruby@3, https://github.com/rubygems/rubygems/issues/2534
   gem-uninstall rubygems-update # remove gem update dependency
 gem-clear
