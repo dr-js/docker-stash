@@ -19,8 +19,8 @@ runKit(async (kit) => {
 
   const URL_CACHE_HASH = 'https://api.github.com/repos/debuerreotype/docker-debian-artifacts/git/refs/heads' // use all branch info as cache hash
   const URL_CORE_IMAGE_MAP = {
-    'amd64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/bookworm/slim/rootfs.tar.xz',
-    'arm64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/bookworm/slim/rootfs.tar.xz'
+    'amd64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/bookworm/slim/oci/blobs/rootfs.tar.gz',
+    'arm64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/bookworm/slim/oci/blobs/rootfs.tar.gz'
   }
 
   const coreImageBufferMap = await fetchGitHubBufferMapWithLocalCache(URL_CORE_IMAGE_MAP, URL_CACHE_HASH, kit.fromTemp('debian12', 'core-github'))
@@ -49,7 +49,7 @@ runKit(async (kit) => {
     kit.padLog('assemble "/" (context)')
     await resetDirectory(PATH_BUILD)
     for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
-      await writeBuffer(kit.fromOutput(PATH_BUILD, `rootfs.tar.xz.${DOCKER_BUILD_ARCH_INFO.key}`), coreImageBufferMap[ DOCKER_BUILD_ARCH_INFO.key ])
+      await writeBuffer(kit.fromOutput(PATH_BUILD, `rootfs.tar.gz.${DOCKER_BUILD_ARCH_INFO.key}`), coreImageBufferMap[ DOCKER_BUILD_ARCH_INFO.key ])
       await writeBuffer(kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`), dockerfileBufferMap[ DOCKER_BUILD_ARCH_INFO.key ])
     }
 
@@ -89,7 +89,7 @@ const getDockerfileString = ({
 FROM scratch
 
 ${_ && 'use prepared fs'}
-ADD "rootfs.tar.xz.${DOCKER_BUILD_ARCH_INFO.key}" /
+ADD "rootfs.tar.gz.${DOCKER_BUILD_ARCH_INFO.key}" /
 
 LABEL arg.DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
 ENV DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
@@ -101,25 +101,21 @@ ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
 
 RUN set -ex \\
- && { \\${_ && 'reset apt source list with bookworm-backports'}
-       echo 'deb http://deb.debian.org/debian bookworm main'; \\
-       echo 'deb http://deb.debian.org/debian bookworm-updates main'; \\
-       echo 'deb http://deb.debian.org/debian bookworm-backports main'; \\
-       echo 'deb http://deb.debian.org/debian-security/ bookworm-security main'; \\
-    } > /etc/apt/sources.list \\
- && { \\${_ && 'set apt to use bookworm-backports by default'}
+\\${_ && 'apt: enable backports sources (for deb822 style config)'}
+ && sed -i 's/bookworm-updates/bookworm-updates bookworm-backports/' /etc/apt/sources.list.d/debian.sources \\
+ && { \\${_ && 'apt: use backports by default'}
       echo 'Package: *'; \\
       echo 'Pin: release a=bookworm-backports'; \\
       echo 'Pin-Priority: 800'; \\
     } > /etc/apt/preferences.d/backports \\
- && { \\${_ && 'reset dpkg file filter # https://askubuntu.com/a/628410'}
+ && { \\${_ && 'apt: reset dpkg file filter # https://askubuntu.com/a/628410'}
       echo 'path-exclude=/usr/share/doc/*'; \\
       echo 'path-include=/usr/share/doc/*/copyright'; \\
       echo 'path-exclude=/usr/share/locale/*/LC_MESSAGES/*.mo'; \\
       echo 'path-exclude=/usr/share/man/*'; \\
       echo 'path-exclude=/usr/share/info/*'; \\
     } > /etc/dpkg/dpkg.cfg.d/excludes \\
-\\${_ && 'prepare apt cache # https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md#example-cache-apt-packages'}
+\\${_ && 'apt: prepare apt cache # https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md#example-cache-apt-packages'}
  && shopt -s nullglob \\
  && rm -rf \\
       /etc/apt/apt.conf.d/docker-clean \\
@@ -128,7 +124,7 @@ RUN set -ex \\
       /var/lib/apt/* \\
  && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";'   > /etc/apt/apt.conf.d/keep-cache \\
  && shopt -u nullglob \\
-\\${_ && 'check system time, apt update will fail if the time is off too much'}
+\\${_ && 'apt: check system time, apt update will fail if the time is off too much'}
  && date -uIs
 
 RUN \\${_ && 'check: https://github.com/moby/buildkit/blob/v0.9.0/frontend/dockerfile/docs/syntax.md'}

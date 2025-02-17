@@ -68,8 +68,8 @@ apt-update
   ruby -r rbconfig -e "puts RbConfig::CONFIG['LIBS']"
 apt-clear
 
-# gem
-  gem update --no-document --system
+# gem # gem@3.5.23 bundler@2.5.23
+  gem install rubygems-update -v 3.5.23 --no-document && update_rubygems # gem update --no-document --system # NOTE: to lock down bundler version
   gem-uninstall rubygems-update # remove gem update dependency
 gem-clear
 
