@@ -1,10 +1,32 @@
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 const { fetchWithJumpProxy } = require('@dr-js/core/library/node/module/Software/npm.js')
+const { compareStringWithNumber } = require('@dr-js/core/library/common/compare.js')
 
 const getText = async (url) => (await fetchWithJumpProxy(url, {
   headers: { 'accept': '*/*', 'user-agent': 'docker-stash' }, // patch for sites require a UA, like GitHub
   jumpMax: 4, family: 4
 })).text()
+
+// Package: nodejs
+// Version: 20.19.2-1nodesource1
+// SHA256: d55d8091b4ca8eabdaaf8cf2f288ebe1e129fac528efaa51e56fae6ad1a846af
+// Description: Node.js event-based server-side javascript engine
+//  Node.js is similar in design to and influenced by systems like <-- starts with space
+//  .. more desc ..
+// .. more fields ..
+const parseBinPkg = (text) => text.split('\n\n').map((v) => {
+  const lineList = v.replaceAll('\n ', '\0').split('\n').filter(Boolean)
+  if (!lineList.length) return
+  const pkgObj = {}
+  for (const line of lineList) {
+    const [ key, ...valueList ] = line.split(': ')
+    pkgObj[ key ] = valueList.join(': ').replaceAll('\0', '\n ')
+  }
+  return pkgObj
+}).filter(Boolean)
+const pickLatestPkg = (pkgList, pkgName = '') => pkgList
+  .filter((v) => v[ 'Package' ] === pkgName) // filter out other pkg
+  .sort((a, b) => -compareStringWithNumber(a[ 'Version' ], b[ 'Version' ]))[ 0 ] // get biggest version // https://www.debian.org/doc/debian-policy/ch-controlfields.html#version
 
 const getDebianDeb = async (dist = 'buster', pkg = '') => {
   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
@@ -36,7 +58,7 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
   return pkgDlList
 }
 
-// const getNodesourceDeb = async (dist = 'buster', rel = '20') => {
+// const getNodesourceDeb = async (dist = 'nodistro', rel = '20', pkgName = 'nodejs') => {
 //   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
 //   for (const dlArch of [
 //     'amd64',
@@ -44,17 +66,15 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
 //   ]) {
 //     // https://deb.nodesource.com/node_20.x/dists/nodistro/main/binary-amd64/Packages
 //     const textDlPage = await getText(`https://deb.nodesource.com/node_${rel}.x/dists/${dist}/main/binary-${dlArch}/Packages`)
-//     const textDlPkg0 = textDlPage.split('\n\n')[ 0 ] // pick first package
-//     // Filename: pool/main/n/nodejs/nodejs_20.15.0-1nodesource1_amd64.deb
-//     // SHA256: 9fd6bc3754cfc5960ce9c08640dbefa4093c274cff4f15065f754849f275c5b8
-//     const dlUrl = `https://deb.nodesource.com/node_${rel}.x/` + /Filename: (pool\/main\/n\/nodejs\/nodejs_[.\d]+-[-\w]+_a(rm|md)64\.deb)/.exec(textDlPkg0)[ 1 ]
-//     const dlSha256 = /SHA256: (\w+)/.exec(textDlPage)[ 1 ]
-//     pkgDlList.push({ pkgName: 'nodejs', dlArch, dlUrl, dlSha256 })
+//     const pkg = pickLatestPkg(parseBinPkg(textDlPage), pkgName)
+//     const dlUrl = `https://deb.nodesource.com/node_${rel}.x/` + pkg[ 'Filename' ]
+//     const dlSha256 = pkg[ 'SHA256' ]
+//     pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
 //   }
 //   return pkgDlList
 // }
 
-const getFluentBitDeb = async (dist = 'buster') => {
+const getFluentBitDeb = async (dist = 'buster', pkgName = 'fluent-bit') => {
   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
   for (const dlArch of [
     'amd64',
@@ -62,12 +82,26 @@ const getFluentBitDeb = async (dist = 'buster') => {
   ]) {
     // https://packages.fluentbit.io/debian/bookworm/dists/bookworm/main/binary-amd64/Packages
     const textDlPage = await getText(`https://packages.fluentbit.io/debian/${dist}/dists/${dist}/main/binary-${dlArch}/Packages`)
-    const textDlPkg0 = textDlPage.split('\n\n')[ 0 ] // pick first package
-    // Filename: pool/main/f/fluent-bit/fluent-bit_3.0.7_amd64.deb
-    // SHA256: 7284302d281e8b91fe17e00552fa8d794d0cc05ebaf976171e5e57316893be66
-    const dlUrl = `https://packages.fluentbit.io/debian/${dist}/` + /Filename: (pool\/main\/f\/fluent-bit\/fluent-bit_[.\d]+_a(rm|md)64\.deb)/.exec(textDlPkg0)[ 1 ]
-    const dlSha256 = /SHA256: (\w+)/.exec(textDlPage)[ 1 ]
-    pkgDlList.push({ pkgName: 'fluent-bit', dlArch, dlUrl, dlSha256 })
+    const pkg = pickLatestPkg(parseBinPkg(textDlPage), pkgName)
+    const dlUrl = `https://packages.fluentbit.io/debian/${dist}/` + pkg[ 'Filename' ]
+    const dlSha256 = pkg[ 'SHA256' ]
+    pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
+  }
+  return pkgDlList
+}
+
+const getFirefoxDeb = async (pkgName = 'firefox') => {
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
+  for (const dlArch of [
+    'amd64',
+    'arm64'
+  ]) {
+    // https://packages.mozilla.org/apt/dists/mozilla/main/binary-amd64/Packages
+    const textDlPage = await getText(`https://packages.mozilla.org/apt/dists/mozilla/main/binary-${dlArch}/Packages`)
+    const pkg = pickLatestPkg(parseBinPkg(textDlPage), pkgName)
+    const dlUrl = 'https://packages.mozilla.org/apt/' + pkg[ 'Filename' ]
+    const dlSha256 = pkg[ 'SHA256' ]
+    pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
   }
   return pkgDlList
 }
@@ -87,10 +121,12 @@ runKit(async (kit) => {
   log(await getDebianDeb('bookworm', 'libjemalloc2'))
   log(await getDebianDeb('bookworm', 'chromium'))
 
-  // NOTE: same deb for bullseye/bookworm
   // kit.padLog('nodesource/nodistro')
-  // log(await getNodesourceDeb('nodistro'))
+  // log(await getNodesourceDeb()) // NOTE: same deb for bullseye/bookworm
 
   kit.padLog('fluent-bit/bookworm')
   log(await getFluentBitDeb('bookworm'))
+
+  kit.padLog('firefox')
+  log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm
 }, { title: 'ci-patch' })
