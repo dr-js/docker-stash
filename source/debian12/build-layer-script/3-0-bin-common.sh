@@ -7,7 +7,7 @@ apt-update
     sudo \
     procps $(: "provide ps|free|top|uptime|... commands, check: https://packages.debian.org/buster/procps") \
     less nano htop lsof screen vim-tiny \
-    wget curl iproute2 netcat-openbsd \
+    wget curl iproute2 iputils-ping netcat-openbsd \
     zip unzip xz-utils p7zip-full $(: "tar gzip is already installed")
 apt-clear
 
@@ -25,6 +25,8 @@ vi --version # from `vim-tiny`, strangely not linked as `vim`
 wget --version
 curl --version
 ip -Version # from `iproute2`
+ss -version # from `iproute2`
+ping4 -V # from `iputils-ping`
 nc -help
 zip --version
 unzip -v
