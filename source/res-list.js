@@ -27,21 +27,21 @@ const RES_NGINX = [
   [ 'https://github.com/google/ngx_brotli/archive/a71f9312.zip  '.trim(), '96f23eb72488ffc570cbc474a928000b05b72f2682456ae357aeaf3ce71c626e', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
 ]
 const RES_GO = [
-  // update at 2025/02/14, use 2nd-recent-minor version, check: https://go.dev/dl/
-  [ 'https://go.dev/dl/go1.23.6.linux-amd64.tar.gz', '9379441ea310de000f33a4dc767bd966e72ab2826270e038e78b2c53c2e7802d' ],
-  [ 'https://go.dev/dl/go1.23.6.linux-arm64.tar.gz', '561c780e8f4a8955d32bf72e46af0b5ee5e0debe1e4633df9a03781878219202' ]
+  // update at 2025/06/03, use 2nd-recent-minor version, check: https://go.dev/dl/
+  [ 'https://go.dev/dl/go1.23.9.linux-amd64.tar.gz', 'de03e45d7a076c06baaa9618d42b3b6a0561125b87f6041c6397680a71e5bb26' ],
+  [ 'https://go.dev/dl/go1.23.9.linux-arm64.tar.gz', '3dc4dd64bdb0275e3ec65a55ecfc2597009c7c46a1b256eefab2f2172a53a602' ]
 ]
-// update at 2025/02/14, check: ".github/check-layer-package-latest.js"
+// update at 2025/06/03, check: ".github/check-layer-package-latest.js"
 const RES_F_BIT_DEB12 = [
-  [ 'https://packages.fluentbit.io/debian/bookworm/pool/main/f/fluent-bit/fluent-bit_3.2.6_amd64.deb', 'd3104d1ef5c3aef4487d8802e35de413e2b8e9e9411560b39f825519e04be247' ],
-  [ 'https://packages.fluentbit.io/debian/bookworm/pool/main/f/fluent-bit/fluent-bit_3.2.6_arm64.deb', 'e707a5521067ec19f8c3f35a0b9802a04671c49ce61effb23bd04220120449ab' ]
+  [ 'https://packages.fluentbit.io/debian/bookworm/pool/main/f/fluent-bit/fluent-bit_3.2.10_amd64.deb', 'e9959ebce2e1aede5033caf686951d9b91d0d01833808290d9db6bbe79defc02' ],
+  [ 'https://packages.fluentbit.io/debian/bookworm/pool/main/f/fluent-bit/fluent-bit_3.2.10_arm64.deb', 'dd70e11002f035e53a13d7d8475b64270068ff106b402ea7cecaf3a8f5529b8a' ]
 ]
-// update at 2024/06/25, from: https://www.ruby-lang.org/en/downloads/releases/
+// update at 2025/06/03, from: https://www.ruby-lang.org/en/downloads/releases/
 // TODO: NOTE:
 //   temp revert & wait for "Compatibility issues" fix since "3.3.0": https://www.ruby-lang.org/en/news/2023/12/25/ruby-3-3-0-released/
 //   temp revert & wait for "Compatibility issues" fix since "3.2.0": https://www.ruby-lang.org/en/news/2022/12/25/ruby-3-2-0-released/
 //   const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.3.tar.gz', '83c05b2177ee9c335b631b29b8c077b4770166d02fa527f3a9f6a40d13f3cce2' ] ]
-const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.6.tar.gz', '0d0dafb859e76763432571a3109d1537d976266be3083445651dc68deed25c22' ] ]
+const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.7.tar.gz', '0556acd69f141ddace03fa5dd8d76e7ea0d8f5232edf012429579bcdaab30e7b' ] ]
 
 // update at 2025/06/03, for `puppeteer-core`, version need match `RES_BROWSER`
 const PPTR_VER = '24.10.0'
