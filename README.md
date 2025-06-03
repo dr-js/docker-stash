@@ -63,7 +63,7 @@ debian:12-core
             └─fluent-bit
               ├─dep-browser
               | └─dep-font
-              |   └─node-pptr2208
+              |   └─node-pptr2506
               └─java
                 └─ruby3
                   └─ruby3-go

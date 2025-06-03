@@ -12,7 +12,7 @@
 
   "FLAVOR_DEP_BROWSER": { "NAME": "dep-browser", "BASE_IMAGE": "fluent-bit", "LAYER_SCRIPT": "5-0-dep-browser.sh" },
   "FLAVOR_DEP_FONT": { "NAME": "dep-font", "BASE_IMAGE": "dep-browser", "LAYER_SCRIPT": "6-0-dep-font.sh" },
-  "FLAVOR_NODE_PPTR2208": { "NAME": "node-pptr2208", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "6-1-node-pptr2208.sh" },
+  "FLAVOR_NODE_PPTR2506": { "NAME": "node-pptr2506", "BASE_IMAGE": "dep-font", "LAYER_SCRIPT": "6-1-node-pptr2506.sh" },
 
   "FLAVOR_JAVA": { "NAME": "java", "BASE_IMAGE": "fluent-bit", "LAYER_SCRIPT": "7-0-java-install.sh" },
   "FLAVOR_RUBY3": { "NAME": "ruby3", "BASE_IMAGE": "java", "LAYER_SCRIPT": "7-1-ruby3-install.sh" },

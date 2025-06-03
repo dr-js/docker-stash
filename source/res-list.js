@@ -43,13 +43,8 @@ const RES_F_BIT_DEB12 = [
 //   const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.3/ruby-3.3.3.tar.gz', '83c05b2177ee9c335b631b29b8c077b4770166d02fa527f3a9f6a40d13f3cce2' ] ]
 const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.1/ruby-3.1.6.tar.gz', '0d0dafb859e76763432571a3109d1537d976266be3083445651dc68deed25c22' ] ]
 
-// update at 2024/08/05, check version at: https://github.com/puppeteer/puppeteer/releases
-// and version mapping from Chrome => Puppeteer: https://github.com/puppeteer/puppeteer/blob/main/versions.json
-const PPTR_VER = '22.15.0' // [ 'v22.15.0', { "chrome": "127.0.6533.88", "firefox": "latest" } ]
-const PPTR_VER_ARM64_DEB12 = '22.15.0' // [ 'v22.15.0' , { "chrome": "127.0.6533.88", "firefox": "latest" } ]
-// https://packages.debian.org/bookworm/chromium (133.0.6943.53-1~deb12u1)
-// https://packages.debian.org/bookworm/firefox-esr (128.7.0esr-1~deb12u1)
-
+// update at 2025/06/03, for `puppeteer-core`, version need match `RES_BROWSER`
+const PPTR_VER = '24.10.0'
 // update at 2025/06/03, check version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
 const RES_BROWSER = [ // [ 'v24.10.0', { "chrome": "137.0.7151.55", "firefox": "stable_139.0.1" } ]
   [ 'https://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium_137.0.7151.55-3~deb12u1_amd64.deb', 'cc49cc138b58dc47e658ab5699ebc54aaea67404e8b50d32969729e2df81cd74' ],
@@ -70,5 +65,5 @@ module.exports = {
 
   RES_RUBY3,
 
-  PPTR_VER, PPTR_VER_ARM64_DEB12, RES_BROWSER
+  PPTR_VER, RES_BROWSER
 }
