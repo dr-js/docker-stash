@@ -37,13 +37,6 @@ const RES_F_BIT_DEB12 = [
   [ 'https://packages.fluentbit.io/debian/bookworm/pool/main/f/fluent-bit/fluent-bit_3.2.6_arm64.deb', 'e707a5521067ec19f8c3f35a0b9802a04671c49ce61effb23bd04220120449ab' ]
 ]
 // update at 2024/06/25, from: https://www.ruby-lang.org/en/downloads/releases/
-// TODO: Ruby 2.7 reaches EOL
-const RES_RUBY2 = [
-  [ 'https://cache.ruby-lang.org/pub/ruby/2.7/ruby-2.7.8.tar.gz', 'c2dab63cbc8f2a05526108ad419efa63a67ed4074dbbcf9fc2b1ca664cb45ba0' ],
-  // for manual build openssl1.1 on Deb12, check: https://github.com/rbenv/ruby-build/discussions/1940#discussioncomment-3724881
-  // update at 2024/06/25, check: https://github.com/rbenv/ruby-build/blob/v20240612/share/ruby-build/2.7.8
-  [ 'https://www.openssl.org/source/openssl-1.1.1w.tar.gz', 'cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8' ]
-]
 // TODO: NOTE:
 //   temp revert & wait for "Compatibility issues" fix since "3.3.0": https://www.ruby-lang.org/en/news/2023/12/25/ruby-3-3-0-released/
 //   temp revert & wait for "Compatibility issues" fix since "3.2.0": https://www.ruby-lang.org/en/news/2022/12/25/ruby-3-2-0-released/
@@ -65,7 +58,6 @@ module.exports = {
   RES_GO,
   RES_F_BIT_DEB12,
 
-  RES_RUBY2,
   RES_RUBY3,
 
   PPTR_VER, PPTR_VER_ARM64_DEB12

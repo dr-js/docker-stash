@@ -65,8 +65,6 @@ debian:12-core
                 └─dep-font
                   ├─node-pptr2208
                   └─java
-                    ├─ruby2
-                    | └─ruby2-go
                     └─ruby3
                       └─ruby3-go
 ```
