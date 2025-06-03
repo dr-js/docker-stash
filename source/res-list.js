@@ -50,6 +50,16 @@ const PPTR_VER_ARM64_DEB12 = '22.15.0' // [ 'v22.15.0' , { "chrome": "127.0.6533
 // https://packages.debian.org/bookworm/chromium (133.0.6943.53-1~deb12u1)
 // https://packages.debian.org/bookworm/firefox-esr (128.7.0esr-1~deb12u1)
 
+// update at 2025/06/03, check version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
+const RES_BROWSER = [ // [ 'v24.10.0', { "chrome": "137.0.7151.55", "firefox": "stable_139.0.1" } ]
+  [ 'https://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium_137.0.7151.55-3~deb12u1_amd64.deb', 'cc49cc138b58dc47e658ab5699ebc54aaea67404e8b50d32969729e2df81cd74' ],
+  [ 'https://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium_137.0.7151.55-3~deb12u1_arm64.deb', '5e5f0a3e3c995d6595c651230972dd9c6256037953c6c09d90a82e3de8164cb5' ],
+  [ 'https://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium-common_137.0.7151.55-3~deb12u1_amd64.deb', 'dcacc5aa120930b77526fc89b41343ea7151ef3c8bdae3808d7596a12b80ede1' ],
+  [ 'https://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium-common_137.0.7151.55-3~deb12u1_arm64.deb', '36e784d78edd208854a5fd0d3a78289f578c0d5de84b37f8d650e25ea5464456' ],
+  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_139.0~build2_amd64_1a4fd07330b66887a34735fc97ea7917.deb', 'c6e643cb125dd214b44943ffba0c4c4d23ec0d48abda3c3e31f5140a8aa808aa' ],
+  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_139.0~build2_arm64_358a6a03c7e39ee63a9a8e4e6bcf6d90.deb', '2cad6a9e2e4dd5361a225b66ce1bc1f7b61fb8e54daebd35fc2527f5b8f72ad3' ]
+]
+
 module.exports = {
   RES_CORE_DEB12,
 
@@ -60,5 +70,5 @@ module.exports = {
 
   RES_RUBY3,
 
-  PPTR_VER, PPTR_VER_ARM64_DEB12
+  PPTR_VER, PPTR_VER_ARM64_DEB12, RES_BROWSER
 }

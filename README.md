@@ -61,7 +61,7 @@ debian:12-core
         └─bin-git
           └─bin-etc (layer from here & above is light, layer below will add 50MiB+ each)
             └─fluent-bit
-              └─dep-chrome
+              └─dep-browser
                 └─dep-font
                   ├─node-pptr2208
                   └─java

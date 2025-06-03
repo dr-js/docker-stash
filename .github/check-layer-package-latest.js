@@ -119,7 +119,6 @@ runKit(async (kit) => {
   log(await getDebianDeb('bookworm', 'openssl'))
   log(await getDebianDeb('bookworm', 'libssl3'))
   log(await getDebianDeb('bookworm', 'libjemalloc2'))
-  log(await getDebianDeb('bookworm', 'chromium'))
 
   // kit.padLog('nodesource/nodistro')
   // log(await getNodesourceDeb()) // NOTE: same deb for bullseye/bookworm
@@ -127,6 +126,9 @@ runKit(async (kit) => {
   kit.padLog('fluent-bit/bookworm')
   log(await getFluentBitDeb('bookworm'))
 
-  kit.padLog('firefox')
+  kit.padLog('browser:chromium')
+  log(await getDebianDeb('bookworm', 'chromium'))
+  log(await getDebianDeb('bookworm', 'chromium-common'))
+  kit.padLog('browser:firefox')
   log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm
 }, { title: 'ci-patch' })
