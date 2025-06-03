@@ -36,23 +36,23 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
   return pkgDlList
 }
 
-const getNodesourceDeb = async (dist = 'buster', rel = '20') => {
-  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
-  for (const dlArch of [
-    'amd64',
-    'arm64'
-  ]) {
-    // https://deb.nodesource.com/node_20.x/dists/nodistro/main/binary-amd64/Packages
-    const textDlPage = await getText(`https://deb.nodesource.com/node_${rel}.x/dists/${dist}/main/binary-${dlArch}/Packages`)
-    const textDlPkg0 = textDlPage.split('\n\n')[ 0 ] // pick first package
-    // Filename: pool/main/n/nodejs/nodejs_20.15.0-1nodesource1_amd64.deb
-    // SHA256: 9fd6bc3754cfc5960ce9c08640dbefa4093c274cff4f15065f754849f275c5b8
-    const dlUrl = `https://deb.nodesource.com/node_${rel}.x/` + /Filename: (pool\/main\/n\/nodejs\/nodejs_[.\d]+-[-\w]+_a(rm|md)64\.deb)/.exec(textDlPkg0)[ 1 ]
-    const dlSha256 = /SHA256: (\w+)/.exec(textDlPage)[ 1 ]
-    pkgDlList.push({ pkgName: 'nodejs', dlArch, dlUrl, dlSha256 })
-  }
-  return pkgDlList
-}
+// const getNodesourceDeb = async (dist = 'buster', rel = '20') => {
+//   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
+//   for (const dlArch of [
+//     'amd64',
+//     'arm64'
+//   ]) {
+//     // https://deb.nodesource.com/node_20.x/dists/nodistro/main/binary-amd64/Packages
+//     const textDlPage = await getText(`https://deb.nodesource.com/node_${rel}.x/dists/${dist}/main/binary-${dlArch}/Packages`)
+//     const textDlPkg0 = textDlPage.split('\n\n')[ 0 ] // pick first package
+//     // Filename: pool/main/n/nodejs/nodejs_20.15.0-1nodesource1_amd64.deb
+//     // SHA256: 9fd6bc3754cfc5960ce9c08640dbefa4093c274cff4f15065f754849f275c5b8
+//     const dlUrl = `https://deb.nodesource.com/node_${rel}.x/` + /Filename: (pool\/main\/n\/nodejs\/nodejs_[.\d]+-[-\w]+_a(rm|md)64\.deb)/.exec(textDlPkg0)[ 1 ]
+//     const dlSha256 = /SHA256: (\w+)/.exec(textDlPage)[ 1 ]
+//     pkgDlList.push({ pkgName: 'nodejs', dlArch, dlUrl, dlSha256 })
+//   }
+//   return pkgDlList
+// }
 
 const getFluentBitDeb = async (dist = 'buster') => {
   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
@@ -88,8 +88,8 @@ runKit(async (kit) => {
   log(await getDebianDeb('bookworm', 'chromium'))
 
   // NOTE: same deb for bullseye/bookworm
-  kit.padLog('nodesource/nodistro')
-  log(await getNodesourceDeb('nodistro'))
+  // kit.padLog('nodesource/nodistro')
+  // log(await getNodesourceDeb('nodistro'))
 
   kit.padLog('fluent-bit/bookworm')
   log(await getFluentBitDeb('bookworm'))
