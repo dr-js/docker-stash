@@ -1,10 +1,10 @@
 const RES_CORE_DEB12 = [
-  // update at 2024/12/19, start from: https://packages.debian.org/search?keywords=ca-certificates
+  // update at 2025/06/03, start from: https://packages.debian.org/search?keywords=ca-certificates
   [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20230311_all.deb '.trim(), '5308b9bd88eebe2a48be3168cb3d87677aaec5da9c63ad0cf561a29b8219115c' ],
-  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.15-1~deb12u1_amd64.deb       '.trim(), 'c9c37660d902f2a43dfbbf619b3f5f413cee298d8f317829e3c11cfff9e174aa' ],
-  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.15-1~deb12u1_arm64.deb       '.trim(), '28d03482e8c550bd65930bd41af99bbc9bff1125474010ccec9024ceffc39744' ],
-  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3_3.0.15-1~deb12u1_amd64.deb       '.trim(), 'd7897e6c55a8d9e229dcf16b0b1d472d7f7be741b2b3b2ac624908ff63215a93' ],
-  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3_3.0.15-1~deb12u1_arm64.deb       '.trim(), '468debe7aad7bd73592dcdbdab4d778558a4f538efd1b960f24e343fdbc0654d' ],
+  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.16-1~deb12u1_amd64.deb       '.trim(), '7db3b071c667eb81d9a7940f077c3325b0f89bbb696c8fa336e40f538058cedf' ],
+  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.16-1~deb12u1_arm64.deb       '.trim(), '7b396d99f14f56ff5ac72cb646d30f36931f177d4845f5afa3483846c59b8f28' ],
+  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3_3.0.16-1~deb12u1_amd64.deb       '.trim(), 'eaa2bab2130820f09361dc8186ddeb11d2a18ec5e5e3806f24414d5d8065a57a' ],
+  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3_3.0.16-1~deb12u1_arm64.deb       '.trim(), 'fbb2dae46eb5549723a59075aeb4bc33cb6d0c9d2f37b6c8617d4d61de02a2ef' ],
   // update at 2023/02/28, check: https://packages.debian.org/search?keywords=libjemalloc2
   [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.3.0-1_amd64.deb          '.trim(), 'a4117c23c5c8acf6c9678a6cb086f000b79476369da7efe8a78a70826956ad3d' ],
   [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.3.0-1_arm64.deb          '.trim(), '866eba7688ec5cbb98200a05540c4909df6320557371b634b5d394cd32b9f252' ]
