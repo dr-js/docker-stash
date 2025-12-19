@@ -100,10 +100,10 @@ For now the doc's quite twisted,
 we need to use a Personal access token (PAT) to auth the "ghcr.io" repo,
 and the setup will be as following:
 
-The main doc (TLDR): https://docs.github.com/en/free-pro-team@latest/packages/guides/about-github-container-registry,
-and this section specifically: https://docs.github.com/en/free-pro-team@latest/packages/guides/about-github-container-registry#about-scopes-and-permissions-for-github-container-registry
+The main doc (TLDR): https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages,
+and this section specifically: https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages#authenticating-to-github-packages
 
-The doc for creating a PAT (follow this): https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token,
+The doc for creating a PAT (follow this): https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens,
 and use the PAT to access the "ghcr.io" repo image, though proxy.
 
 And to create a PAT with `write:packages` scope only, use this url: https://github.com/settings/tokens/new?scopes=write:packages ([REF](https://github.com/github/docs/issues/2660#issuecomment-810766203))
