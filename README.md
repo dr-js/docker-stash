@@ -4,8 +4,8 @@
 
 A collection of strange docker scripts
 
-[i:ci]: https://img.shields.io/github/actions/workflow/status/dr-js/docker-stash/.github/workflows/ci-tag-build.yml
-[l:ci]: https://github.com/dr-js/docker-stash/actions?query=workflow:ci-tag-build
+[i:ci]: https://img.shields.io/github/actions/workflow/status/dr-js/docker-stash/.github/workflows/ci-on-tag.yml
+[l:ci]: https://github.com/dr-js/docker-stash/actions?query=workflow:ci-on-tag
 
 [//]: # (NON_PACKAGE_CONTENT)
 
@@ -75,7 +75,7 @@ debian:12-core
 First create config file `source/debian12/BUILD_REPO.json`
   and `source/debian12/BUILD_REPO_GHCR.json`.
 
-For this repo it's created with: (check the [CI file](.github/workflows/ci-tag-build.yml))
+For this repo it's created with: (check the [CI file](.github/workflows/ci-on-tag.yml))
 ```
 echo '"drjs/debian"' > source/debian12/BUILD_REPO.json
 echo '"ghcr.io/dr-js/debian"' > source/debian12/BUILD_REPO_GHCR.json
