@@ -24,7 +24,8 @@ apt-update
 
     # https://github.com/rbenv/ruby-build/wiki#suggested-build-environment
     apt-install \
-      autoconf bison make gcc \
+      autoconf bison make gcc dpkg-dev \
+      rustc \
       libssl-dev        libssl3 \
       libyaml-dev       libyaml-0-2 \
       libreadline-dev   libreadline8 \
@@ -44,7 +45,8 @@ apt-update
     ./configure \
       --build="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
       --disable-install-doc \
-      --enable-shared
+      --enable-shared \
+      --enable-yjit
 
     make -j "$(nproc)"
     make install
@@ -52,7 +54,8 @@ apt-update
   rm -rf "${PATH_RUBY_BUILD}"
 
   apt-remove \
-      autoconf bison make gcc \
+      autoconf bison make gcc dpkg-dev \
+      rustc \
       libssl-dev \
       libyaml-dev \
       libreadline-dev \
@@ -68,8 +71,8 @@ apt-update
   ruby -r rbconfig -e "puts RbConfig::CONFIG['LIBS']"
 apt-clear
 
-# gem # gem@3.5.23 bundler@2.5.23
-  gem install rubygems-update -v 3.5.23 --no-document && update_rubygems # gem update --no-document --system # NOTE: to lock down bundler version
+# gem # gem@3.7.2 bundler@2.7.2
+  gem install rubygems-update -v 3.7.2 --no-document && update_rubygems # gem update --no-document --system # NOTE: to lock down bundler version
   gem-uninstall rubygems-update # remove gem update dependency
 gem-clear
 
