@@ -1,5 +1,6 @@
 const { resolve } = require('path')
 
+const { withRetryAsync } = require('@dr-js/core/library/common/function.js')
 const { catchAsync } = require('@dr-js/core/library/common/error.js')
 const { strictEqual, oneOf } = require('@dr-js/core/library/common/verify.js')
 const { calcHash } = require('@dr-js/core/library/node/data/Buffer.js')
@@ -35,14 +36,15 @@ const verifyDebian12BuildArg = ({ BUILD_FLAVOR_NAME }) => {
   }
 }
 
-const fetchBuffer = async (url) => {
+const fetchBuffer = async (url) => withRetryAsync(async (failed, maxRetry) => {
+  failed && console.log(` - retry: ${failed}, max: ${maxRetry}`)
   console.log(' - fetch:', url)
   return (await fetchWithJumpProxy(url, {
     jumpMax: 4, family: 4,
     timeout: 10 * 60 * 1000,
     headers: { 'accept': '*/*', 'user-agent': PACKAGE_NAME }
   })).buffer()
-}
+}, 4, 100)
 
 const filenameFromUrl = (url) => String(url).replace(/[^\w-]/g, '_')
 
