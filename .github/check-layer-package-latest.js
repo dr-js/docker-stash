@@ -28,6 +28,7 @@ const pickLatestPkg = (pkgList, pkgName = '') => pkgList
   .filter((v) => v[ 'Package' ] === pkgName) // filter out other pkg
   .sort((a, b) => -compareStringWithNumber(a[ 'Version' ], b[ 'Version' ]))[ 0 ] // get biggest version // https://www.debian.org/doc/debian-policy/ch-controlfields.html#version
 
+// TODO: no longer works, blocked by fastly UA checking page
 const getDebianDeb = async (dist = 'buster', pkg = '') => {
   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
   const textIndex = await getText(`https://packages.debian.org/${dist}/${pkg}`)
@@ -114,11 +115,11 @@ const log = (pkgDlList) => {
 }
 
 runKit(async (kit) => {
-  kit.padLog('debian12/bookworm')
-  log(await getDebianDeb('bookworm', 'ca-certificates'))
-  log(await getDebianDeb('bookworm', 'openssl'))
-  log(await getDebianDeb('bookworm', 'libssl3'))
-  log(await getDebianDeb('bookworm', 'libjemalloc2'))
+  // TODO: not working // kit.padLog('debian12/bookworm')
+  // TODO: not working // log(await getDebianDeb('bookworm', 'ca-certificates'))
+  // TODO: not working // log(await getDebianDeb('bookworm', 'openssl'))
+  // TODO: not working // log(await getDebianDeb('bookworm', 'libssl3'))
+  // TODO: not working // log(await getDebianDeb('bookworm', 'libjemalloc2'))
 
   // kit.padLog('nodesource/nodistro')
   // log(await getNodesourceDeb()) // NOTE: same deb for bullseye/bookworm
@@ -126,9 +127,9 @@ runKit(async (kit) => {
   kit.padLog('fluent-bit/bookworm')
   log(await getFluentBitDeb('bookworm'))
 
-  kit.padLog('browser:chromium')
-  log(await getDebianDeb('bookworm', 'chromium'))
-  log(await getDebianDeb('bookworm', 'chromium-common'))
+  // TODO: not working // kit.padLog('browser:chromium')
+  // TODO: not working // log(await getDebianDeb('bookworm', 'chromium'))
+  // TODO: not working // log(await getDebianDeb('bookworm', 'chromium-common'))
   kit.padLog('browser:firefox')
   log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm
 }, { title: 'ci-patch' })
