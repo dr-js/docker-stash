@@ -105,7 +105,7 @@ RUN set -ex \\
  && sed -i 's/bookworm-updates/bookworm-updates bookworm-backports/' /etc/apt/sources.list.d/debian.sources \\
  && { \\${_ && 'apt: use backports by default'}
       echo 'Package: *'; \\
-      echo 'Pin: release a=bookworm-backports'; \\
+      echo 'Pin: release n=bookworm-backports'; \\
       echo 'Pin-Priority: 800'; \\
     } > /etc/apt/preferences.d/backports \\
  && { \\${_ && 'apt: reset dpkg file filter # https://askubuntu.com/a/628410'}
