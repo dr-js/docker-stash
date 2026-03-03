@@ -103,11 +103,6 @@ ENV LC_ALL C.UTF-8
 RUN set -ex \\
 \\${_ && 'apt: enable backports sources (for deb822 style config)'}
  && sed -i 's/bookworm-updates/bookworm-updates bookworm-backports/' /etc/apt/sources.list.d/debian.sources \\
- && { \\${_ && 'apt: use backports by default'}
-      echo 'Package: *'; \\
-      echo 'Pin: release n=bookworm-backports'; \\
-      echo 'Pin-Priority: 800'; \\
-    } > /etc/apt/preferences.d/backports \\
  && { \\${_ && 'apt: reset dpkg file filter # https://askubuntu.com/a/628410'}
       echo 'path-exclude=/usr/share/doc/*'; \\
       echo 'path-include=/usr/share/doc/*/copyright'; \\
