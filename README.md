@@ -15,27 +15,7 @@ Docker Image Registry:
 
 Image layer is checked with [dive](https://github.com/wagoodman/dive)
 
-Require enable Docker experimental:
-- Docker Linux: edit both `/etc/docker/daemon.json` and possibly `/root/.docker/config.json`
-  - https://github.com/docker/docker-ce/blob/master/components/cli/experimental/README.md
-  - https://github.com/docker/cli/issues/947
-- Docker Desktop: check settings
-
-Require enable Docker BuildKit:
-- for faster build, use `npm run docker-pre-pull-buildkit` to pre-pull to local
-- Docker Linux: edit `/etc/docker/daemon.json`
-  - https://docs.docker.com/develop/develop-images/build_enhancements/#to-enable-buildkit-builds
-- Docker Desktop: check settings
-- related usage:
-  - https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md
-  - https://docs.docker.com/develop/develop-images/build_enhancements/#to-enable-buildkit-builds
-  - https://stackoverflow.com/questions/26050899/how-to-mount-host-volumes-into-docker-containers-in-dockerfile-during-build/52762779#52762779
-
-Basically for Linux, run:
-```shell
-cat /etc/docker/daemon.json
-echo '{ "experimental": true, "features": { "buildkit": true } }' > sudo tee /etc/docker/daemon.json
-```
+Expect `docker@24+` with BuildKit enabled by default
 
 #### build concept
 
