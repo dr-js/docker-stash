@@ -30,7 +30,7 @@ runKit(async (kit) => {
     ...Object.values(coreImageBufferMap),
     ...Object.values(dockerfileBufferMap),
     Buffer.from(JSON.stringify(RES_CORE_DEB12))
-  ])).replace(/\W/g, '')
+  ])).replace(/\W/g, '').slice(-20)
   const BUILD_TAG = `12-${BUILD_FLAVOR}-${SOURCE_HASH}`
   const PATH_BUILD = kit.fromOutput('debian12-core', BUILD_TAG)
 
