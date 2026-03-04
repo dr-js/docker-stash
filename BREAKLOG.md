@@ -2,6 +2,13 @@
 
 keep list of notable break & big code change
 
+- `0.5.0-dev.0`
+  - BREAK: layer: reorder & provide `pptr2603|dep-chromium-headless-shell`
+  - DEV-BREAK: layer: move `rsync` to `bin-common`
+  - BREAK: layer: use `fluent-but@4`
+  - BREAK: `trixie <- bookworm` and `13 <- 12`
+  - BREAK: layer: bin-common: drop `wget|vim-tiny`
+  - BREAK: sort repo dev pkg
 - `0.4.4-dev.2`
   - DEV-BREAK: BUMP: layer package update
 - `0.4.4-dev.1`
