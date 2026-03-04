@@ -26,15 +26,15 @@ apt-update
     apt-install \
       autoconf bison make gcc dpkg-dev \
       rustc \
-      libssl-dev        libssl3 \
+      libssl-dev        libssl3t64 \
       libyaml-dev       libyaml-0-2 \
-      libreadline-dev   libreadline8 \
+      libreadline-dev   libreadline8t64 \
       zlib1g-dev        zlib1g \
       libncurses-dev    libncurses6 \
       libffi-dev        libffi8 \
-      libgdbm-dev       libgdbm6 \
+      libgdbm-dev       libgdbm6t64 \
       libgmp-dev        libgmp10 \
-      libdb-dev         libdb5.3
+      libdb-dev         libdb5.3t64
 
     mkdir -p /usr/local/etc/
     echo "install: --no-document" >> /usr/local/etc/gemrc

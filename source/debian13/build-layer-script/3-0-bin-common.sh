@@ -16,12 +16,12 @@ apt-clear
 sudo --version
 ps --version # from `procps`
 free --version # from `procps`
-top -v # from `procps`
+top --version # from `procps`
 less --version
 nano --version
 htop --version
 lsof -v # to allow htop list process open files
-screen -v # allow backgrounding
+screen --version # allow backgrounding
 curl --version
 ip -Version # from `iproute2`
 ss -version # from `iproute2`

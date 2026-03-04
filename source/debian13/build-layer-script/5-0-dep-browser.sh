@@ -22,7 +22,7 @@ apt-update
   # find missing lib with:
   #   ldd chromium | grep 'not found'
   #   dpkg -S libnss3.so
-  apt-install libdav1d6 libdouble-conversion3 libflac12 libgbm1 libharfbuzz-subset0 libminizip1 libnspr4 libnss3 libopenh264-7 libopenjp2-7 libopus0 libpulse0 libxnvctrl0 libxslt1.1
+  apt-install libdav1d7 libdouble-conversion3 libflac14 libgbm1 libharfbuzz-subset0 libminizip1t64 libnspr4 libnss3 libopenh264-8 libopenjp2-7 libopus0 libpulse0 libxnvctrl0 libxslt1.1
 
   dpkg -i "${MNT_DEB_FIREFOX}" || apt-install --fix-broken # fix missing dependencies
 apt-clear
