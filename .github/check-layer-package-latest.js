@@ -69,7 +69,7 @@ const getFluentBitDeb = async (dist = 'buster', pkgName = 'fluent-bit') => {
   ]) {
     // https://packages.fluentbit.io/debian/bookworm/dists/bookworm/main/binary-amd64/Packages
     const textDlPage = await getText(`https://packages.fluentbit.io/debian/${dist}/dists/${dist}/main/binary-${dlArch}/Packages`)
-    const pkg = pickLatestPkg(parseBinPkg(textDlPage).filter((v) => v[ 'Version' ].startsWith('3.')), pkgName) // TODO: use v3 for now
+    const pkg = pickLatestPkg(parseBinPkg(textDlPage).filter((v) => v[ 'Version' ].startsWith('4.')), pkgName) // TODO: use v4 for now
     const dlUrl = `https://packages.fluentbit.io/debian/${dist}/` + pkg[ 'Filename' ]
     const dlSha256 = pkg[ 'SHA256' ]
     pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
