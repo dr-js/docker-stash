@@ -73,7 +73,6 @@ runKit(async (kit) => {
         `--file=./Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`,
         `--platform=${DOCKER_BUILD_ARCH_INFO.docker}`,
         '--progress=plain', // https://docs.docker.com/develop/develop-images/build_enhancements/#new-docker-build-command-line-build-output
-        '--squash', // merge layer // TODO: NOTE: this is a experimental Docker feature, need to manually enable
         '.' // context is always CWD
       ], { cwd: PATH_BUILD }, PATH_LOG)
     }
@@ -86,19 +85,18 @@ runKit(async (kit) => {
 const getDockerfileString = ({
   DOCKER_BUILD_ARCH_INFO
 }) => `# syntax = ${BUILDKIT_SYNTAX}
-FROM scratch
+FROM scratch AS upstream
 
 ${_ && 'use prepared fs'}
 ADD "rootfs.tar.gz.${DOCKER_BUILD_ARCH_INFO.key}" /
 
 LABEL arg.DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
 ENV DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
 WORKDIR /root/
 SHELL [ "/bin/bash", "-c" ]
 CMD [ "bash" ]
-
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
 
 RUN set -ex \\
 \\${_ && 'apt: enable backports sources (for deb822 style config)'}
@@ -110,7 +108,7 @@ RUN set -ex \\
       echo 'path-exclude=/usr/share/man/*'; \\
       echo 'path-exclude=/usr/share/info/*'; \\
     } > /etc/dpkg/dpkg.cfg.d/excludes \\
-\\${_ && 'apt: prepare apt cache # https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md#example-cache-apt-packages'}
+\\${_ && 'apt: prepare apt cache # https://github.com/moby/buildkit/blob/v0.28.0/frontend/dockerfile/docs/reference.md#example-cache-apt-packages'}
  && shopt -s nullglob \\
  && rm -rf \\
       /etc/apt/apt.conf.d/docker-clean \\
@@ -162,6 +160,19 @@ RUN \\${_ && 'check: https://github.com/moby/buildkit/blob/v0.9.0/frontend/docke
  && cat --version \\
  && tar --version \\
  && gzip --version
+
+# --- --- ---
+# --- --- ---
+
+FROM scratch
+COPY --from=upstream / /
+LABEL arg.DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
+ENV DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
+ENV LANG C.UTF-8
+ENV LC_ALL C.UTF-8
+WORKDIR /root/
+SHELL [ "/bin/bash", "-c" ]
+CMD [ "bash" ]
 `
 const _ = '' // HACK: NOTE: hack for adding comment
 
