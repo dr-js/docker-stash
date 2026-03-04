@@ -1,4 +1,4 @@
-const { resolve } = require('path')
+const { resolve } = require('node:path')
 
 const { withRetryAsync } = require('@dr-js/core/library/common/function.js')
 const { catchAsync } = require('@dr-js/core/library/common/error.js')

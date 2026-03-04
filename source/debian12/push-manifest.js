@@ -38,7 +38,7 @@ runKit(async (kit) => {
     ...(hasTarget('BASE') ? [ ...TAG_LIST_BASE ].reverse() : [])
   ]) {
     kit.log(`push manifest: ${tag}`)
-    runDockerSync([ 'manifest', 'create', tag, ...DOCKER_BUILD_ARCH_INFO_LIST.map((DOCKER_BUILD_ARCH_INFO) => [ '--amend', `${tag}-${DOCKER_BUILD_ARCH_INFO.key}` ]).flat(1) ])
+    runDockerSync([ 'manifest', 'create', tag, ...DOCKER_BUILD_ARCH_INFO_LIST.flatMap((DOCKER_BUILD_ARCH_INFO) => [ '--amend', `${tag}-${DOCKER_BUILD_ARCH_INFO.key}` ]) ])
     runDockerSync([ 'manifest', 'push', tag ])
   }
 }, { title: 'push-manifest' })
