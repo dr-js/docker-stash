@@ -39,14 +39,12 @@ const RES_F_BIT_DEB13 = [
 // update at 2025/12/19, from: https://www.ruby-lang.org/en/downloads/releases/
 const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.gz', '53c4ddad41fbb6189f1f5ee0db57a51d54bd1f87f8755b3d68604156a35b045b' ] ]
 
-// update at 2026/03/02, for `puppeteer-core`, version need match `RES_BROWSER`
-const PPTR_VER = '24.37.5'
-// update at 2026/03/04, check version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
-const RES_BROWSER = [ // [ "v24.37.5", { "chrome": "145.0.7632.77", "firefox": "stable_147.0.4" } ]
-  [ 'https://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium_145.0.7632.116-1~deb13u1_amd64.deb', '3889d73b2e1d45d883624696c327f7aa52bffcea876972850a86dee7330bc24d' ],
-  [ 'https://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium_145.0.7632.116-1~deb13u1_arm64.deb', '61099dc64b036d63a768b1ec554f3cec1730ba73c13140c062f7cec5ba422504' ],
-  [ 'https://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium-common_145.0.7632.116-1~deb13u1_amd64.deb', '4e93d9478864c15a16e04dffa6ad8587b35845060ab19a1289815edc36668b6d' ],
-  [ 'https://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium-common_145.0.7632.116-1~deb13u1_arm64.deb', '94b0227559787651de2ce21ae8ecd97792a581e4bb15abe71a7d27a3e0e95e45' ],
+// update at 2026/03/02, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
+const PPTR_VER = '24.37.5' // [ "v24.37.5", { "chrome": "145.0.7632.77", "firefox": "stable_147.0.4" } ]
+// update at 2026/03/04, use "stable" version at: https://hub.docker.com/r/chromedp/headless-shell/tags
+const IMG_CHROMEDP = 'chromedp/headless-shell:146.0.7680.31'
+// update at 2026/03/04, use official deb from mozilla
+const RES_FIREFOX = [
   [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_148.0~build1_amd64_2ed57f9938e0e3b6210a7fb3d7904e73.deb', 'c714ae7c4248f16087b29645bc8f0b9a73aa4e70aa7fb3c2632703f2a311fd83' ],
   [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_148.0~build1_arm64_59718f33bff5c8c5ddf4d5bb140d4c13.deb', '104755fd66eda9c7cf8368d294c9488f0591283cfe61ecbeb5093905862a1d37' ]
 ]
@@ -61,5 +59,5 @@ module.exports = {
 
   RES_RUBY3,
 
-  PPTR_VER, RES_BROWSER
+  PPTR_VER, IMG_CHROMEDP, RES_FIREFOX
 }

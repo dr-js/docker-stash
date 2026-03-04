@@ -4,6 +4,7 @@ source ./0-1-base-apt.sh
 
 apt-update
   apt-install \
+    fontconfig $(: "for 'fc-*' binaries") \
     fonts-liberation2 $(: "provides Arial/Helvetica as the metric is same, and Liberation Mono provides Courier New") \
     fonts-noto-core $(: "for Thai/Arabic/... not small") \
     fonts-noto-cjk $(: "for SC/TC/JP/KR big") \

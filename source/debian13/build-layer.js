@@ -4,13 +4,14 @@ const { modifyCopy } = require('@dr-js/core/library/node/fs/Modify.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
-const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB13, RES_RUBY3, PPTR_VER, RES_BROWSER } = require('../res-list.js')
+const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB13, RES_RUBY3, PPTR_VER, RES_FIREFOX } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN13_BUILD_FLAVOR_MAP, verifyDebian13BuildArg,
   fetchFileListWithLocalCache,
   TAG_LAYER_CACHE // , TAG_LAYER_MAIN_CACHE
 } = require('../function.js')
+const { prepareChromeHeadlessShellWithLocalCache } = require('../function.chrome-headless-shell.js')
 
 const [
   , // node
@@ -34,10 +35,11 @@ runKit(async (kit) => {
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
     const appendCommandList = [
       // https://github.com/puppeteer/puppeteer/blob/puppeteer-core-v24.10.0/docs/api/puppeteer.configuration.md
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2506 && 'ENV PUPPETEER_SKIP_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2506 && 'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium', // Specifies an executable path to be used in puppeteer.launch.
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2506 && 'ENV PUPPETEER_BROWSER=chrome',
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2506 && 'ENV HOME=/tmp'
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && 'ENV PUPPETEER_SKIP_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && 'ENV PUPPETEER_SKIP_CHROME_HEADLESS_SHELL_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && 'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chrome-headless-shell', // Specifies an executable path to be used in puppeteer.launch.
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && 'ENV PUPPETEER_BROWSER=chrome',
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && 'ENV HOME=/tmp'
     ].filter(Boolean)
     await writeText(
       kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
@@ -58,18 +60,22 @@ runKit(async (kit) => {
   kit.padLog('assemble "build-layer-resource/"')
   await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
   for (const [ text, file ] of [
-    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2506 && [ PPTR_VER, 'PUPPETEER_VERSION.txt' ]
+    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && [ PPTR_VER, 'PUPPETEER_VERSION.txt' ]
   ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
   await fetchFileListWithLocalCache([
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_NODE : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? RES_NGINX : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_FLUENT_BIT ? RES_F_BIT_DEB13 : []),
-    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_DEP_BROWSER ? RES_BROWSER : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_DEP_FIREFOX ? RES_FIREFOX : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 ? RES_RUBY3 : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_RUBY3_GO ? RES_GO : [])
   ], {
     pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),
     pathCache: kit.fromTemp('debian13', 'layer-url')
+  })
+  BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_DEP_CHROMIUM_HEADLESS_SHELL && await prepareChromeHeadlessShellWithLocalCache({
+    fileOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/', 'chrome-headless-shell.tar'),
+    pathCache: kit.fromTemp('debian13', 'layer-file')
   })
 
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
