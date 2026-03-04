@@ -8,6 +8,7 @@ apt-update
     procps $(: "provide ps|free|top|uptime|... commands, check: https://packages.debian.org/buster/procps") \
     less nano htop lsof screen \
     curl iproute2 iputils-ping netcat-openbsd \
+    rsync $(: "for data backup") \
     zip unzip xz-utils p7zip-full $(: "tar gzip is already installed")
 apt-clear
 
@@ -26,6 +27,7 @@ ip -Version # from `iproute2`
 ss -version # from `iproute2`
 ping4 -V # from `iputils-ping`
 nc -help
+rsync --version
 zip --version
 unzip -v
 xz --version
