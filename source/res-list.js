@@ -1,13 +1,13 @@
 const RES_CORE_DEB12 = [
   // update at 2026/03/02, start from: https://packages.debian.org/search?keywords=ca-certificates
-  [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20230311+deb12u1_all.deb         '.trim(), '0d5f444f594e48c1e16a41d8fc628a09b24c658916a1274025c2330f2a802bed' ],
-  [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.0.18-1~deb12u2_amd64.deb  '.trim(), '9107c374e0f760d5d7c9c7372788d4e618e1433db4fdef9a3a25788dfd5588bb' ],
-  [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.0.18-1~deb12u2_arm64.deb  '.trim(), 'ed4671eb9fcc282b69c9768863f2df0386664d686bb3103d5397802f9c0b1297' ],
-  [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl3_3.0.18-1~deb12u2_amd64.deb  '.trim(), 'ed44f11b74763cded2ad406f4de4d585ea27b0ce6377e7c8d98c2ddf2ed35cb3' ],
-  [ 'http://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl3_3.0.18-1~deb12u2_arm64.deb  '.trim(), '30b2d6c27fd4a2f5ef554ac3b86c96e8a3abbbfb454c6dbe7e308ce9df36f8c5' ],
+  [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20230311+deb12u1_all.deb', '0d5f444f594e48c1e16a41d8fc628a09b24c658916a1274025c2330f2a802bed' ],
+  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.0.18-1~deb12u2_amd64.deb', '9107c374e0f760d5d7c9c7372788d4e618e1433db4fdef9a3a25788dfd5588bb' ],
+  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.0.18-1~deb12u2_arm64.deb', 'ed4671eb9fcc282b69c9768863f2df0386664d686bb3103d5397802f9c0b1297' ],
+  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl3_3.0.18-1~deb12u2_amd64.deb', 'ed44f11b74763cded2ad406f4de4d585ea27b0ce6377e7c8d98c2ddf2ed35cb3' ],
+  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl3_3.0.18-1~deb12u2_arm64.deb', '30b2d6c27fd4a2f5ef554ac3b86c96e8a3abbbfb454c6dbe7e308ce9df36f8c5' ],
   // update at 2023/02/28, check: https://packages.debian.org/search?keywords=libjemalloc2
-  [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.3.0-1_amd64.deb          '.trim(), 'a4117c23c5c8acf6c9678a6cb086f000b79476369da7efe8a78a70826956ad3d' ],
-  [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.3.0-1_arm64.deb          '.trim(), '866eba7688ec5cbb98200a05540c4909df6320557371b634b5d394cd32b9f252' ]
+  [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.3.0-1_amd64.deb', 'a4117c23c5c8acf6c9678a6cb086f000b79476369da7efe8a78a70826956ad3d' ],
+  [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.3.0-1_arm64.deb', '866eba7688ec5cbb98200a05540c4909df6320557371b634b5d394cd32b9f252' ]
 ]
 
 const RES_NODE = [

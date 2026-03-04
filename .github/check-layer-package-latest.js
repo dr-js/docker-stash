@@ -2,8 +2,8 @@ const { runKit } = require('@dr-js/core/library/node/kit.js')
 const { fetchWithJumpProxy } = require('@dr-js/core/library/node/module/Software/npm.js')
 const { compareStringWithNumber } = require('@dr-js/core/library/common/compare.js')
 
-const getText = async (url) => (await fetchWithJumpProxy(url, {
-  headers: { 'accept': '*/*', 'user-agent': 'docker-stash' }, // patch for sites require a UA, like GitHub
+const getText = async (url, extHdr = {}) => (await fetchWithJumpProxy(url, {
+  headers: { 'accept': '*/*', 'user-agent': 'docker-stash', ...extHdr }, // patch for sites require a UA, like GitHub
   jumpMax: 4, family: 4
 })).text()
 
@@ -28,10 +28,12 @@ const pickLatestPkg = (pkgList, pkgName = '') => pkgList
   .filter((v) => v[ 'Package' ] === pkgName) // filter out other pkg
   .sort((a, b) => -compareStringWithNumber(a[ 'Version' ], b[ 'Version' ]))[ 0 ] // get biggest version // https://www.debian.org/doc/debian-policy/ch-controlfields.html#version
 
-// TODO: no longer works, blocked by fastly UA checking page
+
+// TODO: NOTE: to bypass fastly UA checking page, need copy from browser on page like https://packages.debian.org/trixie/apt
+const EXT_HDR_DEB = { cookie: '_fs_ch_cp_79..Qv=Ae ..{REPLACE-WITH-ACTUAL-COOKIE}.. Nw==' }
 const getDebianDeb = async (dist = 'buster', pkg = '') => {
   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
-  const textIndex = await getText(`https://packages.debian.org/${dist}/${pkg}`)
+  const textIndex = await getText(`https://packages.debian.org/${dist}/${pkg}`, EXT_HDR_DEB)
   // name     <h1>Package: ca-certificates (20211016)\n</h1>
   // dl-url   <th><a href="/bookworm/all/ca-certificates/download">all</a></th>
   // name     <h1>Package: libjemalloc2 (5.2.1-5)\n</h1>
@@ -46,7 +48,7 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
     textIndex.includes(`/${dist}/arm64/${pkg}/download`) && 'arm64'
   ].filter(Boolean)) {
     // https://packages.debian.org/bookworm/amd64/openssl/download
-    const textDlPage = await getText(`https://packages.debian.org/${dist}/${dlArch}/${pkg}/download`)
+    const textDlPage = await getText(`https://packages.debian.org/${dist}/${dlArch}/${pkg}/download`, EXT_HDR_DEB)
     // <li><a href="http://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20211016_all.deb">ftp.debian.org/debian</a></li>
     // <tr><th>SHA256 checksum</th>\t<td><tt>d7abcfaa67bc16c4aed960c959ca62849102c8a0a61b9af9a23fcc870ebc3c57</tt></td>
     // <li><a href="http://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.0.5-2_amd64.deb">ftp.debian.org/debian</a></li>
@@ -115,11 +117,11 @@ const log = (pkgDlList) => {
 }
 
 runKit(async (kit) => {
-  // TODO: not working // kit.padLog('debian12/bookworm')
-  // TODO: not working // log(await getDebianDeb('bookworm', 'ca-certificates'))
-  // TODO: not working // log(await getDebianDeb('bookworm', 'openssl'))
-  // TODO: not working // log(await getDebianDeb('bookworm', 'libssl3'))
-  // TODO: not working // log(await getDebianDeb('bookworm', 'libjemalloc2'))
+  kit.padLog('debian12/bookworm')
+  log(await getDebianDeb('bookworm', 'ca-certificates'))
+  log(await getDebianDeb('bookworm', 'openssl'))
+  log(await getDebianDeb('bookworm', 'libssl3'))
+  log(await getDebianDeb('bookworm', 'libjemalloc2'))
 
   // kit.padLog('nodesource/nodistro')
   // log(await getNodesourceDeb()) // NOTE: same deb for bullseye/bookworm
@@ -127,9 +129,9 @@ runKit(async (kit) => {
   kit.padLog('fluent-bit/bookworm')
   log(await getFluentBitDeb('bookworm'))
 
-  // TODO: not working // kit.padLog('browser:chromium')
-  // TODO: not working // log(await getDebianDeb('bookworm', 'chromium'))
-  // TODO: not working // log(await getDebianDeb('bookworm', 'chromium-common'))
+  kit.padLog('browser:chromium')
+  log(await getDebianDeb('bookworm', 'chromium'))
+  log(await getDebianDeb('bookworm', 'chromium-common'))
   kit.padLog('browser:firefox')
   log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm
 }, { title: 'ci-patch' })
