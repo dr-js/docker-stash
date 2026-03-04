@@ -4,7 +4,7 @@ const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const {
   DOCKER_BUILD_ARCH_INFO_LIST,
-  DEBIAN12_BUILD_REPO, DEBIAN12_BUILD_REPO_GHCR, DEBIAN12_BUILD_FLAVOR_LIST // loadDebian12TagCore,
+  DEBIAN13_BUILD_REPO, DEBIAN13_BUILD_REPO_GHCR, DEBIAN13_BUILD_FLAVOR_LIST // loadDebian13TagCore,
 } = require('../function.js')
 
 const [
@@ -24,11 +24,11 @@ runKit(async (kit) => {
   const hasTarget = (target) => PUSH_TARGET_MAP[ PUSH_TARGET ].includes(target)
 
   const { version: BUILD_VERSION } = require(kit.fromRoot('package.json'))
-  const toGitHubTag = (tag) => tag.replace(DEBIAN12_BUILD_REPO, DEBIAN12_BUILD_REPO_GHCR)
+  const toGitHubTag = (tag) => tag.replace(DEBIAN13_BUILD_REPO, DEBIAN13_BUILD_REPO_GHCR)
 
   const TAG_LIST_BASE = [ // NOTE: skip core tag, as local push will need build or manual edit to keep up with latest
-    // loadDebian12TagCore(''),
-    ...DEBIAN12_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN12_BUILD_REPO}:12-${flavorName}-${BUILD_VERSION}`)
+    // loadDebian13TagCore(''),
+    ...DEBIAN13_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN13_BUILD_REPO}:13-${flavorName}-${BUILD_VERSION}`)
   ]
   const TAG_LIST_GHCR = TAG_LIST_BASE.map(toGitHubTag)
 

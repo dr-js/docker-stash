@@ -32,7 +32,7 @@ Most build resource file is cached locally,
 
 Current layer stack:
 ```
-debian:12-core
+debian:13-core
 └─node
   └─bin-common
     ├─dep-build (big layer with C/C++ compiler tools +200MiB)
@@ -50,20 +50,20 @@ debian:12-core
 ```
 
 
-#### build `debian12`
+#### build `debian13`
 
-First create config file `source/debian12/BUILD_REPO.json`
-  and `source/debian12/BUILD_REPO_GHCR.json`.
+First create config file `source/debian13/BUILD_REPO.json`
+  and `source/debian13/BUILD_REPO_GHCR.json`.
 
 For this repo it's created with: (check the [CI file](.github/workflows/ci-on-tag.yml))
 ```
-echo '"drjs/debian"' > source/debian12/BUILD_REPO.json
-echo '"ghcr.io/dr-js/debian"' > source/debian12/BUILD_REPO_GHCR.json
+echo '"drjs/debian"' > source/debian13/BUILD_REPO.json
+echo '"ghcr.io/dr-js/debian"' > source/debian13/BUILD_REPO_GHCR.json
 ```
 
 Then run:
 ```shell script
-npm run build-debian12
+npm run build-debian13
 ```
 
 Use `build-proxy*` for slow fetch, the config can also be added in `.npmrc` like:

@@ -61,22 +61,6 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
   return pkgDlList
 }
 
-// const getNodesourceDeb = async (dist = 'nodistro', rel = '20', pkgName = 'nodejs') => {
-//   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
-//   for (const dlArch of [
-//     'amd64',
-//     'arm64'
-//   ]) {
-//     // https://deb.nodesource.com/node_20.x/dists/nodistro/main/binary-amd64/Packages
-//     const textDlPage = await getText(`https://deb.nodesource.com/node_${rel}.x/dists/${dist}/main/binary-${dlArch}/Packages`)
-//     const pkg = pickLatestPkg(parseBinPkg(textDlPage), pkgName)
-//     const dlUrl = `https://deb.nodesource.com/node_${rel}.x/` + pkg[ 'Filename' ]
-//     const dlSha256 = pkg[ 'SHA256' ]
-//     pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
-//   }
-//   return pkgDlList
-// }
-
 const getFluentBitDeb = async (dist = 'buster', pkgName = 'fluent-bit') => {
   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
   for (const dlArch of [
@@ -117,21 +101,18 @@ const log = (pkgDlList) => {
 }
 
 runKit(async (kit) => {
-  kit.padLog('debian12/bookworm')
-  log(await getDebianDeb('bookworm', 'ca-certificates'))
-  log(await getDebianDeb('bookworm', 'openssl'))
-  log(await getDebianDeb('bookworm', 'libssl3'))
-  log(await getDebianDeb('bookworm', 'libjemalloc2'))
+  kit.padLog('pkg-deb/trixie')
+  log(await getDebianDeb('trixie', 'ca-certificates'))
+  log(await getDebianDeb('trixie', 'openssl'))
+  log(await getDebianDeb('trixie', 'libssl3'))
+  log(await getDebianDeb('trixie', 'libjemalloc2'))
 
-  // kit.padLog('nodesource/nodistro')
-  // log(await getNodesourceDeb()) // NOTE: same deb for bullseye/bookworm
-
-  kit.padLog('fluent-bit/bookworm')
-  log(await getFluentBitDeb('bookworm'))
+  kit.padLog('fluent-bit/trixie')
+  log(await getFluentBitDeb('trixie'))
 
   kit.padLog('browser:chromium')
-  log(await getDebianDeb('bookworm', 'chromium'))
-  log(await getDebianDeb('bookworm', 'chromium-common'))
+  log(await getDebianDeb('trixie', 'chromium'))
+  log(await getDebianDeb('trixie', 'chromium-common'))
   kit.padLog('browser:firefox')
-  log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm
+  log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm/trixie
 }, { title: 'ci-patch' })

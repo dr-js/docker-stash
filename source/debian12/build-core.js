@@ -4,35 +4,35 @@ const { resetDirectory } = require('@dr-js/core/library/node/fs/Directory.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee, checkPullImage } = require('@dr-js/dev/library/docker.js')
-const { RES_CORE_DEB12 } = require('../res-list.js')
+const { RES_CORE_DEB13 } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
-  DEBIAN12_BUILD_REPO, saveDebian12TagCore,
+  DEBIAN13_BUILD_REPO, saveDebian13TagCore,
   fetchGitHubBufferMapWithLocalCache, fetchFileListWithLocalCache
 } = require('../function.js')
 
 runKit(async (kit) => {
-  const BUILD_REPO = DEBIAN12_BUILD_REPO
+  const BUILD_REPO = DEBIAN13_BUILD_REPO
   const BUILD_FLAVOR = 'core'
 
   kit.padLog('borrow file from github:debuerreotype/docker-debian-artifacts')
 
   const URL_CACHE_HASH = 'https://api.github.com/repos/debuerreotype/docker-debian-artifacts/git/refs/heads' // use all branch info as cache hash
   const URL_CORE_IMAGE_MAP = {
-    'amd64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/bookworm/slim/oci/blobs/rootfs.tar.gz',
-    'arm64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/bookworm/slim/oci/blobs/rootfs.tar.gz'
+    'amd64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/trixie/slim/oci/blobs/rootfs.tar.gz',
+    'arm64': 'https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/trixie/slim/oci/blobs/rootfs.tar.gz'
   }
 
-  const coreImageBufferMap = await fetchGitHubBufferMapWithLocalCache(URL_CORE_IMAGE_MAP, URL_CACHE_HASH, kit.fromTemp('debian12', 'core-github'))
+  const coreImageBufferMap = await fetchGitHubBufferMapWithLocalCache(URL_CORE_IMAGE_MAP, URL_CACHE_HASH, kit.fromTemp('debian13', 'core-github'))
   const dockerfileBufferMap = Object.fromEntries(DOCKER_BUILD_ARCH_INFO_LIST.map((DOCKER_BUILD_ARCH_INFO) => [ DOCKER_BUILD_ARCH_INFO.key, Buffer.from(getDockerfileString({ DOCKER_BUILD_ARCH_INFO })) ]))
 
   const SOURCE_HASH = calcHash(Buffer.concat([
     ...Object.values(coreImageBufferMap),
     ...Object.values(dockerfileBufferMap),
-    Buffer.from(JSON.stringify(RES_CORE_DEB12))
+    Buffer.from(JSON.stringify(RES_CORE_DEB13))
   ])).replace(/\W/g, '').slice(-20)
-  const BUILD_TAG = `12-${BUILD_FLAVOR}-${SOURCE_HASH}`
-  const PATH_BUILD = kit.fromOutput('debian12-core', BUILD_TAG)
+  const BUILD_TAG = `13-${BUILD_FLAVOR}-${SOURCE_HASH}`
+  const PATH_BUILD = kit.fromOutput('debian13-core', BUILD_TAG)
 
   kit.padLog('build config')
   kit.log('BUILD_TAG:', BUILD_TAG)
@@ -54,9 +54,9 @@ runKit(async (kit) => {
     }
 
     kit.padLog('assemble "build-core/"')
-    await fetchFileListWithLocalCache(RES_CORE_DEB12, {
+    await fetchFileListWithLocalCache(RES_CORE_DEB13, {
       pathOutput: kit.fromOutput(PATH_BUILD, 'build-core/'),
-      pathCache: kit.fromTemp('debian12', 'core-url')
+      pathCache: kit.fromTemp('debian13', 'core-url')
     })
     await writeText(kit.fromOutput(PATH_BUILD, 'build-core/bashrc'), STRING_BASHRC)
 
@@ -64,7 +64,7 @@ runKit(async (kit) => {
       if (DOCKER_BUILD_ARCH_INFO.node !== process.arch) continue
       kit.padLog(`build image for ${DOCKER_BUILD_ARCH_INFO.key}`)
 
-      const PATH_LOG = kit.fromOutput('debian12-core', `${BUILD_TAG}.${DOCKER_BUILD_ARCH_INFO.key}.log`)
+      const PATH_LOG = kit.fromOutput('debian13-core', `${BUILD_TAG}.${DOCKER_BUILD_ARCH_INFO.key}.log`)
       kit.log('PATH_LOG:', PATH_LOG)
 
       await runDockerWithTee([
@@ -79,7 +79,7 @@ runKit(async (kit) => {
   }
 
   kit.padLog('save core image tag')
-  saveDebian12TagCore(`${BUILD_REPO}:${BUILD_TAG}`)
+  saveDebian13TagCore(`${BUILD_REPO}:${BUILD_TAG}`)
 }, { title: 'build-core' })
 
 const getDockerfileString = ({
@@ -100,7 +100,7 @@ CMD [ "bash" ]
 
 RUN set -ex \\
 \\${_ && 'apt: enable backports sources (for deb822 style config)'}
- && sed -i 's/bookworm-updates/bookworm-updates bookworm-backports/' /etc/apt/sources.list.d/debian.sources \\
+ && sed -i 's/trixie-updates/trixie-updates trixie-backports/' /etc/apt/sources.list.d/debian.sources \\
  && { \\${_ && 'apt: reset dpkg file filter # https://askubuntu.com/a/628410'}
       echo 'path-exclude=/usr/share/doc/*'; \\
       echo 'path-include=/usr/share/doc/*/copyright'; \\

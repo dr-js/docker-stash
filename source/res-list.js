@@ -1,4 +1,4 @@
-const RES_CORE_DEB12 = [
+const RES_CORE_DEB13 = [
   // update at 2026/03/02, start from: https://packages.debian.org/search?keywords=ca-certificates
   [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20230311+deb12u1_all.deb', '0d5f444f594e48c1e16a41d8fc628a09b24c658916a1274025c2330f2a802bed' ],
   [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.0.18-1~deb12u2_amd64.deb', '9107c374e0f760d5d7c9c7372788d4e618e1433db4fdef9a3a25788dfd5588bb' ],
@@ -32,9 +32,9 @@ const RES_GO = [
   [ 'https://go.dev/dl/go1.25.7.linux-arm64.tar.gz', 'ba611a53534135a81067240eff9508cd7e256c560edd5d8c2fef54f083c07129' ]
 ]
 // update at 2025/06/03, check: ".github/check-layer-package-latest.js"
-const RES_F_BIT_DEB12 = [
-  [ 'https://packages.fluentbit.io/debian/bookworm/pool/main/f/fluent-bit/fluent-bit_3.2.10_amd64.deb', 'e9959ebce2e1aede5033caf686951d9b91d0d01833808290d9db6bbe79defc02' ],
-  [ 'https://packages.fluentbit.io/debian/bookworm/pool/main/f/fluent-bit/fluent-bit_3.2.10_arm64.deb', 'dd70e11002f035e53a13d7d8475b64270068ff106b402ea7cecaf3a8f5529b8a' ]
+const RES_F_BIT_DEB13 = [
+  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_3.2.10_amd64.deb', 'e9959ebce2e1aede5033caf686951d9b91d0d01833808290d9db6bbe79defc02' ],
+  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_3.2.10_arm64.deb', 'dd70e11002f035e53a13d7d8475b64270068ff106b402ea7cecaf3a8f5529b8a' ]
 ]
 // update at 2025/12/19, from: https://www.ruby-lang.org/en/downloads/releases/
 const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.gz', '53c4ddad41fbb6189f1f5ee0db57a51d54bd1f87f8755b3d68604156a35b045b' ] ]
@@ -52,12 +52,12 @@ const RES_BROWSER = [ // [ "v24.37.5", { "chrome": "145.0.7632.77", "firefox": "
 ]
 
 module.exports = {
-  RES_CORE_DEB12,
+  RES_CORE_DEB13,
 
   RES_NODE,
   RES_NGINX,
   RES_GO,
-  RES_F_BIT_DEB12,
+  RES_F_BIT_DEB13,
 
   RES_RUBY3,
 

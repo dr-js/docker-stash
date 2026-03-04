@@ -4,7 +4,7 @@ const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const {
   DOCKER_BUILD_ARCH_INFO_LIST,
-  DEBIAN12_BUILD_REPO, DEBIAN12_BUILD_REPO_GHCR, DEBIAN12_BUILD_FLAVOR_LIST, loadDebian12TagCore,
+  DEBIAN13_BUILD_REPO, DEBIAN13_BUILD_REPO_GHCR, DEBIAN13_BUILD_FLAVOR_LIST, loadDebian13TagCore,
   TAG_LAYER_CACHE
 } = require('../function.js')
 
@@ -29,18 +29,18 @@ runKit(async (kit) => {
   const hasTarget = (target) => PUSH_TARGET_MAP[ PUSH_TARGET ].includes(target)
 
   const { version: BUILD_VERSION } = require(kit.fromRoot('package.json'))
-  const toGitHubTag = (tag) => tag.replace(DEBIAN12_BUILD_REPO, DEBIAN12_BUILD_REPO_GHCR)
+  const toGitHubTag = (tag) => tag.replace(DEBIAN13_BUILD_REPO, DEBIAN13_BUILD_REPO_GHCR)
 
   const TAG_LIST_BASE = [
-    loadDebian12TagCore(''), ...DEBIAN12_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN12_BUILD_REPO}:12-${flavorName}-${BUILD_VERSION}`)
+    loadDebian13TagCore(''), ...DEBIAN13_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN13_BUILD_REPO}:13-${flavorName}-${BUILD_VERSION}`)
   ]
   const TAG_LIST_BASE_CACHE = [ // only use cache from BASE for now
-    ...DEBIAN12_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN12_BUILD_REPO}:12-${flavorName}-${TAG_LAYER_CACHE}`)
+    ...DEBIAN13_BUILD_FLAVOR_LIST.map(({ NAME: flavorName }) => `${DEBIAN13_BUILD_REPO}:13-${flavorName}-${TAG_LAYER_CACHE}`)
   ]
   const TAG_LIST_GHCR = TAG_LIST_BASE.map(toGitHubTag)
 
   if (hasTarget('GHCR')) {
-    kit.padLog(`re-tag to: ${DEBIAN12_BUILD_REPO_GHCR}`)
+    kit.padLog(`re-tag to: ${DEBIAN13_BUILD_REPO_GHCR}`)
     for (const tag of TAG_LIST_BASE) runDockerSync([ 'image', 'tag', toArch(tag), toGitHubTag(toArch(tag)) ])
   }
 
@@ -52,4 +52,4 @@ runKit(async (kit) => {
     kit.log(`push tag: ${toArch(tag)}`)
     runDockerSync([ 'image', 'push', toArch(tag) ])
   }
-}, { title: 'push-debian12' })
+}, { title: 'push-debian13' })

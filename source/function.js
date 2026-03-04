@@ -16,20 +16,20 @@ const DOCKER_BUILD_ARCH_INFO_LIST = [
   { key: 'arm64', node: 'arm64', docker: 'linux/arm64', debian: 'arm64', debianLibName: 'aarch64-linux-gnu' }
 ]
 
-const DEBIAN12_BUILD_REPO = require('./debian12/BUILD_REPO.json')
-const DEBIAN12_BUILD_REPO_GHCR = require('./debian12/BUILD_REPO_GHCR.json')
-const DEBIAN12_BUILD_FLAVOR_MAP = require('./debian12/BUILD_FLAVOR_MAP.json')
-const DEBIAN12_BUILD_FLAVOR_LIST = Object.values(DEBIAN12_BUILD_FLAVOR_MAP)
+const DEBIAN13_BUILD_REPO = require('./debian13/BUILD_REPO.json')
+const DEBIAN13_BUILD_REPO_GHCR = require('./debian13/BUILD_REPO_GHCR.json')
+const DEBIAN13_BUILD_FLAVOR_MAP = require('./debian13/BUILD_FLAVOR_MAP.json')
+const DEBIAN13_BUILD_FLAVOR_LIST = Object.values(DEBIAN13_BUILD_FLAVOR_MAP)
 
-const saveDebian12TagCore = (tag) => writeJSONSync(resolve(__dirname, 'debian12/TAG_CORE.json'), tag)
-const loadDebian12TagCore = () => readJSONSync(resolve(__dirname, 'debian12/TAG_CORE.json'))
-const verifyDebian12BuildArg = ({ BUILD_FLAVOR_NAME }) => {
-  oneOf(BUILD_FLAVOR_NAME, DEBIAN12_BUILD_FLAVOR_LIST.map(({ NAME }) => NAME))
-  const BUILD_FLAVOR = DEBIAN12_BUILD_FLAVOR_LIST.find(({ NAME }) => BUILD_FLAVOR_NAME === NAME)
-  const getFlavoredTag = (name, version = PACKAGE_VERSION) => `12-${name}-${version}`
+const saveDebian13TagCore = (tag) => writeJSONSync(resolve(__dirname, 'debian13/TAG_CORE.json'), tag)
+const loadDebian13TagCore = () => readJSONSync(resolve(__dirname, 'debian13/TAG_CORE.json'))
+const verifyDebian13BuildArg = ({ BUILD_FLAVOR_NAME }) => {
+  oneOf(BUILD_FLAVOR_NAME, DEBIAN13_BUILD_FLAVOR_LIST.map(({ NAME }) => NAME))
+  const BUILD_FLAVOR = DEBIAN13_BUILD_FLAVOR_LIST.find(({ NAME }) => BUILD_FLAVOR_NAME === NAME)
+  const getFlavoredTag = (name, version = PACKAGE_VERSION) => `13-${name}-${version}`
   const getFlavoredImageTag = (name, version = PACKAGE_VERSION) => name === '@CORE'
-    ? loadDebian12TagCore()
-    : `${DEBIAN12_BUILD_REPO}:${getFlavoredTag(name, version)}`
+    ? loadDebian13TagCore()
+    : `${DEBIAN13_BUILD_REPO}:${getFlavoredTag(name, version)}`
   return {
     BUILD_FLAVOR,
     getFlavoredTag, getFlavoredImageTag
@@ -108,9 +108,9 @@ const TAG_LAYER_MAIN_CACHE = [ tagVersionMajor, 'latest' ].filter(Boolean).join(
 module.exports = {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
 
-  DEBIAN12_BUILD_REPO, DEBIAN12_BUILD_REPO_GHCR,
-  DEBIAN12_BUILD_FLAVOR_MAP, DEBIAN12_BUILD_FLAVOR_LIST,
-  saveDebian12TagCore, loadDebian12TagCore, verifyDebian12BuildArg,
+  DEBIAN13_BUILD_REPO, DEBIAN13_BUILD_REPO_GHCR,
+  DEBIAN13_BUILD_FLAVOR_MAP, DEBIAN13_BUILD_FLAVOR_LIST,
+  saveDebian13TagCore, loadDebian13TagCore, verifyDebian13BuildArg,
 
   fetchGitHubBufferMapWithLocalCache, fetchFileListWithLocalCache,
   TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
