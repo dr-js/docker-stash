@@ -6,8 +6,8 @@ apt-update
   apt-install \
     sudo \
     procps $(: "provide ps|free|top|uptime|... commands, check: https://packages.debian.org/buster/procps") \
-    less nano htop lsof screen vim-tiny \
-    wget curl iproute2 iputils-ping netcat-openbsd \
+    less nano htop lsof screen \
+    curl iproute2 iputils-ping netcat-openbsd \
     zip unzip xz-utils p7zip-full $(: "tar gzip is already installed")
 apt-clear
 
@@ -21,8 +21,6 @@ nano --version
 htop --version
 lsof -v # to allow htop list process open files
 screen -v # allow backgrounding
-vi --version # from `vim-tiny`, strangely not linked as `vim`
-wget --version
 curl --version
 ip -Version # from `iproute2`
 ss -version # from `iproute2`
