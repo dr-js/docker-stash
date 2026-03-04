@@ -96,7 +96,7 @@ const getFirefoxDeb = async (pkgName = 'firefox') => {
 const log = (pkgDlList) => {
   for (const { pkgName, dlArch, dlUrl, dlSha256 } of pkgDlList) {
     console.log(`  // <${dlArch}> ${pkgName}`)
-    console.log(`  [ '${dlUrl}', '${dlSha256}' ]`)
+    console.log(`  [ '${dlUrl}', '${dlSha256}' ],`)
   }
 }
 
