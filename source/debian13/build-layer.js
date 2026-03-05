@@ -35,11 +35,11 @@ runKit(async (kit) => {
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
     const appendCommandList = [
       // https://github.com/puppeteer/puppeteer/blob/puppeteer-core-v24.10.0/docs/api/puppeteer.configuration.md
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && 'ENV PUPPETEER_SKIP_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && 'ENV PUPPETEER_SKIP_CHROME_HEADLESS_SHELL_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && 'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chrome-headless-shell', // Specifies an executable path to be used in puppeteer.launch.
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && 'ENV PUPPETEER_BROWSER=chrome',
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && 'ENV HOME=/tmp'
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_SKIP_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_SKIP_CHROME_HEADLESS_SHELL_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chrome-headless-shell', // Specifies an executable path to be used in puppeteer.launch.
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_BROWSER=chrome',
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV HOME=/tmp'
     ].filter(Boolean)
     await writeText(
       kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
@@ -52,7 +52,7 @@ runKit(async (kit) => {
   for (const file of [
     '0-0-base.sh',
     '0-1-base-apt.sh',
-    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && '0-3-base-ruby.sh',
+    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_RBY3 && '0-3-base-ruby.sh',
     BUILD_FLAVOR.LAYER_SCRIPT,
     BUILD_FLAVOR.LAYER_DEP_BUILD_SCRIPT
   ].filter(Boolean)) await modifyCopy(kit.fromRoot(__dirname, 'build-layer-script/', file), kit.fromOutput(PATH_BUILD, 'build-layer-script/', file))
@@ -60,20 +60,20 @@ runKit(async (kit) => {
   kit.padLog('assemble "build-layer-resource/"')
   await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
   for (const [ text, file ] of [
-    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_PPTR2603 && [ PPTR_VER, 'PUPPETEER_VERSION.txt' ]
+    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && [ PPTR_VER, 'PUPPETEER_VERSION.txt' ]
   ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
   await fetchFileListWithLocalCache([
-    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_NODE : []),
-    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? RES_NGINX : []),
-    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_FLUENT_BIT ? RES_F_BIT_DEB13 : []),
-    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_DEP_FIREFOX ? RES_FIREFOX : []),
-    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 ? RES_RUBY3 : []),
-    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_RUBY3_GO ? RES_GO : [])
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_NODE ? RES_NODE : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_NGNX ? RES_NGINX : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_FBIT ? RES_F_BIT_DEB13 : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_FRFX ? RES_FIREFOX : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_RBY3 ? RES_RUBY3 : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_GO__ ? RES_GO : [])
   ], {
     pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),
     pathCache: kit.fromTemp('debian13', 'layer-url')
   })
-  BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_DEP_CHROMIUM_HEADLESS_SHELL && await prepareChromeHeadlessShellWithLocalCache({
+  BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_C_HS && await prepareChromeHeadlessShellWithLocalCache({
     fileOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/', 'chrome-headless-shell.tar'),
     pathCache: kit.fromTemp('debian13', 'layer-file')
   })
@@ -120,7 +120,7 @@ RUN \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
 ${appendCommandList.join('\n')}`
   : `# syntax = ${BUILDKIT_SYNTAX}
-FROM ${getFlavoredImageTag(DEBIAN13_BUILD_FLAVOR_MAP.FLAVOR_DEP_BUILD.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS dep-build-layer
+FROM ${getFlavoredImageTag(DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_BULD.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS dep-build-layer
 RUN \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-0,target=/var/log \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-1,target=/var/cache \\

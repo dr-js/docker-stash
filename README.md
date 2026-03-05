@@ -33,21 +33,21 @@ Most build resource file is cached locally,
 Current layer stack:
 ```
 debian:13-core (80M uncompressed)
-└─node (135M)
+└─bin-node (135M)
   └─bin-common (35M)
-    ├─dep-build (230M)
     └─bin-sshd (10M)
-      └─bin-nginx (2M)
-        └─bin-git (35M)
-          └─bin-etc (3M)
-            └─fluent-bit (70M)
-              ├─dep-font (155M)
-              | └─pptr2603 (20M)
-              |   └─dep-chromium-headless-shell (225M)
-              |     └─dep-firefox (390M)
-              └─java (210M)
-                └─ruby3 (75M)
-                  └─ruby3-go (210M)
+      └─bin-etc (3M)
+        ├─bin-git (35M)
+        | └─bin-ruby3 (75M)
+        |   └─bin-java (210M)
+        |     ├─bin-go (210M)
+        |     | └─bin-build (230M) ──╮
+        |     └─bin-nginx (2M) ⏴─────╯ used to build
+        |       └─bin-fluent-bit (70M)
+        └─dep-font (155M)
+          └─dep-pptr2603 (20M)
+            └─bin-chrome-headless-shell (225M)
+              └─bin-firefox (390M)
 ```
 
 

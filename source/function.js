@@ -18,7 +18,7 @@ const DOCKER_BUILD_ARCH_INFO_LIST = [
 
 const DEBIAN13_BUILD_REPO = require('./debian13/BUILD_REPO.json')
 const DEBIAN13_BUILD_REPO_GHCR = require('./debian13/BUILD_REPO_GHCR.json')
-const DEBIAN13_BUILD_FLAVOR_MAP = require('./debian13/BUILD_FLAVOR_MAP.json')
+const DEBIAN13_BUILD_FLAVOR_MAP = require('./debian13/BUILD_FLAVOR_MAP.js').BUILD_FLAVOR_MAP
 const DEBIAN13_BUILD_FLAVOR_LIST = Object.values(DEBIAN13_BUILD_FLAVOR_MAP)
 
 const saveDebian13TagCore = (tag) => writeJSONSync(resolve(__dirname, 'debian13/TAG_CORE.json'), tag)
