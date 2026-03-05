@@ -25,3 +25,5 @@ mkdir -p "${PUPPETEER_ROOT}"
 
 # symlink
 ln -sfT "${PUPPETEER_ROOT}" "/media/node-pptr"
+
+rm -r /tmp/node-compile-cache/ # drop module compilation cache since nodejs@22

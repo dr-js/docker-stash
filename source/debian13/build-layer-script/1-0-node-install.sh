@@ -44,3 +44,5 @@ npm --version
 npm config get cache # should be "/root/.npm/"
 dr-js --version
 dr-dev --version
+
+rm -r /tmp/node-compile-cache/ # drop module compilation cache since nodejs@22
