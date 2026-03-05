@@ -2,6 +2,9 @@
 
 keep list of notable break & big code change
 
+- `0.5.0-dev.1`
+  - BREAK: layer: mass sort layer order & name
+  - DEV-BREAK: layer: bin-git: install base git without perl for size reduce
 - `0.5.0-dev.0`
   - BREAK: layer: reorder & provide `pptr2603|dep-chromium-headless-shell`
   - DEV-BREAK: layer: move `rsync` to `bin-common`
