@@ -39,10 +39,11 @@ npm cache clean --force
 dr-dev --package-trim-node-modules /usr/lib/node_modules/
 
 # log version & info
+set -o pipefail
 node --version
 npm --version
 npm config get cache # should be "/root/.npm/"
-dr-js --version
-dr-dev --version
+dr-js --version | grep "packageVersion"
+dr-dev --version | grep "packageVersion"
 
 rm -r /tmp/node-compile-cache/ # drop module compilation cache since nodejs@22

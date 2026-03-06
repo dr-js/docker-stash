@@ -13,22 +13,23 @@ apt-update
 apt-clear
 
 # log version & info
-sudo --version
+set -o pipefail
+sudo --version | sed -n '1,4p'
 ps --version # from `procps`
 free --version # from `procps`
 top --version # from `procps`
-less --version
+less --version | sed -n '1p'
 nano --version
 htop --version
-lsof -v # to allow htop list process open files
+lsof -v 2>&1 | sed -n '1,2p' # to allow htop list process open files
 screen --version # allow backgrounding
 curl --version
 ip -Version # from `iproute2`
 ss -version # from `iproute2`
 ping4 -V # from `iputils-ping`
-nc -help
-rsync --version
-zip --version
-unzip -v
+nc -help 2>&1 | sed -n '1p'
+rsync --version | sed -n '1p'
+zip --version | sed -n '1,2p'
+unzip -v | sed -n '1p'
 xz --version
-7z --help
+7z --help | sed -n '1,3p'

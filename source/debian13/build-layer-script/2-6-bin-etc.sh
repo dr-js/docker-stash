@@ -8,5 +8,6 @@ apt-update
 apt-clear
 
 # log version & info
-rsyslogd -v
-logrotate --version
+set -o pipefail
+rsyslogd -v | sed -n '1p'
+logrotate --version | sed -n '1p'

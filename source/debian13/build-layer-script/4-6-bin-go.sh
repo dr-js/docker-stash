@@ -13,5 +13,6 @@ ln -sfT "/usr/local/go/bin/go" "/usr/bin/go"
 ln -sfT "/usr/local/go/bin/gofmt" "/usr/bin/gofmt"
 
 # log version & info
+set -o pipefail
 go version
-gofmt --help
+gofmt --help 2>&1 | sed -n '1p' # test command usable

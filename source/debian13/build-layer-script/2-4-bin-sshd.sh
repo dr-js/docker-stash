@@ -8,4 +8,4 @@ apt-clear
 
 # log version & info
 ssh -V
-sshd -V || true # sshd do not have a "version" option
+sshd -V

@@ -20,3 +20,6 @@ if ldd /usr/bin/chrome-headless-shell | grep "not found"
 then ldd /usr/bin/chrome-headless-shell && false # log what's wrong & return error
 else echo "[ldd pass: chrome-headless-shell]"
 fi
+
+# log version & info
+/usr/bin/chrome-headless-shell --version

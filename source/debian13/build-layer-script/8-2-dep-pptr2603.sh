@@ -26,4 +26,7 @@ mkdir -p "${PUPPETEER_ROOT}"
 # symlink
 ln -sfT "${PUPPETEER_ROOT}" "/media/node-pptr"
 
+# log version & info
+node -p "require('/media/node-pptr/node_modules/puppeteer-core/package.json').version"
+
 rm -r /tmp/node-compile-cache/ # drop module compilation cache since nodejs@22

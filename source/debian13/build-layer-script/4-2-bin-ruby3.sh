@@ -80,5 +80,5 @@ dr-dev --package-trim-ruby-gem /usr/local/lib/ruby/gems/*/gems/
 
 # log version & info
 ruby --version
-gem env
+# gem env # just check below output
 bundle env
