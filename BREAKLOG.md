@@ -2,6 +2,8 @@
 
 keep list of notable break & big code change
 
+- `0.5.0-dev.2`
+  - DEV-BREAK: core: drop `WORKDIR /root/`
 - `0.5.0-dev.1`
   - BREAK: layer: mass sort layer order & name
   - DEV-BREAK: layer: bin-git: install base git without perl for size reduce
