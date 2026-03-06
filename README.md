@@ -44,6 +44,9 @@ debian:13-core (80M uncompressed)
         |     | └─bin-build (230M) ──╮
         |     └─bin-nginx (2M) ⏴─────╯ used to build
         |       └─bin-fluent-bit (70M)
+        |         └─bin-vips (90M)
+        |           └─dep-database (1M)
+        |             └─bin-aapt (10M)
         └─dep-font (155M)
           └─dep-pptr2603 (20M)
             └─bin-chrome-headless-shell (225M)

@@ -12,6 +12,9 @@ const BUILD_FLAVOR_MAP = {
 
   'F_BIN_NGNX': { 'NAME': 'bin-nginx', 'BASE_IMAGE': 'bin-java', 'LAYER_SCRIPT': '6-0-bin-nginx.2-check.sh', 'LAYER_DEP_BUILD_SCRIPT': '6-0-bin-nginx.0-build.sh', 'DEP_BUILD_COPY': '/usr/local/bin/nginx' },
   'F_BIN_FBIT': { 'NAME': 'bin-fluent-bit', 'BASE_IMAGE': 'bin-nginx', 'LAYER_SCRIPT': '6-2-bin-fluent-bit.sh' },
+  'F_BIN_VIPS': { 'NAME': 'bin-vips', 'BASE_IMAGE': 'bin-fluent-bit', 'LAYER_SCRIPT': '6-4-bin-vips.sh' },
+  'F_DEP_DTBS': { 'NAME': 'dep-database', 'BASE_IMAGE': 'bin-vips', 'LAYER_SCRIPT': '6-6-dep-database.sh' },
+  'F_BIN_AAPT': { 'NAME': 'bin-aapt', 'BASE_IMAGE': 'dep-database', 'LAYER_SCRIPT': '6-8-bin-aapt.sh' },
 
   'F_DEP_FONT': { 'NAME': 'dep-font', 'BASE_IMAGE': 'bin-etc', 'LAYER_SCRIPT': '8-0-dep-font.sh' },
   'F_DEP_PPTR': { 'NAME': 'dep-pptr2603', 'BASE_IMAGE': 'dep-font', 'LAYER_SCRIPT': '8-2-dep-pptr2603.sh' },
