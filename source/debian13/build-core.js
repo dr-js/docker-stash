@@ -170,7 +170,6 @@ LABEL arg.DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
 ENV DOCKER_BUILD_ARCH=${JSON.stringify(DOCKER_BUILD_ARCH_INFO.key)}
 ENV LANG C.UTF-8
 ENV LC_ALL C.UTF-8
-WORKDIR /root/
 SHELL [ "/bin/bash", "-c" ]
 CMD [ "bash" ]
 `
