@@ -1,39 +1,41 @@
 {
   "private": true,
   "name": "docker-stash",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "A collection of strange functions, for development",
   "author": "dr-js",
   "license": "MIT",
   "repository": "github:dr-js/docker-stash",
   "scripts": {
-    "// repo ========================": "",
+    "// repo ===================": "",
     "version-bump": "dr-dev --version-bump-git-branch --git-commit --debug",
     "tag-push": "dr-dev --version-bump-push-check --git-commit",
-    "// build =======================": "",
-    "build-debian12": "node source/debian12/build.js",
-    "build-debian12-core": "node source/debian12/build-core.js",
-    "build-debian12-layer": "node source/debian12/build-layer.js ruby3",
-    "// push ========================": "",
-    "push-debian12-all": "node source/debian12/push.js ALL",
-    "push-debian12-manifest-all": "node source/debian12/push-manifest.js ALL",
-    "// docker ======================": "",
+    "// build ==================": "",
+    "build-debian13": "node source/debian13/build.js",
+    "build-debian13-core": "node source/debian13/build-core.js",
+    "build-debian13-layer": "node source/debian13/build-layer.js bin-git",
+    "// push ===================": "",
+    "push-debian13-all": "node source/debian13/push.js ALL",
+    "push-debian13-manifest-all": "node source/debian13/push-manifest.js ALL",
+    "// docker =================": "",
     "docker-pre-pull-buildkit": "sudo docker image pull \"$(node -p \"require('./source/function.js').BUILDKIT_SYNTAX\")\"",
     "docker-prune": "node source/docker-prune.js",
     "docker-ls": "node source/docker-ls.js",
-    "// =============================": "",
+    "// tooling ================": "",
+    "lint": "biome lint",
+    "// ========================": "",
     "fix-script-filemode": "bash -c '(shopt -s globstar && chmod --changes +x source/**/*.sh && ls -al source/**/*.sh)'",
-    "lint": "eslint ./source/",
-    "test": "npm run lint",
     "prepack": "echo \"Error: do not pack this package\" && exit 1"
   },
   "engines": {
-    "node": ">=18.12",
-    "npm": ">=8.19"
+    "node": ">=24",
+    "npm": ">=11"
   },
   "devDependencies": {
     "@dr-js/core": "^0.5.17",
-    "@dr-js/dev": "^0.5.14",
-    "@dr-js/dev-eslint": "^0.5.14"
+    "@dr-js/dev": "^0.5.14"
+  },
+  "optionalDependencies": {
+    "@biomejs/biome": "^2.4.5"
   }
 }

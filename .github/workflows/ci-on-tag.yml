@@ -1,0 +1,38 @@
+name: "ci-on-tag"
+on: { push: { tags: [ 'v*' ] } } # use `v0.0.0` tag pattern # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#onpushbranchestagsbranches-ignoretags-ignore
+jobs:
+  "build-by-arch": # job id
+    strategy: { matrix: { OS: [ "ubuntu-24.04", "ubuntu-24.04-arm" ] } }
+    runs-on: "${{ matrix.OS }}"
+    timeout-minutes: 45
+    steps:
+      - { uses: "actions/checkout@v6" } # https://github.com/actions/checkout
+      - { uses: "actions/setup-node@v6", with: { node-version: "lts/*" } } # https://github.com/actions/setup-node
+      - run: |
+          bash .github/setup-docker.sh
+          echo "$PASSWORD" | dr-js --docker -- login --username drjs --password-stdin
+          echo "$GHCR_PASSWORD" | dr-js --docker -- login --username dr-js --password-stdin ghcr.io
+        env:
+          PASSWORD: ${{ secrets.DOCKER_HUB_DRJS_PASSWORD }}
+          GHCR_PASSWORD: ${{ secrets.GHCR_DRJS_PAT_PASSWORD }}
+      - run: npm ci --ignore-scripts
+      - run: npm run lint
+      - run: npm run build-debian13
+      - run: npm run push-debian13-all
+
+  "push-manifest": # job id
+    needs: [ "build-by-arch" ] # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idneeds
+    runs-on: "ubuntu-24.04"
+    timeout-minutes: 15
+    steps:
+      - { uses: "actions/checkout@v6" } # https://github.com/actions/checkout
+      - { uses: "actions/setup-node@v6", with: { node-version: "lts/*" } } # https://github.com/actions/setup-node
+      - run: |
+          bash .github/setup-docker.sh
+          echo "$PASSWORD" | dr-js --docker -- login --username drjs --password-stdin
+          echo "$GHCR_PASSWORD" | dr-js --docker -- login --username dr-js --password-stdin ghcr.io
+        env:
+          PASSWORD: ${{ secrets.DOCKER_HUB_DRJS_PASSWORD }}
+          GHCR_PASSWORD: ${{ secrets.GHCR_DRJS_PAT_PASSWORD }}
+      - run: npm ci --ignore-scripts --omit=optional
+      - run: npm run push-debian13-manifest-all

@@ -4,7 +4,6 @@ source ./0-3-base-ruby.sh
 
 # MNT
 MNT_TGZ_RUBY="$(echo /mnt/build-layer-resource/ruby-*.tar.gz)"
-MNT_TGZ_OSSL="$(echo /mnt/build-layer-resource/openssl-1.1*.tar.gz)"
 
 apt-update
   # mostly borrowed from: https://github.com/docker-library/ruby/blob/master/2.5/buster/Dockerfile
@@ -25,39 +24,17 @@ apt-update
 
     # https://github.com/rbenv/ruby-build/wiki#suggested-build-environment
     apt-install \
-      autoconf bison make gcc \
-      $(: "libssl-dev        libssl3 # ruby2 need openssl1.1, but debian12 only provide openssl3") \
+      autoconf bison make gcc dpkg-dev \
+      rustc \
+      libssl-dev        libssl3t64 \
       libyaml-dev       libyaml-0-2 \
-      libreadline-dev   libreadline8 \
+      libreadline-dev   libreadline8t64 \
       zlib1g-dev        zlib1g \
       libncurses-dev    libncurses6 \
       libffi-dev        libffi8 \
-      libgdbm-dev       libgdbm6 \
+      libgdbm-dev       libgdbm6t64 \
       libgmp-dev        libgmp10 \
-      libdb-dev         libdb5.3
-
-    # manual build openssl1.1 on Deb12, check: https://github.com/rbenv/ruby-build/discussions/1940#discussioncomment-3724881
-    ( PATH_OSSL_BUILD="/root/.build-ossl"
-      rm -rf "${PATH_OSSL_BUILD}"
-      mkdir -p "${PATH_OSSL_BUILD}"
-      tar -xf "${MNT_TGZ_OSSL}" \
-        -C "${PATH_OSSL_BUILD}" \
-        --strip-components=1
-      ( cd "${PATH_OSSL_BUILD}"
-        ./config
-        make -j "$(nproc)"
-        make install
-      )
-
-      # use system ssl config (`--openssldir` in config, check `OpenSSL::Config::DEFAULT_CONFIG_FILE` in irb)
-      # default path "/usr/local/ssl/" has no certs
-      rm -rf /usr/local/ssl/
-      ln -sfT /usr/lib/ssl /usr/local/ssl
-
-      # rm -rf /usr/local/include/openssl/ # keep for later vendor build
-      rm -rf /usr/local/share/doc/openssl/
-      rm -rf /usr/local/share/man/*
-    )
+      libdb-dev         libdb5.3t64
 
     mkdir -p /usr/local/etc/
     echo "install: --no-document" >> /usr/local/etc/gemrc
@@ -68,7 +45,8 @@ apt-update
     ./configure \
       --build="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
       --disable-install-doc \
-      --enable-shared
+      --enable-shared \
+      --enable-yjit
 
     make -j "$(nproc)"
     make install
@@ -76,8 +54,9 @@ apt-update
   rm -rf "${PATH_RUBY_BUILD}"
 
   apt-remove \
-      autoconf bison make gcc \
-      $(: "libssl-dev") \
+      autoconf bison make gcc dpkg-dev \
+      rustc \
+      libssl-dev \
       libyaml-dev \
       libreadline-dev \
       zlib1g-dev \
@@ -92,8 +71,8 @@ apt-update
   ruby -r rbconfig -e "puts RbConfig::CONFIG['LIBS']"
 apt-clear
 
-# gem # gem@3.4.22 bundler@2.4.22
-  gem install rubygems-update -v 3.4.22 --no-document && update_rubygems # gem update --no-document --system # NOTE: v3.5 requires ruby@3, https://github.com/rubygems/rubygems/issues/2534
+# gem # gem@3.7.2 bundler@2.7.2
+  gem install rubygems-update -v 3.7.2 --no-document && update_rubygems # gem update --no-document --system # NOTE: to lock down bundler version
   gem-uninstall rubygems-update # remove gem update dependency
 gem-clear
 
@@ -101,5 +80,5 @@ dr-dev --package-trim-ruby-gem /usr/local/lib/ruby/gems/*/gems/
 
 # log version & info
 ruby --version
-gem env
+# gem env # just check below output
 bundle env

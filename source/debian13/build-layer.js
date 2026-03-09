@@ -4,13 +4,14 @@ const { modifyCopy } = require('@dr-js/core/library/node/fs/Modify.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
-const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB12, RES_RUBY2, RES_RUBY3, PPTR_VER, PPTR_VER_ARM64_DEB12 } = require('../res-list.js')
+const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB13, RES_RUBY3, PPTR_VER, RES_FIREFOX } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
-  DEBIAN12_BUILD_FLAVOR_MAP, verifyDebian12BuildArg,
+  DEBIAN13_BUILD_FLAVOR_MAP, verifyDebian13BuildArg,
   fetchFileListWithLocalCache,
-  TAG_LAYER_CACHE // , TAG_LAYER_MAIN_CACHE
+  TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
 } = require('../function.js')
+const { prepareChromeHeadlessShellWithLocalCache } = require('../function.chrome-headless-shell.js')
 
 const [
   , // node
@@ -19,10 +20,10 @@ const [
 ] = process.argv
 
 runKit(async (kit) => {
-  const { BUILD_FLAVOR, getFlavoredTag, getFlavoredImageTag } = verifyDebian12BuildArg({ BUILD_FLAVOR_NAME })
+  const { BUILD_FLAVOR, getFlavoredTag, getFlavoredImageTag } = verifyDebian13BuildArg({ BUILD_FLAVOR_NAME })
 
   const BUILD_TAG = getFlavoredTag(BUILD_FLAVOR.NAME)
-  const PATH_BUILD = kit.fromOutput('debian12-layer', BUILD_FLAVOR.NAME) // leave less file around
+  const PATH_BUILD = kit.fromOutput('debian13-layer', BUILD_FLAVOR.NAME) // leave less file around
 
   kit.padLog('build config')
   kit.log('BUILD_TAG:', BUILD_TAG)
@@ -33,11 +34,12 @@ runKit(async (kit) => {
 
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
     const appendCommandList = [
-      // Tell Puppeteer to skip installing Chrome: https://github.com/puppeteer/puppeteer/blob/puppeteer-v22.12.0/docs/api/puppeteer.configuration.md
-      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV PUPPETEER_EXECUTABLE_PATH=/media/node-pptr2208-bin',
-      // Fix for pptr v22 launch error: https://github.com/puppeteer/puppeteer/issues/11023#issuecomment-1776247197
-      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV XDG_CONFIG_HOME=/tmp/.pptr',
-      BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && 'ENV XDG_CACHE_HOME=/tmp/.pptr'
+      // https://github.com/puppeteer/puppeteer/blob/puppeteer-core-v24.10.0/docs/api/puppeteer.configuration.md
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_SKIP_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_SKIP_CHROME_HEADLESS_SHELL_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chrome-headless-shell', // Specifies an executable path to be used in puppeteer.launch.
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_BROWSER=chrome',
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV HOME=/tmp'
     ].filter(Boolean)
     await writeText(
       kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
@@ -50,8 +52,7 @@ runKit(async (kit) => {
   for (const file of [
     '0-0-base.sh',
     '0-1-base-apt.sh',
-    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY2 && '0-3-base-ruby.sh',
-    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 && '0-3-base-ruby.sh',
+    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_RBY3 && '0-3-base-ruby.sh',
     BUILD_FLAVOR.LAYER_SCRIPT,
     BUILD_FLAVOR.LAYER_DEP_BUILD_SCRIPT
   ].filter(Boolean)) await modifyCopy(kit.fromRoot(__dirname, 'build-layer-script/', file), kit.fromOutput(PATH_BUILD, 'build-layer-script/', file))
@@ -59,40 +60,39 @@ runKit(async (kit) => {
   kit.padLog('assemble "build-layer-resource/"')
   await resetDirectory(kit.fromOutput(PATH_BUILD, 'build-layer-resource/'))
   for (const [ text, file ] of [
-    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && [ PPTR_VER, 'PUPPETEER_VERSION.txt' ],
-    BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE_PPTR2208 && [ PPTR_VER_ARM64_DEB12, 'PUPPETEER_VERSION_ARM64.txt' ]
+    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && [ PPTR_VER, 'PUPPETEER_VERSION.txt' ]
   ].filter(Boolean)) await writeText(kit.fromOutput(PATH_BUILD, 'build-layer-resource/', file), text)
   await fetchFileListWithLocalCache([
-    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_NODE ? RES_NODE : []),
-    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_BIN_NGINX ? RES_NGINX : []),
-    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_FLUENT_BIT ? RES_F_BIT_DEB12 : []),
-    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY2 ? RES_RUBY2 : []),
-    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY2_GO ? RES_GO : []),
-    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3 ? RES_RUBY3 : []),
-    ...(BUILD_FLAVOR === DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_RUBY3_GO ? RES_GO : [])
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_NODE ? RES_NODE : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_NGNX ? RES_NGINX : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_FBIT ? RES_F_BIT_DEB13 : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_FRFX ? RES_FIREFOX : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_RBY3 ? RES_RUBY3 : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_GO__ ? RES_GO : [])
   ], {
     pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),
-    pathCache: kit.fromTemp('debian12', 'layer-url')
+    pathCache: kit.fromTemp('debian13', 'layer-url')
+  })
+  BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_C_HS && await prepareChromeHeadlessShellWithLocalCache({
+    fileOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/', 'chrome-headless-shell.tar'),
+    pathCache: kit.fromTemp('debian13', 'layer-file')
   })
 
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
     if (DOCKER_BUILD_ARCH_INFO.node !== process.arch) continue
     kit.padLog(`build image for ${DOCKER_BUILD_ARCH_INFO.key}`)
 
-    const PATH_LOG = kit.fromOutput('debian12-layer', `${BUILD_FLAVOR.NAME}.${DOCKER_BUILD_ARCH_INFO.key}.log`) // leave less file around
+    const PATH_LOG = kit.fromOutput('debian13-layer', `${BUILD_FLAVOR.NAME}.${DOCKER_BUILD_ARCH_INFO.key}.log`) // leave less file around
     kit.log('PATH_LOG:', PATH_LOG)
 
     await runDockerWithTee([
       'image', 'build',
       `--tag=${getFlavoredImageTag(BUILD_FLAVOR.NAME)}-${DOCKER_BUILD_ARCH_INFO.key}`,
       `--tag=${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}`, // NOTE: for layer to use as base, so version-bump won't change Dockerfile
-      // TODO: disable for now. a loop in cache may stack-overflow dockerd (buildkit), possibly related:
-      //   https://github.com/moby/buildkit/issues/1902
-      //   https://github.com/moby/moby/issues/40993#issuecomment-634259286
-      // `--cache-from=${[ ...new Set([ // cache tag
-      //   `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}`, // try same label first
-      //   `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_MAIN_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}` // try `main` next
-      // ]) ].join(',')}`, // https://github.com/moby/moby/issues/34715#issuecomment-425933774
+      `--cache-from=${[ ...new Set([ // cache tag
+        `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}`, // try same label first
+        `${getFlavoredImageTag(BUILD_FLAVOR.NAME, TAG_LAYER_MAIN_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}` // try `main` next
+      ]) ].join(',')}`, // https://github.com/moby/moby/issues/34715#issuecomment-425933774
       '--build-arg=BUILDKIT_INLINE_CACHE=1', // save build cache metadata // https://docs.docker.com/engine/reference/commandline/build/#specifying-external-cache-sources
       `--file=./Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`,
       `--platform=${DOCKER_BUILD_ARCH_INFO.docker}`,
@@ -117,7 +117,7 @@ RUN \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
 ${appendCommandList.join('\n')}`
   : `# syntax = ${BUILDKIT_SYNTAX}
-FROM ${getFlavoredImageTag(DEBIAN12_BUILD_FLAVOR_MAP.FLAVOR_DEP_BUILD.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS dep-build-layer
+FROM ${getFlavoredImageTag(DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_BULD.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS dep-build-layer
 RUN \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-0,target=/var/log \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-1,target=/var/cache \\
