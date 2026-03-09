@@ -40,13 +40,11 @@ debian:13-core (80M uncompressed)
         ├─bin-git (35M)
         | └─bin-ruby3 (75M)
         |   └─bin-java (210M)
-        |     ├─bin-go (210M)
-        |     | └─bin-build (230M) ──╮
-        |     └─bin-nginx (2M) ⏴─────╯ used to build
-        |       └─bin-fluent-bit (70M)
-        |         └─bin-vips (90M)
-        |           └─dep-database (1M)
-        |             └─bin-aapt (10M)
+        |     └─dep-libvips (90M)
+        |       ├─bin-go (210M)
+        |       | └─bin-build (230M) ──╮
+        |       └─bin-nginx (2M) ⏴─────╯ used to build
+        |         └─bin-fluent-bit (70M)
         └─dep-font (155M)
           └─dep-pptr2603 (20M)
             └─bin-chrome-headless-shell (225M)
