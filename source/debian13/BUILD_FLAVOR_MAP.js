@@ -1,7 +1,7 @@
 const BUILD_FLAVOR_MAP = {
-  'F_BIN_NODE': { 'NAME': 'bin-node', 'BASE_IMAGE': '@CORE', 'LAYER_SCRIPT': '2-0-bin-node.sh' },
-  'F_BIN_CMMN': { 'NAME': 'bin-common', 'BASE_IMAGE': 'bin-node', 'LAYER_SCRIPT': '2-2-bin-common.sh' },
-  'F_BIN_SSHD': { 'NAME': 'bin-sshd', 'BASE_IMAGE': 'bin-common', 'LAYER_SCRIPT': '2-4-bin-sshd.sh' },
+  'F_BIN_CMMN': { 'NAME': 'bin-common', 'BASE_IMAGE': '@CORE', 'LAYER_SCRIPT': '2-0-bin-common.sh' },
+  'F_BIN_NODE': { 'NAME': 'bin-node', 'BASE_IMAGE': 'bin-common', 'LAYER_SCRIPT': '2-2-bin-node.sh' },
+  'F_BIN_SSHD': { 'NAME': 'bin-sshd', 'BASE_IMAGE': 'bin-node', 'LAYER_SCRIPT': '2-4-bin-sshd.sh' },
   'F_BIN_ETC_': { 'NAME': 'bin-etc', 'BASE_IMAGE': 'bin-sshd', 'LAYER_SCRIPT': '2-6-bin-etc.sh' },
 
   'F_BIN_GIT_': { 'NAME': 'bin-git', 'BASE_IMAGE': 'bin-etc', 'LAYER_SCRIPT': '4-0-bin-git.sh' },

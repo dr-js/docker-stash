@@ -33,8 +33,8 @@ Most build resource file is cached locally,
 Current layer stack:
 ```
 debian:13-core (80M uncompressed)
-└─bin-node (135M)
-  └─bin-common (35M)
+└─bin-common (35M)
+  └─bin-node (135M)
     └─bin-sshd (10M)
       └─bin-etc (3M)
         ├─bin-git (35M)
