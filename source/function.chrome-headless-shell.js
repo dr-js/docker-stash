@@ -22,7 +22,7 @@ const prepareChromeHeadlessShellWithLocalCache = async ({ fileOutput, pathCache 
   await createDirectory(pathCache)
 
   const imgPlatform = process.arch === 'arm64' ? 'linux/arm64' : 'linux/amd64'
-  const fileCacheName = `${IMG_CHROMEDP}:${imgPlatform}`.replaceAll(/\W/g, '_') + '.tar'
+  const fileCacheName = `${`${IMG_CHROMEDP}:${imgPlatform}`.replaceAll(/\W/g, '_')}.tar`
   const fileCachePath = resolve(pathCache, fileCacheName)
   if (!existPathSync(fileCachePath)) {
     console.log(' - pull docker image:', IMG_CHROMEDP, imgPlatform)
