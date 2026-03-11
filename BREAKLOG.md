@@ -2,6 +2,9 @@
 
 keep list of notable break & big code change
 
+- `0.5.2`
+  - DEV-BREAK: layer: re-order `bin-common` as base layer for `bin-node`
+  - ADD: layer: `slim-nginx`
 - `0.5.0-dev.4`
   - DEV-BREAK: layer: keep only `bin-vips`
 - `0.5.0-dev.2`
