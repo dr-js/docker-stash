@@ -54,7 +54,7 @@ runKit(async (kit) => {
     '0-1-base-apt.sh',
     BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_RBY3 && '0-3-base-ruby.sh',
     BUILD_FLAVOR.LAYER_SCRIPT,
-    BUILD_FLAVOR.LAYER_DEP_BUILD_SCRIPT
+    BUILD_FLAVOR.BUILD_LAYER_SCRIPT
   ].filter(Boolean)) await modifyCopy(kit.fromRoot(__dirname, 'build-layer-script/', file), kit.fromOutput(PATH_BUILD, 'build-layer-script/', file))
 
   kit.padLog('assemble "build-layer-resource/"')
@@ -104,7 +104,7 @@ runKit(async (kit) => {
 
 const getLayerDockerfileString = ({
   DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, appendCommandList = [], getFlavoredImageTag
-}) => !BUILD_FLAVOR.LAYER_DEP_BUILD_SCRIPT
+}) => !BUILD_FLAVOR.BUILD_LAYER_SCRIPT
   ? `# syntax = ${BUILDKIT_SYNTAX}
 FROM ${getFlavoredImageTag(BUILD_FLAVOR.BASE_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}
 RUN \\
@@ -117,7 +117,7 @@ RUN \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
 ${appendCommandList.join('\n')}`
   : `# syntax = ${BUILDKIT_SYNTAX}
-FROM ${getFlavoredImageTag(DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_BULD.NAME, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS dep-build-layer
+FROM ${getFlavoredImageTag(BUILD_FLAVOR.BUILD_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS dep-build-layer
 RUN \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-0,target=/var/log \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-1,target=/var/cache \\
@@ -125,13 +125,13 @@ RUN \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-3,target=/root \\
   --mount=type=bind,target=/mnt/,source=. \\
     cd /mnt/build-layer-script/ \\
- && . ${BUILD_FLAVOR.LAYER_DEP_BUILD_SCRIPT}
+ && . ${BUILD_FLAVOR.BUILD_LAYER_SCRIPT}
 FROM ${getFlavoredImageTag(BUILD_FLAVOR.BASE_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS check-layer
-COPY --from=dep-build-layer ${BUILD_FLAVOR.DEP_BUILD_COPY} ${BUILD_FLAVOR.DEP_BUILD_COPY}
+COPY --from=dep-build-layer ${BUILD_FLAVOR.BUILD_COPY_PATH} ${BUILD_FLAVOR.BUILD_COPY_PATH}
 RUN \\
   --mount=type=bind,target=/mnt/,source=. \\
     cd /mnt/build-layer-script/ \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
 FROM ${getFlavoredImageTag(BUILD_FLAVOR.BASE_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}
-COPY --from=check-layer ${BUILD_FLAVOR.DEP_BUILD_COPY} ${BUILD_FLAVOR.DEP_BUILD_COPY}
+COPY --from=check-layer ${BUILD_FLAVOR.BUILD_COPY_PATH} ${BUILD_FLAVOR.BUILD_COPY_PATH}
 ${appendCommandList.join('\n')}`

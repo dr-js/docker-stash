@@ -11,13 +11,17 @@ const BUILD_FLAVOR_MAP = {
   'F_BIN_GO__': { 'NAME': 'bin-go', 'BASE_IMAGE': 'bin-vips', 'LAYER_SCRIPT': '4-6-bin-go.sh' },
   'F_BIN_BULD': { 'NAME': 'bin-build', 'BASE_IMAGE': 'bin-go', 'LAYER_SCRIPT': '4-8-bin-build.sh' },
 
-  'F_BIN_NGNX': { 'NAME': 'bin-nginx', 'BASE_IMAGE': 'bin-vips', 'LAYER_SCRIPT': '6-0-bin-nginx.2-check.sh', 'LAYER_DEP_BUILD_SCRIPT': '6-0-bin-nginx.0-build.sh', 'DEP_BUILD_COPY': '/usr/local/bin/nginx' },
+  'F_BIN_NGNX': { 'NAME': 'bin-nginx', 'BASE_IMAGE': 'bin-vips', 'LAYER_SCRIPT': '6-0-bin-nginx.2-check.sh',
+    'BUILD_IMAGE': 'bin-build', 'BUILD_LAYER_SCRIPT': '6-0-bin-nginx.0-build.sh', 'BUILD_COPY_PATH': '/usr/local/bin/nginx' },
   'F_BIN_FBIT': { 'NAME': 'bin-fluent-bit', 'BASE_IMAGE': 'bin-nginx', 'LAYER_SCRIPT': '6-2-bin-fluent-bit.sh' },
 
   'F_DEP_FONT': { 'NAME': 'dep-font', 'BASE_IMAGE': 'bin-etc', 'LAYER_SCRIPT': '8-0-dep-font.sh' },
   'F_DEP_PPTR': { 'NAME': 'dep-pptr2603', 'BASE_IMAGE': 'dep-font', 'LAYER_SCRIPT': '8-2-dep-pptr2603.sh' },
   'F_BIN_C_HS': { 'NAME': 'bin-chrome-headless-shell', 'BASE_IMAGE': 'dep-pptr2603', 'LAYER_SCRIPT': '8-4-bin-chrome-headless-shell.sh' },
-  'F_BIN_FRFX': { 'NAME': 'bin-firefox', 'BASE_IMAGE': 'bin-chrome-headless-shell', 'LAYER_SCRIPT': '8-6-bin-firefox.sh' }
+  'F_BIN_FRFX': { 'NAME': 'bin-firefox', 'BASE_IMAGE': 'bin-chrome-headless-shell', 'LAYER_SCRIPT': '8-6-bin-firefox.sh' },
+
+  'F_SLM_NGNX': { 'NAME': 'slim-nginx', 'BASE_IMAGE': 'bin-common', 'LAYER_SCRIPT': '6-0-bin-nginx.2-check.sh',
+    'BUILD_IMAGE': 'bin-nginx', 'BUILD_LAYER_SCRIPT': '6-0-bin-nginx.2-check.sh', 'BUILD_COPY_PATH': '/usr/local/bin/nginx' }
 }
 
 module.exports = { BUILD_FLAVOR_MAP }

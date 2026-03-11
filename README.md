@@ -34,21 +34,22 @@ Current layer stack:
 ```
 debian:13-core (80M uncompressed)
 └─bin-common (35M)
-  └─bin-node (135M)
-    └─bin-sshd (10M)
-      └─bin-etc (3M)
-        ├─bin-git (35M)
-        | └─bin-ruby3 (75M)
-        |   └─bin-java (210M)
-        |     └─dep-libvips (90M)
-        |       ├─bin-go (210M)
-        |       | └─bin-build (230M) ──╮
-        |       └─bin-nginx (2M) ⏴─────╯ used to build
-        |         └─bin-fluent-bit (70M)
-        └─dep-font (155M)
-          └─dep-pptr2603 (20M)
-            └─bin-chrome-headless-shell (225M)
-              └─bin-firefox (390M)
+  ├─bin-node (135M)
+  | └─bin-sshd (10M)
+  |   └─bin-etc (3M)
+  |     ├─bin-git (35M)
+  |     | └─bin-ruby3 (75M)
+  |     |   └─bin-java (210M)
+  |     |     └─dep-libvips (90M)
+  |     |       ├─bin-go (210M)
+  |     |       | └─bin-build (230M) ┈┈┬┈┈┈┈┈┈┈┈╮ used to build
+  |     |       └─bin-nginx (2M) ⏴┈┈┈┈┈╯        ┊
+  |     |         └─bin-fluent-bit (70M)        ┊
+  |     └─dep-font (155M)                       ┊
+  |       └─dep-pptr2603 (20M)                  ┊
+  |         └─bin-chrome-headless-shell (225M)  ┊
+  |           └─bin-firefox (390M)              ┊
+  └─slim-nginx (2M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈╯
 ```
 
 
