@@ -4,7 +4,7 @@ source ./0-1-base-apt.sh
 
 apt-update
   apt-install \
-    sudo \
+    sudo gosu \
     procps $(: "provide ps|free|top|uptime|... commands, check: https://packages.debian.org/buster/procps") \
     less nano htop lsof screen \
     curl iproute2 iputils-ping netcat-openbsd \
@@ -15,6 +15,7 @@ apt-clear
 # log version & info
 set -o pipefail
 sudo --version | sed -n '1,4p'
+gosu --version
 ps --version # from `procps`
 free --version # from `procps`
 top --version # from `procps`
