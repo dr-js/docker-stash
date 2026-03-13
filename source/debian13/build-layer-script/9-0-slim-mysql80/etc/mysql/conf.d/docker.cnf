@@ -1,0 +1,8 @@
+[mysqld]
+host_cache_size=0
+skip-name-resolve
+# performance_schema: reduce memory 300M->150M, check: https://stackoverflow.com/questions/10676753/reducing-memory-consumption-of-mysql-on-ubuntuaws-micro-instance/19116121#19116121
+performance_schema = 0
+# innodb_io_capacity*: increase io for modern SSD, the default value for MySQL 8.4 is 10000 (8.0 & 5.7 default is 200), check: https://dev.mysql.com/doc/refman/8.4/en/innodb-configuring-io-capacity.html
+innodb_io_capacity = 5000
+innodb_io_capacity_max = 20000

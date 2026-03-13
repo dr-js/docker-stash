@@ -13,7 +13,7 @@
     "// build ==================": "",
     "build-debian13": "node source/debian13/build.js",
     "build-debian13-core": "node source/debian13/build-core.js",
-    "build-debian13-layer": "node source/debian13/build-layer.js bin-git",
+    "build-debian13-layer": "node source/debian13/build-layer.js slim-mysql80",
     "// push ===================": "",
     "push-debian13-all": "node source/debian13/push.js ALL",
     "push-debian13-manifest-all": "node source/debian13/push-manifest.js ALL",

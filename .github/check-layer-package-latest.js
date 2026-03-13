@@ -28,19 +28,17 @@ const pickLatestPkg = (pkgList, pkgName = '') => pkgList
   .filter((v) => v[ 'Package' ] === pkgName) // filter out other pkg
   .sort((a, b) => -compareStringWithNumber(a[ 'Version' ], b[ 'Version' ]))[ 0 ] // get biggest version // https://www.debian.org/doc/debian-policy/ch-controlfields.html#version
 
-
 // TODO: NOTE: to bypass fastly UA checking page, need copy from browser on page like https://packages.debian.org/trixie/apt
 const EXT_HDR_DEB = { cookie: '_fs_ch_cp_79..Qv=Ae ..{REPLACE-WITH-ACTUAL-COOKIE}.. Nw==' }
 const getDebianDeb = async (dist = 'buster', pkg = '') => {
   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
   const textIndex = await getText(`https://packages.debian.org/${dist}/${pkg}`, EXT_HDR_DEB)
   // name     <h1>Package: ca-certificates (20211016)\n</h1>
+  //          <h1>Package: libjemalloc2 (5.2.1-5)\n</h1>
+  //          <h1>Package: chromium (118.0.5993.70-1~deb11u1 and others)\n [<strong class="pmarker" >security</strong>] </h1>
   // dl-url   <th><a href="/bookworm/all/ca-certificates/download">all</a></th>
-  // name     <h1>Package: libjemalloc2 (5.2.1-5)\n</h1>
-  // dl-url   <th><a href="/bookworm/amd64/libjemalloc2/download">amd64</a></th>
+  //          <th><a href="/bookworm/amd64/libjemalloc2/download">amd64</a></th>
   //          <th><a href="/bookworm/arm64/libjemalloc2/download">arm64</a></th>
-  // name     <h1>Package: chromium (118.0.5993.70-1~deb11u1 and others)
-  //            [<strong class="pmarker" >security</strong>] </h1>
   const pkgName = /<h1>Package:\s*(.+)\s*(?:\n.+)?<\/h1>/.exec(textIndex)[ 1 ]
   for (const dlArch of [
     textIndex.includes(`/${dist}/all/${pkg}/download`) && 'all',
@@ -55,6 +53,42 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
     // <tr><th>SHA256 checksum</th>\t<td><tt>d67bb6da8256863c85866059c8c2b93f1571ed7e2574b007241de35a2f0120d9</tt></td>
     // <ul><li><a href="http://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium_118.0.5993.70-1~deb11u1_amd64.deb">security.debian.org/debian-security</a></li></ul>
     const dlUrl = 'https://' + /:\/\/((?:ftp|security)\.debian\.org\/debian(?:-security)?\/pool\/.*\.deb)">/.exec(textDlPage)[ 1 ]
+    const dlSha256 = /SHA256 checksum<\/th>\s*<td><tt>(\w+)<\/tt>/.exec(textDlPage)[ 1 ]
+    pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
+  }
+  return pkgDlList
+}
+
+const getUbuntuDeb = async (dist = 'noble', pkg = '') => {
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
+  const textIndex = await getText(`https://packages.ubuntu.com/${dist}/${pkg}`)
+  // name     <h1>Package: mysql-common (5.8+1.1.0build1)\n</h1>
+  // name     <h1>Package: mysql-client-8.0 (8.0.45-0ubuntu0.24.04.1 and others)\n [<strong class="pmarker" >security</strong>] </h1>
+  // dl-url   <th><a href="/noble/all/mysql-common/download">all</a></th>
+  // dl-url   <th><a href="/noble/amd64/mysql-client-8.0/download">amd64</a></th> .. <td class='vcurrent'>8.0.45-0ubuntu0.24.04.1</td>
+  //          <th><a href="/noble/arm64/mysql-client-8.0/download">arm64</a></th> .. <td class='vold'>8.0.36-2ubuntu3</td>
+  const pkgName = /<h1>Package:\s*(.+)\s*(?:\n.+)?<\/h1>/.exec(textIndex)[ 1 ]
+  for (const dlArch of [
+    textIndex.includes(`/${dist}/all/${pkg}/download`) && 'all',
+    textIndex.includes(`/${dist}/amd64/${pkg}/download`) && 'amd64',
+    textIndex.includes(`/${dist}/arm64/${pkg}/download`) && 'arm64'
+  ].filter(Boolean)) {
+    // https://packages.ubuntu.com/noble/amd64/mysql-client-8.0/download
+    const textDlPage = await getText(`https://packages.ubuntu.com/${dist}/${dlArch}/${pkg}/download`)
+    // <p>You can download the requested file from the <tt>pool/main/m/mysql-8.0/</tt> subdirectory at:</p>
+    // <p>You can download the requested file from the <tt>pool/main/m/mysql-8.0/</tt> subdirectory at any of these sites:</p>
+    // <h3>More information on <kbd>mysql-client-core-8.0_8.0.36-2ubuntu3_arm64.deb</kbd>:</h3>
+    // <tr><th>SHA256 checksum</th>\t<td><tt>0d1275c1004a55f7886bc23adefda950e5442be228799de8520776880dd84c82</tt></td>
+    const uStub = /You can download the requested file from the <tt>(pool\/\S+)<\/tt> subdirectory at/.exec(textDlPage)[ 1 ]
+    const uDeb = /More information on <kbd>(\S+\.deb)<\/kbd>:/.exec(textDlPage)[ 1 ]
+    // TODO: need map from:  https://mirrors.kernel.org/ubuntu/pool/main/m/mysql-8.0/ (with amd64.deb & all.deb)
+    //                  or: https://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/ (with amd64.deb & all.deb)
+    //                  to:           https://ports.ubuntu.com/pool/main/m/mysql-8.0/ (with arm64.deb & all.deb)
+    //       check: https://forum.odroid.com/viewtopic.php?t=32841
+    const uPfx = dlArch === 'arm64' ? 'ports.ubuntu.com/////////'
+      : textDlPage.includes('security.ubuntu.com') ? 'security.ubuntu.com/ubuntu'
+        : 'mirrors.kernel.org/ubuntu'
+    const dlUrl = `https://${uPfx}/${uStub}${uDeb}`
     const dlSha256 = /SHA256 checksum<\/th>\s*<td><tt>(\w+)<\/tt>/.exec(textDlPage)[ 1 ]
     pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
   }
@@ -115,4 +149,10 @@ runKit(async (kit) => {
   log(await getDebianDeb('trixie', 'chromium-common'))
   kit.padLog('browser:firefox')
   log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm/trixie
+
+  kit.padLog('pkg-deb/noble')
+  log(await getUbuntuDeb('noble', 'mysql-common'))
+  log(await getUbuntuDeb('noble-updates', 'mysql-client-core-8.0'))
+  log(await getUbuntuDeb('noble-updates', 'libicu74')) // needed by `mysql-server-core-8.0` but debian/trixie use `libicu76`
+  log(await getUbuntuDeb('noble-updates', 'mysql-server-core-8.0'))
 }, { title: 'ci-patch' })

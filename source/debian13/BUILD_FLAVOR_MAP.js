@@ -21,7 +21,8 @@ const BUILD_FLAVOR_MAP = {
   'F_BIN_FRFX': { 'NAME': 'bin-firefox', 'BASE_IMAGE': 'bin-chrome-headless-shell', 'LAYER_SCRIPT': '8-6-bin-firefox.sh' },
 
   'F_SLM_NGNX': { 'NAME': 'slim-nginx', 'BASE_IMAGE': 'bin-common', 'LAYER_SCRIPT': '6-0-bin-nginx.2-check.sh',
-    'BUILD_IMAGE': 'bin-nginx', 'BUILD_LAYER_SCRIPT': '6-0-bin-nginx.2-check.sh', 'BUILD_COPY_PATH': '/usr/local/bin/nginx' }
+    'BUILD_IMAGE': 'bin-nginx', 'BUILD_LAYER_SCRIPT': '6-0-bin-nginx.2-check.sh', 'BUILD_COPY_PATH': '/usr/local/bin/nginx' },
+  'F_SLM_MYSQ': { 'NAME': 'slim-mysql80', 'BASE_IMAGE': 'bin-common', 'LAYER_SCRIPT': '9-0-slim-mysql80.sh' }
 }
 
 module.exports = { BUILD_FLAVOR_MAP }
