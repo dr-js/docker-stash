@@ -17,6 +17,7 @@ apt-update
   dpkg -i "${MNT_DEB_MYSQL_SVR}" || apt-install --fix-broken # fix missing dependencies
 apt-clear
 
+# edited from Docker Official Image: https://github.com/docker-library/mysql/blob/7a8f81aad11e871baf1dbc755dbff1652e13cba5/8.0/
 cp -r "${RES_LAYER}"/* /
 chmod +x /usr/local/bin/docker-entrypoint.sh
 
@@ -28,18 +29,9 @@ mkdir /docker-entrypoint-initdb.d/ /var/lib/mysql/ /var/run/mysqld/
 chown mysql:mysql /var/lib/mysql /var/run/mysqld
 chmod 1777 /var/lib/mysql # make data dir writable for all user
 
-if ldd /usr/bin/mysql | grep "not found"
-then ldd /usr/bin/mysql && false # log what's wrong & return error
-else echo "[ldd pass: mysql]"
-fi
-if ldd /usr/bin/mysqldump | grep "not found"
-then ldd /usr/bin/mysqldump && false # log what's wrong & return error
-else echo "[ldd pass: mysqldump]"
-fi
-if ldd /usr/sbin/mysqld | grep "not found"
-then ldd /usr/sbin/mysqld && false # log what's wrong & return error
-else echo "[ldd pass: mysqld]"
-fi
+ldd-chk /usr/bin/mysql
+ldd-chk /usr/bin/mysqldump
+ldd-chk /usr/sbin/mysqld
 
 # log version & info
 id mysql

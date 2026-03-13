@@ -72,7 +72,7 @@ apt-update
 apt-clear
 
 # gem # gem@3.7.2 bundler@2.7.2
-  gem install rubygems-update -v 3.7.2 --no-document && update_rubygems # gem update --no-document --system # NOTE: to lock down bundler version
+  gem install rubygems-update -v 3.7.2 --no-document; update_rubygems # gem update --no-document --system # NOTE: to lock down bundler version
   gem-uninstall rubygems-update # remove gem update dependency
 gem-clear
 

@@ -9,10 +9,7 @@ apt-update
   dpkg -i "${MNT_DEB_FIREFOX}" || apt-install --fix-broken # fix missing dependencies
 apt-clear
 
-if ldd /usr/bin/firefox | grep "not found"
-then ldd /usr/bin/firefox && false # log what's wrong & return error
-else echo "[ldd pass: firefox]"
-fi
+ldd-chk /usr/bin/firefox
 
 # log version & info
 /usr/bin/firefox --version

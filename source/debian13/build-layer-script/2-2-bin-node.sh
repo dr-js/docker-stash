@@ -39,7 +39,6 @@ npm cache clean --force
 dr-dev --package-trim-node-modules /usr/lib/node_modules/
 
 # log version & info
-set -o pipefail
 node --version
 npm --version
 npm config get cache # should be "/root/.npm/"

@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-set -xe # enable shell command log & exit on error
+set -xeo pipefail # enable shell command log & exit on error
 
-function make-public-readable { chmod --recursive --changes a+rX "$@"; } # make all file readable (+r), and dir content accessible (+X)
-function make-public-writable { chmod --recursive --changes a+rwX "$@"; } # make all file readable & writable (+rw), and dir content accessible (+X)
+function ldd-chk {
+  TGT_BIN="$1"
+  if ldd "${TGT_BIN}" | grep "not found"
+  then ldd "${TGT_BIN}"; exit 1 # log what's wrong & return error
+  else echo "[ldd pass: ${TGT_BIN}]"
+  fi
+}

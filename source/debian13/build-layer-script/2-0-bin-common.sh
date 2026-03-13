@@ -13,7 +13,6 @@ apt-update
 apt-clear
 
 # log version & info
-set -o pipefail
 sudo --version | sed -n '1,4p'
 gosu --version
 ps --version # from `procps`

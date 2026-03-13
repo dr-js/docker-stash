@@ -42,7 +42,7 @@ apt-update
 
   # build brotli, check: https://github.com/google/ngx_brotli/pull/150
   ( cd "${PATH_NGX_BROTLI}/deps/brotli/"
-    mkdir -p "out/" && cd "out/"
+    mkdir -p "out/"; cd "out/"
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=./installed ..
     cmake --build . --config Release --target brotlienc
     # ls -al "${PATH_NGX_BROTLI}/deps/brotli/out/"
