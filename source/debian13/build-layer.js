@@ -49,7 +49,10 @@ runKit(async (kit) => {
       BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && 'ENTRYPOINT [ "docker-entrypoint.sh" ]',
       // use modern UTF8, check: https://github.com/docker-library/docs/tree/master/mysql#configuration-without-a-cnf-file
       // and reset default auth plugin for npm `mysql@2`: https://github.com/mysqljs/mysql/pull/2233#issuecomment-805759987
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && 'CMD [ "mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-authentication-plugin=mysql_native_password" ]'
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && 'CMD [ "mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-authentication-plugin=mysql_native_password" ]',
+
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYCO && 'ENV MYSQL_ROOT_PASSWORD=""',
+      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYCO && 'ENV MYSQL_ALLOW_EMPTY_PASSWORD=yes'
     ].filter(Boolean)
     await writeText(
       kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
