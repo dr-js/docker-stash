@@ -4,7 +4,7 @@ const { modifyCopy } = require('@dr-js/core/library/node/fs/Modify.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
-const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB13, RES_RUBY3, PPTR_VER, RES_FIREFOX, RES_MYSQL80 } = require('../res-list.js')
+const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB13, RES_RUBY3, PPTR_VER, RES_FIREFOX, RES_MYSQL80, RES_REDIS6 } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN13_BUILD_FLAVOR_MAP, verifyDebian13BuildArg,
@@ -33,27 +33,9 @@ runKit(async (kit) => {
   await resetDirectory(PATH_BUILD)
 
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
-    const appendCommandList = [
-      // https://github.com/puppeteer/puppeteer/blob/puppeteer-core-v24.10.0/docs/api/puppeteer.configuration.md
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_SKIP_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_SKIP_CHROME_HEADLESS_SHELL_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chrome-headless-shell', // Specifies an executable path to be used in puppeteer.launch.
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_BROWSER=chrome',
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV HOME=/tmp',
-
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && 'ENV TZ="UTC"',
-      // NOTE: expose port 3306 only, to prevent gitlab services health-check waiting 30sec on 33060 for nothing:
-      // - https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4143#thougts
-      // - https://gitlab.com/gitlab-org/gitlab-runner/-/issues/3984#note_687063345
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && 'EXPOSE 3306',
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && 'ENTRYPOINT [ "docker-entrypoint.sh" ]',
-      // use modern UTF8, check: https://github.com/docker-library/docs/tree/master/mysql#configuration-without-a-cnf-file
-      // and reset default auth plugin for npm `mysql@2`: https://github.com/mysqljs/mysql/pull/2233#issuecomment-805759987
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && 'CMD [ "mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-authentication-plugin=mysql_native_password" ]'
-    ].filter(Boolean)
     await writeText(
       kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
-      getLayerDockerfileString({ DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, appendCommandList, getFlavoredImageTag })
+      getLayerDockerfileString({ DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, getFlavoredImageTag })
     )
   }
 
@@ -62,10 +44,9 @@ runKit(async (kit) => {
   for (const file of [
     '0-0-base.sh',
     '0-1-base-apt.sh',
-    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_RBY3 && '0-3-base-ruby.sh',
-    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && '9-0-slim-mysql80/',
     BUILD_FLAVOR.LAYER_SCRIPT,
-    BUILD_FLAVOR.BUILD_LAYER_SCRIPT
+    BUILD_FLAVOR.BUILD_LAYER_SCRIPT || '',
+    ...(BUILD_FLAVOR.LAYER_SCRIPT_EXTRA || []),
   ].filter(Boolean)) await modifyCopy(kit.fromRoot(__dirname, 'build-layer-script/', file), kit.fromOutput(PATH_BUILD, 'build-layer-script/', file))
 
   kit.padLog('assemble "build-layer-resource/"')
@@ -80,7 +61,8 @@ runKit(async (kit) => {
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_FRFX ? RES_FIREFOX : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_RBY3 ? RES_RUBY3 : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_GO__ ? RES_GO : []),
-    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ ? RES_MYSQL80 : [])
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ ? RES_MYSQL80 : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_REDS ? RES_REDIS6 : [])
   ], {
     pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),
     pathCache: kit.fromTemp('debian13', 'layer-url')
@@ -115,7 +97,7 @@ runKit(async (kit) => {
 }, { title: `build-${BUILD_FLAVOR_NAME}` })
 
 const getLayerDockerfileString = ({
-  DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, appendCommandList = [], getFlavoredImageTag
+  DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, getFlavoredImageTag
 }) => !BUILD_FLAVOR.BUILD_LAYER_SCRIPT
   ? `# syntax = ${BUILDKIT_SYNTAX}
 FROM ${getFlavoredImageTag(BUILD_FLAVOR.BASE_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}
@@ -127,9 +109,9 @@ RUN \\
   --mount=type=bind,target=/mnt/,source=. \\
     cd /mnt/build-layer-script/ \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
-${appendCommandList.join('\n')}`
+${(BUILD_FLAVOR.LAYER_COMMAND_EXTRA || []).join('\n')}`
   : `# syntax = ${BUILDKIT_SYNTAX}
-FROM ${getFlavoredImageTag(BUILD_FLAVOR.BUILD_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS dep-build-layer
+FROM ${getFlavoredImageTag(BUILD_FLAVOR.BUILD_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS build-layer
 RUN \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-0,target=/var/log \\
   --mount=type=cache,id=${DOCKER_BUILD_ARCH_INFO.key}-core-cache-1,target=/var/cache \\
@@ -139,11 +121,9 @@ RUN \\
     cd /mnt/build-layer-script/ \\
  && . ${BUILD_FLAVOR.BUILD_LAYER_SCRIPT}
 FROM ${getFlavoredImageTag(BUILD_FLAVOR.BASE_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS check-layer
-COPY --from=dep-build-layer ${BUILD_FLAVOR.BUILD_COPY_PATH} ${BUILD_FLAVOR.BUILD_COPY_PATH}
+COPY --from=build-layer --parents ${BUILD_FLAVOR.BUILD_COPY_PATH} /
 RUN \\
   --mount=type=bind,target=/mnt/,source=. \\
     cd /mnt/build-layer-script/ \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
-FROM ${getFlavoredImageTag(BUILD_FLAVOR.BASE_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}
-COPY --from=check-layer ${BUILD_FLAVOR.BUILD_COPY_PATH} ${BUILD_FLAVOR.BUILD_COPY_PATH}
-${appendCommandList.join('\n')}`
+${(BUILD_FLAVOR.LAYER_COMMAND_EXTRA || []).join('\n')}`

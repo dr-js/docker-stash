@@ -60,6 +60,11 @@ const RES_MYSQL80 = [
   [ 'https://ports.ubuntu.com//////////pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.45-0ubuntu0.24.04.1_arm64.deb', '82a4cb1eb69d7b4928a442331f119e0b89e3daa1603efad3ed4d47d757dd9e57' ]
 ]
 
+// update at 2026/03/16, borrow: https://github.com/redis/docker-library-redis/blob/d42d7aec93b1c54dd46f37a66a92f62478456039/6.2/debian/Dockerfile
+const RES_REDIS6 = [
+  [ 'https://download.redis.io/releases/redis-6.2.21.tar.gz', '6383b32ba8d246f41bbbb83663381f5a5f4c4713235433cec22fc4a47e9b6d5f' ]
+]
+
 module.exports = {
   RES_CORE_DEB13,
 
@@ -72,5 +77,5 @@ module.exports = {
 
   PPTR_VER, IMG_CHROMEDP, RES_FIREFOX,
 
-  RES_MYSQL80
+  RES_MYSQL80, RES_REDIS6
 }

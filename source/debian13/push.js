@@ -1,4 +1,5 @@
 const { oneOf } = require('@dr-js/core/library/common/verify.js')
+const { withRetry } = require('@dr-js/core/library/common/function.js')
 const { runDockerSync } = require('@dr-js/core/library/node/module/Software/docker.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
@@ -50,6 +51,6 @@ runKit(async (kit) => {
     ...(hasTarget('BASE') ? [ ...TAG_LIST_BASE, ...TAG_LIST_BASE_CACHE ].reverse() : [])
   ]) {
     kit.log(`push tag: ${toArch(tag)}`)
-    runDockerSync([ 'image', 'push', toArch(tag) ])
+    withRetry(() => runDockerSync([ 'image', 'push', toArch(tag) ]), 3)
   }
 }, { title: 'push-debian13' })
