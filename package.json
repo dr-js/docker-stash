@@ -36,6 +36,6 @@
     "@dr-js/dev": "^0.5.14"
   },
   "optionalDependencies": {
-    "@biomejs/biome": "^2.4.5"
+    "@biomejs/biome": "^2.4.7"
   }
 }
