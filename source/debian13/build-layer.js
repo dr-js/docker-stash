@@ -33,35 +33,9 @@ runKit(async (kit) => {
   await resetDirectory(PATH_BUILD)
 
   for (const DOCKER_BUILD_ARCH_INFO of DOCKER_BUILD_ARCH_INFO_LIST) {
-    const appendCommandList = [
-      // https://github.com/puppeteer/puppeteer/blob/puppeteer-core-v24.10.0/docs/api/puppeteer.configuration.md
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_SKIP_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_SKIP_CHROME_HEADLESS_SHELL_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chrome-headless-shell', // Specifies an executable path to be used in puppeteer.launch.
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV PUPPETEER_BROWSER=chrome',
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_DEP_PPTR && 'ENV HOME=/tmp',
-
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && 'ENV TZ="UTC"',
-      // NOTE: expose port 3306 only, to prevent gitlab services health-check waiting 30sec on 33060 for nothing:
-      // - https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4143#thougts
-      // - https://gitlab.com/gitlab-org/gitlab-runner/-/issues/3984#note_687063345
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && 'EXPOSE 3306',
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && 'ENTRYPOINT [ "docker-entrypoint.sh" ]',
-      // use modern UTF8, check: https://github.com/docker-library/docs/tree/master/mysql#configuration-without-a-cnf-file
-      // and reset default auth plugin for npm `mysql@2`: https://github.com/mysqljs/mysql/pull/2233#issuecomment-805759987
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && 'CMD [ "mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-authentication-plugin=mysql_native_password" ]',
-
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYCO && 'ENV MYSQL_ROOT_PASSWORD=""',
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYCO && 'ENV MYSQL_ALLOW_EMPTY_PASSWORD=yes',
-
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_REDS && 'EXPOSE 6379',
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_REDS && 'CMD [ "redis-server" ]',
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_REDS && 'WORKDIR "/data"',
-      BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_REDS && 'ENTRYPOINT [ "docker-entrypoint.sh" ]',
-    ].filter(Boolean)
     await writeText(
       kit.fromOutput(PATH_BUILD, `Dockerfile.${DOCKER_BUILD_ARCH_INFO.key}`),
-      getLayerDockerfileString({ DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, appendCommandList, getFlavoredImageTag })
+      getLayerDockerfileString({ DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, getFlavoredImageTag })
     )
   }
 
@@ -70,11 +44,9 @@ runKit(async (kit) => {
   for (const file of [
     '0-0-base.sh',
     '0-1-base-apt.sh',
-    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_RBY3 && '0-3-base-ruby.sh',
-    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ && '9-0-slim-mysql80/',
-    BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_REDS && '9-2-slim-redis6/',
     BUILD_FLAVOR.LAYER_SCRIPT,
-    BUILD_FLAVOR.BUILD_LAYER_SCRIPT
+    BUILD_FLAVOR.BUILD_LAYER_SCRIPT || '',
+    ...(BUILD_FLAVOR.LAYER_SCRIPT_EXTRA || []),
   ].filter(Boolean)) await modifyCopy(kit.fromRoot(__dirname, 'build-layer-script/', file), kit.fromOutput(PATH_BUILD, 'build-layer-script/', file))
 
   kit.padLog('assemble "build-layer-resource/"')
@@ -125,7 +97,7 @@ runKit(async (kit) => {
 }, { title: `build-${BUILD_FLAVOR_NAME}` })
 
 const getLayerDockerfileString = ({
-  DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, appendCommandList = [], getFlavoredImageTag
+  DOCKER_BUILD_ARCH_INFO, BUILD_FLAVOR, getFlavoredImageTag
 }) => !BUILD_FLAVOR.BUILD_LAYER_SCRIPT
   ? `# syntax = ${BUILDKIT_SYNTAX}
 FROM ${getFlavoredImageTag(BUILD_FLAVOR.BASE_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key}
@@ -137,7 +109,7 @@ RUN \\
   --mount=type=bind,target=/mnt/,source=. \\
     cd /mnt/build-layer-script/ \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
-${appendCommandList.join('\n')}`
+${(BUILD_FLAVOR.LAYER_COMMAND_EXTRA || []).join('\n')}`
   : `# syntax = ${BUILDKIT_SYNTAX}
 FROM ${getFlavoredImageTag(BUILD_FLAVOR.BUILD_IMAGE, TAG_LAYER_CACHE)}-${DOCKER_BUILD_ARCH_INFO.key} AS build-layer
 RUN \\
@@ -154,4 +126,4 @@ RUN \\
   --mount=type=bind,target=/mnt/,source=. \\
     cd /mnt/build-layer-script/ \\
  && . ${BUILD_FLAVOR.LAYER_SCRIPT}
-${appendCommandList.join('\n')}`
+${(BUILD_FLAVOR.LAYER_COMMAND_EXTRA || []).join('\n')}`
