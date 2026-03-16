@@ -49,9 +49,10 @@ debian:13-core (80M uncompressed)
   |       └─dep-pptr2603 (20M)                  ┊
   |         └─bin-chrome-headless-shell (225M)  ┊
   |           └─bin-firefox (390M)              ┊
-  ├─slim-nginx (2M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈╯
-  └─slim-mysql80 (225M)
-    └─slim-mysql80-ci-only (45M)
+  ├─slim-nginx (2M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
+  ├─slim-mysql80 (225M)                         ┊
+  | └─slim-mysql80-ci-only (45M)                ┊
+  └─slim-redis6 (15M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈╯
 ```
 
 

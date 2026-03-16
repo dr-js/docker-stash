@@ -22,8 +22,12 @@ const BUILD_FLAVOR_MAP = {
 
   'F_SLM_NGNX': { 'NAME': 'slim-nginx', 'BASE_IMAGE': 'bin-common', 'LAYER_SCRIPT': '6-0-bin-nginx.2-check.sh',
     'BUILD_IMAGE': 'bin-nginx', 'BUILD_LAYER_SCRIPT': '6-0-bin-nginx.2-check.sh', 'BUILD_COPY_PATH': '/usr/local/bin/nginx' },
+  // match usage of: https://hub.docker.com/_/mysql
   'F_SLM_MYSQ': { 'NAME': 'slim-mysql80', 'BASE_IMAGE': 'bin-common', 'LAYER_SCRIPT': '9-0-slim-mysql80.sh' },
-  'F_SLM_MYCO': { 'NAME': 'slim-mysql80-ci-only', 'BASE_IMAGE': 'slim-mysql80', 'LAYER_SCRIPT': '9-1-slim-mysql80-ci-only.sh' }
+  'F_SLM_MYCO': { 'NAME': 'slim-mysql80-ci-only', 'BASE_IMAGE': 'slim-mysql80', 'LAYER_SCRIPT': '9-1-slim-mysql80-ci-only.sh' },
+  // match usage of: https://hub.docker.com/_/redis
+  'F_SLM_REDS': { 'NAME': 'slim-redis6', 'BASE_IMAGE': 'bin-common', 'LAYER_SCRIPT': '9-2-slim-redis6.2-check.sh',
+    'BUILD_IMAGE': 'bin-build', 'BUILD_LAYER_SCRIPT': '9-2-slim-redis6.0-build.sh', 'BUILD_COPY_PATH': '/usr/local/bin/redis*' }
 }
 
 module.exports = { BUILD_FLAVOR_MAP }
