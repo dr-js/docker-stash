@@ -15,7 +15,7 @@ const BUILD_FLAVOR_MAP = {
     BUILD_IMAGE: 'bin-build', BUILD_LAYER_SCRIPT: '6-0-bin-nginx.0-build.sh', BUILD_COPY_PATH: '/usr/local/bin/nginx' },
   F_BIN_FBIT: { NAME: 'bin-fluent-bit', BASE_IMAGE: 'bin-nginx', LAYER_SCRIPT: '6-2-bin-fluent-bit.sh' },
 
-  F_DEP_FONT: { NAME: 'dep-font', BASE_IMAGE: 'bin-etc', LAYER_SCRIPT: '8-0-dep-font.sh' },
+  F_DEP_FONT: { NAME: 'dep-font', BASE_IMAGE: 'bin-git', LAYER_SCRIPT: '8-0-dep-font.sh' },
   F_DEP_PPTR: { NAME: 'dep-pptr2603', BASE_IMAGE: 'dep-font', LAYER_SCRIPT: '8-2-dep-pptr2603.sh',
     LAYER_COMMAND_EXTRA: [ // https://github.com/puppeteer/puppeteer/blob/puppeteer-core-v24.10.0/docs/api/puppeteer.configuration.md
       'ENV PUPPETEER_SKIP_DOWNLOAD=true', // Tells Puppeteer to not download during installation.
