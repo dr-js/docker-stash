@@ -144,9 +144,9 @@ runKit(async (kit) => {
   kit.padLog('fluent-bit/trixie')
   log(await getFluentBitDeb('trixie'))
 
-  kit.padLog('browser:chromium')
-  log(await getDebianDeb('trixie', 'chromium'))
-  log(await getDebianDeb('trixie', 'chromium-common'))
+  // kit.padLog('browser:chromium')
+  // log(await getDebianDeb('trixie', 'chromium'))
+  // log(await getDebianDeb('trixie', 'chromium-common'))
   kit.padLog('browser:firefox')
   log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm/trixie
 

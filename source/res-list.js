@@ -14,8 +14,8 @@ const RES_NODE = [
   // update at 2026/03/02, check: https://nodejs.org/download/release/latest-v24.x/SHASUMS256.txt
   [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.14.0-linux-x64.tar.gz  '.trim(), 'dbf5b8665dec15e59e6359a517fefb47b23fdb9152d8def975b9bca3dfc6d355', 'node-@@@-amd64.tar.gz' ], // NOTE: fix filename
   [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.14.0-linux-arm64.tar.gz'.trim(), 'f44740cd218de8127f1c44c41510a3a740fa5c9c8d1cdce1c3bedada79f3cde7', 'node-@@@-arm64.tar.gz' ], // NOTE: fix filename
-  // update at 2026/03/02, check: `{ npm view npm@next-11; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
-  [ 'https://registry.npmjs.org/npm/-/npm-11.11.0.tgz         '.trim(), '82gRxKrh/eY5UnNorkTFcdBQAGpgjWehkfGVqAGlJjejEtJZGGJUqjo3mbBTNbc5BTnPKGVtGPBZGhElujX5cw==:sha512:base64' ],
+  // update at 2026/03/20, check: `{ npm view npm@next-11; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
+  [ 'https://registry.npmjs.org/npm/-/npm-11.12.0.tgz         '.trim(), 'xPhOap4ZbJWyd7DAOukP564WFwNSGu/2FeTRFHhiiKthcauxhH/NpkJAQm24xD+cAn8av5tQ00phi98DqtfLsg==:sha512:base64' ],
   [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.17.tgz '.trim(), 'xHPK1TEXbvTKyH1UafKZFWqSqZZaYEtTLZ6hVEvYasmm3sFSUPA0rbw/r1DPGRJ7QlLkdzCewS4t11C1B9l0DA==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
   [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.5.14.tgz   '.trim(), 'KWwHsqxHrOtuVNPTq2chms7bXsQnti05UXp7dQIWUGVqOC+nQs6uN1KlIRqwJXZ5eo2pZnNCjk+GQ3RcpEyfjg==:sha512:base64', 'dr-dev-@@@.tgz' ] // NOTE: fix filename
 ]
@@ -27,22 +27,22 @@ const RES_NGINX = [
   [ 'https://github.com/google/ngx_brotli/archive/a71f9312.zip  '.trim(), '96f23eb72488ffc570cbc474a928000b05b72f2682456ae357aeaf3ce71c626e', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
 ]
 const RES_GO = [
-  // update at 2026/03/02, use 2nd-recent-minor version, check: https://go.dev/dl/
-  [ 'https://go.dev/dl/go1.25.7.linux-amd64.tar.gz', '12e6d6a191091ae27dc31f6efc630e3a3b8ba409baf3573d955b196fdf086005' ],
-  [ 'https://go.dev/dl/go1.25.7.linux-arm64.tar.gz', 'ba611a53534135a81067240eff9508cd7e256c560edd5d8c2fef54f083c07129' ]
+  // update at 2026/03/20, use 2nd-recent-minor version, check: https://go.dev/dl/
+  [ 'https://go.dev/dl/go1.25.8.linux-amd64.tar.gz', 'ceb5e041bbc3893846bd1614d76cb4681c91dadee579426cf21a63f2d7e03be6' ],
+  [ 'https://go.dev/dl/go1.25.8.linux-arm64.tar.gz', '7d137f59f66bb93f40a6b2b11e713adc2a9d0c8d9ae581718e3fad19e5295dc7' ]
 ]
 // update at 2026/03/04, check: ".github/check-layer-package-latest.js"
 const RES_F_BIT_DEB13 = [
   [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_4.2.3_amd64.deb', '4e8a30a77137ec10c2a255f628334d1381b008d354973a2ff701520b6ebcfd59' ],
   [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_4.2.3_arm64.deb', '09df2f288a2ce5f36ce5f762d442e84f3038cebbf002da27580abf58c588f94f' ]
 ]
-// update at 2025/12/19, from: https://www.ruby-lang.org/en/downloads/releases/
-const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.8.tar.gz', '53c4ddad41fbb6189f1f5ee0db57a51d54bd1f87f8755b3d68604156a35b045b' ] ]
+// update at 2025/03/20, from: https://www.ruby-lang.org/en/downloads/releases/
+const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.gz', '7bb4d4f5e807cc27251d14d9d6086d182c5b25875191e44ab15b709cd7a7dd9c' ] ]
 
-// update at 2026/03/02, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
-const PPTR_VER = '24.37.5' // [ "v24.37.5", { "chrome": "145.0.7632.77", "firefox": "stable_147.0.4" } ]
-// update at 2026/03/04, use "stable" version at: https://hub.docker.com/r/chromedp/headless-shell/tags
-const IMG_CHROMEDP = 'chromedp/headless-shell:145.0.7632.117' // bad version: 146.0.7680.31, check: https://github.com/chromedp/chromedp/issues/1619 and https://github.com/chromedp/chromedp/issues/1621
+// update at 2026/03/20, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
+const PPTR_VER = '24.39.0' // [ "v24.39.0", { "chrome": "146.0.7680.66", "firefox": "stable_148.0" } ]
+// update at 2026/03/20, use "stable" version at: https://hub.docker.com/r/chromedp/headless-shell/tags
+const IMG_CHROMEDP = 'chromedp/headless-shell:146.0.7680.154'
 // update at 2026/03/04, use official deb from mozilla
 const RES_FIREFOX = [
   [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_148.0~build1_amd64_2ed57f9938e0e3b6210a7fb3d7904e73.deb', 'c714ae7c4248f16087b29645bc8f0b9a73aa4e70aa7fb3c2632703f2a311fd83' ],
