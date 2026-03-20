@@ -2,6 +2,9 @@
 
 keep list of notable break & big code change
 
+- `0.5.6.dev.1`
+  - DEV-BREAK: layer: move `dep-font` under `bin-git`
+  - DEV-BREAK: layer: rename `bin-chrome-hlsh <- bin-chrome-headless-shell`
 - `0.5.2`
   - DEV-BREAK: layer: re-order `bin-common` as base layer for `bin-node`
   - ADD: layer: `slim-nginx`
