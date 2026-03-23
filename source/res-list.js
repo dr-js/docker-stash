@@ -39,10 +39,12 @@ const RES_F_BIT_DEB13 = [
 // update at 2025/03/20, from: https://www.ruby-lang.org/en/downloads/releases/
 const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.gz', '7bb4d4f5e807cc27251d14d9d6086d182c5b25875191e44ab15b709cd7a7dd9c' ] ]
 
-// update at 2026/03/20, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
-const PPTR_VER = '24.39.0' // [ "v24.39.0", { "chrome": "146.0.7680.66", "firefox": "stable_148.0" } ]
-// update at 2026/03/20, use "stable" version at: https://hub.docker.com/r/chromedp/headless-shell/tags
-const IMG_CHROMEDP = 'chromedp/headless-shell:146.0.7680.154'
+// update at 2026/03/23, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
+const PPTR_VER = '24.37.5' // [ "v24.37.5", { "chrome": "145.0.7632.77", "firefox": "stable_147.0.4" } ]
+// update at 2026/03/23, default use "stable" version at: https://hub.docker.com/r/chromedp/headless-shell/tags
+// bad version: 146.0.7680.154, will spawn 2 extra Z-state headless-shell process
+// bad version: 146.0.7680.31, check: https://github.com/chromedp/chromedp/issues/1619 and https://github.com/chromedp/chromedp/issues/1621
+const IMG_CHROMEDP = 'chromedp/headless-shell:145.0.7632.117'
 // update at 2026/03/04, use official deb from mozilla
 const RES_FIREFOX = [
   [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_148.0~build1_amd64_2ed57f9938e0e3b6210a7fb3d7904e73.deb', 'c714ae7c4248f16087b29645bc8f0b9a73aa4e70aa7fb3c2632703f2a311fd83' ],
