@@ -52,7 +52,7 @@ debian:13-core (80M uncompressed)
   ├─slim-nginx (2M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
   ├─slim-mysql80 (225M)                         ┊
   | └─slim-mysql80-ci-only (45M)                ┊
-  └─slim-redis6 (15M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈╯
+  └─slim-valkey9 (29M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈╯
 ```
 
 

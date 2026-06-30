@@ -41,10 +41,9 @@ const BUILD_FLAVOR_MAP = {
   F_SLM_MYCO: { NAME: 'slim-mysql80-ci-only', BASE_IMAGE: 'slim-mysql80', LAYER_SCRIPT: '9-1-slim-mysql80-ci-only.sh',
     LAYER_COMMAND_EXTRA: [ 'ENV MYSQL_ROOT_PASSWORD=""', 'ENV MYSQL_ALLOW_EMPTY_PASSWORD=yes' ] },
 
-  // match usage of: https://hub.docker.com/_/redis
-  F_SLM_REDS: { NAME: 'slim-redis6', BASE_IMAGE: 'bin-common', LAYER_SCRIPT: '9-2-slim-redis6.2-check.sh', LAYER_SCRIPT_EXTRA: [ '9-2-slim-redis6/' ],
-    LAYER_COMMAND_EXTRA: [ 'EXPOSE 6379', 'CMD [ "redis-server" ]', 'WORKDIR "/data"', 'ENTRYPOINT [ "docker-entrypoint.sh" ]' ],
-    BUILD_IMAGE: 'bin-build', BUILD_LAYER_SCRIPT: '9-2-slim-redis6.0-build.sh', BUILD_COPY_PATH: '/usr/local/bin/redis*' }
+  // match usage of: https://hub.docker.com/r/valkey/valkey
+  F_SLM_VLKS: { NAME: 'slim-valkey9', BASE_IMAGE: 'bin-common', LAYER_SCRIPT: '9-2-slim-valkey9.sh', LAYER_SCRIPT_EXTRA: [ '9-2-slim-valkey9/' ],
+    LAYER_COMMAND_EXTRA: [ 'EXPOSE 6379', 'CMD [ "valkey-server" ]', 'WORKDIR "/data"', 'ENTRYPOINT [ "docker-entrypoint.sh" ]' ] }
 }
 
 module.exports = { BUILD_FLAVOR_MAP }
