@@ -50,8 +50,8 @@ debian:13-core (80M uncompressed)
   |           └─bin-chrome-hlsh (225M)          ┊
   |             └─bin-firefox (390M)            ┊
   ├─slim-nginx (2M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
-  ├─slim-mysql80 (225M)                         ┊
-  | └─slim-mysql80-ci-only (45M)                ┊
+  ├─slim-mysql84 (225M)                         ┊
+  | └─slim-mysql84-ci-only (45M)                ┊
   └─slim-redis6 (15M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈╯
 ```
 

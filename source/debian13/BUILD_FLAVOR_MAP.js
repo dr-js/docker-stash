@@ -30,7 +30,7 @@ const BUILD_FLAVOR_MAP = {
     BUILD_IMAGE: 'bin-nginx', BUILD_LAYER_SCRIPT: '6-0-bin-nginx.2-check.sh', BUILD_COPY_PATH: '/usr/local/bin/nginx' },
 
   // match usage of: https://hub.docker.com/_/mysql
-  F_SLM_MYSQ: { NAME: 'slim-mysql80', BASE_IMAGE: 'bin-common', LAYER_SCRIPT: '9-0-slim-mysql80.sh', LAYER_SCRIPT_EXTRA: [ '9-0-slim-mysql80/' ],
+  F_SLM_MYSQ: { NAME: 'slim-mysql84', BASE_IMAGE: 'bin-common', LAYER_SCRIPT: '9-0-slim-mysql84.sh', LAYER_SCRIPT_EXTRA: [ '9-0-slim-mysql84/' ],
     LAYER_COMMAND_EXTRA: [
       'ENV TZ="UTC"',
       'EXPOSE 3306', // NOTE: expose port 3306 only, to prevent gitlab services health-check waiting 30sec on 33060 for nothing: https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4143#thougts and https://gitlab.com/gitlab-org/gitlab-runner/-/issues/3984#note_687063345
@@ -38,7 +38,7 @@ const BUILD_FLAVOR_MAP = {
       // use modern UTF8, check: https://github.com/docker-library/docs/tree/master/mysql#configuration-without-a-cnf-file
       // and reset default auth plugin for npm `mysql@2`: https://github.com/mysqljs/mysql/pull/2233#issuecomment-805759987
       'CMD [ "mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-authentication-plugin=mysql_native_password" ]' ] },
-  F_SLM_MYCO: { NAME: 'slim-mysql80-ci-only', BASE_IMAGE: 'slim-mysql80', LAYER_SCRIPT: '9-1-slim-mysql80-ci-only.sh',
+  F_SLM_MYCO: { NAME: 'slim-mysql84-ci-only', BASE_IMAGE: 'slim-mysql84', LAYER_SCRIPT: '9-1-slim-mysql84-ci-only.sh',
     LAYER_COMMAND_EXTRA: [ 'ENV MYSQL_ROOT_PASSWORD=""', 'ENV MYSQL_ALLOW_EMPTY_PASSWORD=yes' ] },
 
   // match usage of: https://hub.docker.com/_/redis

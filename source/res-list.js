@@ -51,15 +51,18 @@ const RES_FIREFOX = [
   [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_148.0~build1_arm64_59718f33bff5c8c5ddf4d5bb140d4c13.deb', '104755fd66eda9c7cf8368d294c9488f0591283cfe61ecbeb5093905862a1d37' ]
 ]
 
-// update at 2026/03/13, use official deb from ubuntu
-const RES_MYSQL80 = [
-  [ 'https://mirrors.kernel.org/ubuntu/pool/main/m/mysql-defaults/mysql-common_5.8+1.1.0build1_all.deb', '2a9ed286f4a78849bb0231b11a9ababf8c8694667caf986cd2563a6b67f939bc' ],
-  [ 'https://mirrors.kernel.org/ubuntu/pool/main/m/mysql-8.0/mysql-client-core-8.0_8.0.45-0ubuntu0.24.04.1_amd64.deb', '882a659e4234199bd039237f9ec52c6ee499742212ee4934fc9cd80659a8c25d' ],
-  [ 'https://ports.ubuntu.com//////////pool/main/m/mysql-8.0/mysql-client-core-8.0_8.0.45-0ubuntu0.24.04.1_arm64.deb', 'f639f271f9a7b894158b5fe260ba61532f6f8c45fe833d6ee23b65de3ef54257' ],
-  [ 'https://mirrors.kernel.org/ubuntu/pool/main/i/icu/libicu74_74.2-1ubuntu3.1_amd64.deb', 'c9a70989678660eed9a1e904c74fa043da8bec8e2036856fc16e31ced79b04f8' ],
-  [ 'https://ports.ubuntu.com//////////pool/main/i/icu/libicu74_74.2-1ubuntu3.1_arm64.deb', '48f93acf50dcf237a8d58ce366730a28438ce52d3f06d7a2a88b51261dd791f7' ],
-  [ 'https://mirrors.kernel.org/ubuntu/pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.45-0ubuntu0.24.04.1_amd64.deb', '6854e40bddae3ac8c4a90b918b539061440d4b3d71872df2a9f32632cd1f31ad' ],
-  [ 'https://ports.ubuntu.com//////////pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.45-0ubuntu0.24.04.1_arm64.deb', '82a4cb1eb69d7b4928a442331f119e0b89e3daa1603efad3ed4d47d757dd9e57' ]
+// update at 2026/06/30, use official deb from ubuntu
+const RES_MYSQL84 = [
+  [ 'https://mirrors.kernel.org/ubuntu//pool/main/g/google-perftools/libtcmalloc-minimal4t64_2.18.1-1_amd64.deb', 'b1b769749befa42696d8368c8124afe1f2c522282b9520224304a43fdf7155d9' ],
+  [ 'https://ports.ubuntu.com///////////pool/main/g/google-perftools/libtcmalloc-minimal4t64_2.18.1-1_arm64.deb', 'd36065a2ccf246bb479a40e85498f56a298cafc41a6ed79b329ceb1a71aadd8d' ],
+  [ 'https://mirrors.kernel.org/ubuntu//pool/main/g/google-perftools/libgoogle-perftools4t64_2.18.1-1_amd64.deb', '62cd52ab2f569f26d6a6db26cb9963191f24196bef7b4d25762aca6cdc94e856' ],
+  [ 'https://ports.ubuntu.com///////////pool/main/g/google-perftools/libgoogle-perftools4t64_2.18.1-1_arm64.deb', '205894fbb01efc1727deaa9b03284266a075aa6395b73ec80f7d4ccd38921dbd' ],
+  [ 'https://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.4/mysql-client-core_8.4.10-0ubuntu0.26.04.1_amd64.deb', '8905e8784f8698636d4705adfe25de6542a99db69023c14573c063ad181aab64' ],
+  [ 'https://ports.ubuntu.com///////////pool/main/m/mysql-8.4/mysql-client-core_8.4.10-0ubuntu0.26.04.1_arm64.deb', 'ab654f9527ff0edeba72c69a341ba105273671caadec24d1b00084a9b1434e57' ],
+  [ 'https://mirrors.kernel.org/ubuntu//pool/main/i/icu/libicu78_78.2-2ubuntu1_amd64.deb', 'c8b97930f9e365d6d00978144b468ac8397ef07d2fb2c453869f05fc3a98c4ca' ],
+  [ 'https://ports.ubuntu.com///////////pool/main/i/icu/libicu78_78.2-2ubuntu1_arm64.deb', 'b5c465f39aa3f13cb9840007a195053af81b35b372c769d9ee26a11625088980' ],
+  [ 'https://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.4/mysql-server-core_8.4.10-0ubuntu0.26.04.1_amd64.deb', '05c8caf9eb3a036dd7133d65a91939cc4d2c46a32bcce95d934aeb8806ab80de' ],
+  [ 'https://ports.ubuntu.com///////////pool/main/m/mysql-8.4/mysql-server-core_8.4.10-0ubuntu0.26.04.1_arm64.deb', 'e92d332c42a202479ea00f749d8120fbbb578ee868efd0f65b637f2090f8aa99' ],
 ]
 
 // update at 2026/03/16, borrow: https://github.com/redis/docker-library-redis/blob/d42d7aec93b1c54dd46f37a66a92f62478456039/6.2/debian/Dockerfile
@@ -79,5 +82,5 @@ module.exports = {
 
   PPTR_VER, IMG_CHROMEDP, RES_FIREFOX,
 
-  RES_MYSQL80, RES_REDIS6
+  RES_MYSQL84, RES_REDIS6
 }

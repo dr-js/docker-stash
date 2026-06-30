@@ -85,9 +85,9 @@ const getUbuntuDeb = async (dist = 'noble', pkg = '') => {
     //                  or: https://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/ (with amd64.deb & all.deb)
     //                  to:           https://ports.ubuntu.com/pool/main/m/mysql-8.0/ (with arm64.deb & all.deb)
     //       check: https://forum.odroid.com/viewtopic.php?t=32841
-    const uPfx = dlArch === 'arm64' ? 'ports.ubuntu.com/////////'
+    const uPfx = dlArch === 'arm64' ? 'ports.ubuntu.com//////////'
       : textDlPage.includes('security.ubuntu.com') ? 'security.ubuntu.com/ubuntu'
-        : 'mirrors.kernel.org/ubuntu'
+        : 'mirrors.kernel.org/ubuntu/'
     const dlUrl = `https://${uPfx}/${uStub}${uDeb}`
     const dlSha256 = /SHA256 checksum<\/th>\s*<td><tt>(\w+)<\/tt>/.exec(textDlPage)[ 1 ]
     pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
@@ -150,9 +150,10 @@ runKit(async (kit) => {
   kit.padLog('browser:firefox')
   log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm/trixie
 
-  kit.padLog('pkg-deb/noble')
-  log(await getUbuntuDeb('noble', 'mysql-common'))
-  log(await getUbuntuDeb('noble-updates', 'mysql-client-core-8.0'))
-  log(await getUbuntuDeb('noble-updates', 'libicu74')) // needed by `mysql-server-core-8.0` but debian/trixie use `libicu76`
-  log(await getUbuntuDeb('noble-updates', 'mysql-server-core-8.0'))
+  kit.padLog('pkg-deb/resolute')
+  log(await getUbuntuDeb('resolute', 'libtcmalloc-minimal4t64')) // needed by `libgoogle-perftools4t64` but debian/trixie version is a bit older
+  log(await getUbuntuDeb('resolute', 'libgoogle-perftools4t64')) // needed by `mysql-client-core` but debian/trixie version is a bit older
+  log(await getUbuntuDeb('resolute', 'mysql-client-core')) // 8.4
+  log(await getUbuntuDeb('resolute', 'libicu78')) // needed by `mysql-server-core` but debian/trixie use `libicu76`
+  log(await getUbuntuDeb('resolute', 'mysql-server-core')) // 8.4
 }, { title: 'ci-patch' })

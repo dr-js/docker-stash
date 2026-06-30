@@ -4,7 +4,7 @@ const { modifyCopy } = require('@dr-js/core/library/node/fs/Modify.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
-const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB13, RES_RUBY3, PPTR_VER, RES_FIREFOX, RES_MYSQL80, RES_REDIS6 } = require('../res-list.js')
+const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB13, RES_RUBY3, PPTR_VER, RES_FIREFOX, RES_MYSQL84, RES_REDIS6 } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN13_BUILD_FLAVOR_MAP, verifyDebian13BuildArg,
@@ -61,7 +61,7 @@ runKit(async (kit) => {
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_FRFX ? RES_FIREFOX : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_RBY3 ? RES_RUBY3 : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_GO__ ? RES_GO : []),
-    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ ? RES_MYSQL80 : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ ? RES_MYSQL84 : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_REDS ? RES_REDIS6 : [])
   ], {
     pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),
