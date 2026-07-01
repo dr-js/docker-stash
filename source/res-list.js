@@ -27,9 +27,9 @@ const RES_NGINX = [
   [ 'https://github.com/google/ngx_brotli/archive/a71f9312.zip  '.trim(), '96f23eb72488ffc570cbc474a928000b05b72f2682456ae357aeaf3ce71c626e', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
 ]
 const RES_GO = [
-  // update at 2026/03/20, use 2nd-recent-minor version, check: https://go.dev/dl/
-  [ 'https://go.dev/dl/go1.25.8.linux-amd64.tar.gz', 'ceb5e041bbc3893846bd1614d76cb4681c91dadee579426cf21a63f2d7e03be6' ],
-  [ 'https://go.dev/dl/go1.25.8.linux-arm64.tar.gz', '7d137f59f66bb93f40a6b2b11e713adc2a9d0c8d9ae581718e3fad19e5295dc7' ]
+  // update at 2026/07/01, use 2nd-recent-minor version if latest version's patch version < 2, check: https://go.dev/dl/
+  [ 'https://go.dev/dl/go1.26.4.linux-amd64.tar.gz', '1153d3d50e0ac764b447adfe05c2bcf08e889d42a02e0fe0259bd47f6733ad7f' ],
+  [ 'https://go.dev/dl/go1.26.4.linux-arm64.tar.gz', 'ef758ae7c6cf9267c9c0ef080b8965f453d89ab2d25d9eb22de4405925238768' ]
 ]
 // update at 2026/03/04, check: ".github/check-layer-package-latest.js"
 const RES_F_BIT_DEB13 = [
