@@ -81,13 +81,13 @@ const getUbuntuDeb = async (dist = 'noble', pkg = '') => {
     // <tr><th>SHA256 checksum</th>\t<td><tt>0d1275c1004a55f7886bc23adefda950e5442be228799de8520776880dd84c82</tt></td>
     const uStub = /You can download the requested file from the <tt>(pool\/\S+)<\/tt> subdirectory at/.exec(textDlPage)[ 1 ]
     const uDeb = /More information on <kbd>(\S+\.deb)<\/kbd>:/.exec(textDlPage)[ 1 ]
-    // TODO: need map from:  https://mirrors.kernel.org/ubuntu/pool/main/m/mysql-8.0/ (with amd64.deb & all.deb)
-    //                  or: https://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/ (with amd64.deb & all.deb)
-    //                  to:           https://ports.ubuntu.com/pool/main/m/mysql-8.0/ (with arm64.deb & all.deb)
+    // TODO: need map from: https://kr.archive.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/ (with amd64.deb & all.deb)
+    //                  or:   https://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/ (with amd64.deb & all.deb)
+    //                  to:             https://ports.ubuntu.com/pool/main/m/mysql-8.0/ (with arm64.deb & all.deb)
     //       check: https://forum.odroid.com/viewtopic.php?t=32841
-    const uPfx = dlArch === 'arm64' ? 'ports.ubuntu.com/////////'
-      : textDlPage.includes('security.ubuntu.com') ? 'security.ubuntu.com/ubuntu'
-        : 'mirrors.kernel.org/ubuntu'
+    const uPfx = dlArch === 'arm64' ? 'ports.ubuntu.com////////////'
+      : textDlPage.includes('security.ubuntu.com') ? 'security.ubuntu.com/ubuntu//'
+        : 'kr.archive.ubuntu.com/ubuntu'
     const dlUrl = `https://${uPfx}/${uStub}${uDeb}`
     const dlSha256 = /SHA256 checksum<\/th>\s*<td><tt>(\w+)<\/tt>/.exec(textDlPage)[ 1 ]
     pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
@@ -151,7 +151,6 @@ runKit(async (kit) => {
   log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm/trixie
 
   kit.padLog('pkg-deb/noble')
-  log(await getUbuntuDeb('noble', 'mysql-common'))
   log(await getUbuntuDeb('noble-updates', 'mysql-client-core-8.0'))
   log(await getUbuntuDeb('noble-updates', 'libicu74')) // needed by `mysql-server-core-8.0` but debian/trixie use `libicu76`
   log(await getUbuntuDeb('noble-updates', 'mysql-server-core-8.0'))

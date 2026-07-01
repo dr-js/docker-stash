@@ -49,15 +49,14 @@ const RES_FIREFOX = [
   [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_152.0~build1_arm64_6ee60e648848a2bee27baedf779db97e.deb', '3db8b21175cad7e2f131b455db6c8fa8221877cd0dd96bf94e1a4af925e70b88' ]
 ]
 
-// update at 2026/03/13, use official deb from ubuntu
+// update at 2026/07/01, use official deb from ubuntu
 const RES_MYSQL80 = [
-  [ 'https://mirrors.kernel.org/ubuntu/pool/main/m/mysql-defaults/mysql-common_5.8+1.1.0build1_all.deb', '2a9ed286f4a78849bb0231b11a9ababf8c8694667caf986cd2563a6b67f939bc' ],
-  [ 'https://mirrors.kernel.org/ubuntu/pool/main/m/mysql-8.0/mysql-client-core-8.0_8.0.45-0ubuntu0.24.04.1_amd64.deb', '882a659e4234199bd039237f9ec52c6ee499742212ee4934fc9cd80659a8c25d' ],
-  [ 'https://ports.ubuntu.com//////////pool/main/m/mysql-8.0/mysql-client-core-8.0_8.0.45-0ubuntu0.24.04.1_arm64.deb', 'f639f271f9a7b894158b5fe260ba61532f6f8c45fe833d6ee23b65de3ef54257' ],
-  [ 'https://mirrors.kernel.org/ubuntu/pool/main/i/icu/libicu74_74.2-1ubuntu3.1_amd64.deb', 'c9a70989678660eed9a1e904c74fa043da8bec8e2036856fc16e31ced79b04f8' ],
-  [ 'https://ports.ubuntu.com//////////pool/main/i/icu/libicu74_74.2-1ubuntu3.1_arm64.deb', '48f93acf50dcf237a8d58ce366730a28438ce52d3f06d7a2a88b51261dd791f7' ],
-  [ 'https://mirrors.kernel.org/ubuntu/pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.45-0ubuntu0.24.04.1_amd64.deb', '6854e40bddae3ac8c4a90b918b539061440d4b3d71872df2a9f32632cd1f31ad' ],
-  [ 'https://ports.ubuntu.com//////////pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.45-0ubuntu0.24.04.1_arm64.deb', '82a4cb1eb69d7b4928a442331f119e0b89e3daa1603efad3ed4d47d757dd9e57' ]
+  [ 'https://kr.archive.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/mysql-client-core-8.0_8.0.46-0ubuntu0.24.04.3_amd64.deb', '0e10465bf52210a80581bb0133d691c988548429d09e19a237ff338f9a8e9630' ],
+  [ 'https://ports.ubuntu.com/////////////pool/main/m/mysql-8.0/mysql-client-core-8.0_8.0.46-0ubuntu0.24.04.3_arm64.deb', '7e3cf23b069fd965b84c042d8c910d1e191983327b5a5968b5d5dbe5a9c43e2f' ],
+  [ 'https://kr.archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu74_74.2-1ubuntu3.1_amd64.deb', 'c9a70989678660eed9a1e904c74fa043da8bec8e2036856fc16e31ced79b04f8' ],
+  [ 'https://ports.ubuntu.com/////////////pool/main/i/icu/libicu74_74.2-1ubuntu3.1_arm64.deb', '48f93acf50dcf237a8d58ce366730a28438ce52d3f06d7a2a88b51261dd791f7' ],
+  [ 'https://kr.archive.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.46-0ubuntu0.24.04.3_amd64.deb', '44e30b8592dfbb9236f68ccec10840cc3a27ee42aced41f77b154bad5d3d0929' ],
+  [ 'https://ports.ubuntu.com/////////////pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.46-0ubuntu0.24.04.3_arm64.deb', 'f5494dfa54ec788b322487dfdeaf70e59b611b9a4fea392564110db258780d29' ],
 ]
 
 // update at 2026/06/30, from: https://valkey.io/download/
