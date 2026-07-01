@@ -20,9 +20,9 @@ const RES_NODE = [
   [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.5.14.tgz   '.trim(), 'KWwHsqxHrOtuVNPTq2chms7bXsQnti05UXp7dQIWUGVqOC+nQs6uN1KlIRqwJXZ5eo2pZnNCjk+GQ3RcpEyfjg==:sha512:base64', 'dr-dev-@@@.tgz' ] // NOTE: fix filename
 ]
 const RES_NGINX = [
-  // update at 2026/03/02, use Stable version, check: https://nginx.org/en/download.html
+  // update at 2026/07/01, use Stable version, check: https://nginx.org/en/download.html
   // and: https://github.com/google/ngx_brotli
-  [ 'https://nginx.org/download/nginx-1.28.2.tar.gz             '.trim(), '20e5e0f2c917acfb51120eec2fba9a4ba4e1e10fd28465067cc87a7d81a829a3' ], // TODO: need to calc hash yourself
+  [ 'https://nginx.org/download/nginx-1.30.3.tar.gz             '.trim(), 'e5823dc6f45610993def93ebf6cfce68264af4958c77e874b7d20f3709001b8f' ], // TODO: need to calc hash yourself
   [ 'https://github.com/google/brotli/archive/ed738e84.zip      '.trim(), 'a68ec12a898abc9cf248f21362620562041b7aab4d623ecd736f39bedf5002a0', 'brotli.zip' ], // specify filename // TODO: need to calc hash yourself
   [ 'https://github.com/google/ngx_brotli/archive/a71f9312.zip  '.trim(), '96f23eb72488ffc570cbc474a928000b05b72f2682456ae357aeaf3ce71c626e', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
 ]
