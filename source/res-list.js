@@ -1,21 +1,21 @@
 const RES_CORE_DEB13 = [
-  // update at 2026/03/04, start from: https://packages.debian.org/search?keywords=ca-certificates
+  // update at 2026/07/01, start from: https://packages.debian.org/search?keywords=ca-certificates
   [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20250419_all.deb', 'ef590f89563aa4b46c8260d49d1cea0fc1b181d19e8df3782694706adf05c184' ],
-  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.5.4-1~deb13u2_amd64.deb', '583f2881a9ed89e480d46caa3de39a6f0e174d259077a98c8b6cc3d46166e1e5' ],
-  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.5.4-1~deb13u2_arm64.deb', 'b51177af3e5b9ff495c82ecd6f6df596c4272600dbbea328f8ac9210598f154b' ],
-  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl3t64_3.5.4-1~deb13u2_amd64.deb', '4a832fbdfc6ae292e4846eab6a6bf3687958c37ebcfd970e49169774d66d1231' ],
-  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl3t64_3.5.4-1~deb13u2_arm64.deb', 'bf08516b135862e5284635ac300189ecfee25f26c9bad79a3599474e63ad4dc5' ],
+  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.5.6-1~deb13u2_amd64.deb', '7b4270966255f0bad468ac889f4b090a6e10eb6ccbc2be0fa418560b24bdef5a' ],
+  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.5.6-1~deb13u2_arm64.deb', '1ee735e2480519bd1fd5f6576a879243bc81b9773059e1fa1ec8b8943c84e77c' ],
+  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl3t64_3.5.6-1~deb13u2_amd64.deb', 'b2dab3fe29c1fcb82ef58c2db0ff4bd830a442cf37b9a8b730b7b6ce87181349' ],
+  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl3t64_3.5.6-1~deb13u2_arm64.deb', 'f7e09a12ccb2d6bd28bcc87a6e2462a0558dcb3cc34d56f90ee86fbd3402d8ba' ],
   // update at 2026/03/04, check: https://packages.debian.org/search?keywords=libjemalloc2
   [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.3.0-3_amd64.deb', 'e7d64919e620e8ea46960104efe1e9c977d751e5b610a5d89b0b51aeae9530d7' ],
   [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.3.0-3_arm64.deb', '437c48a6d591579bc812fc583ff0f28ac34a7d5c36b7d4e9f4f8809650430f3e' ]
 ]
 
 const RES_NODE = [
-  // update at 2026/03/02, check: https://nodejs.org/download/release/latest-v24.x/SHASUMS256.txt
-  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.14.0-linux-x64.tar.gz  '.trim(), 'dbf5b8665dec15e59e6359a517fefb47b23fdb9152d8def975b9bca3dfc6d355', 'node-@@@-amd64.tar.gz' ], // NOTE: fix filename
-  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.14.0-linux-arm64.tar.gz'.trim(), 'f44740cd218de8127f1c44c41510a3a740fa5c9c8d1cdce1c3bedada79f3cde7', 'node-@@@-arm64.tar.gz' ], // NOTE: fix filename
-  // update at 2026/03/20, check: `{ npm view npm@next-11; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
-  [ 'https://registry.npmjs.org/npm/-/npm-11.12.0.tgz         '.trim(), 'xPhOap4ZbJWyd7DAOukP564WFwNSGu/2FeTRFHhiiKthcauxhH/NpkJAQm24xD+cAn8av5tQ00phi98DqtfLsg==:sha512:base64' ],
+  // update at 2026/07/01, check: https://nodejs.org/download/release/latest-v24.x/SHASUMS256.txt
+  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.18.0-linux-x64.tar.gz  '.trim(), '783130984963db7ba9cbd01089eaf2c2efb055c7c1693c943174b967b3050cb8', 'node-@@@-amd64.tar.gz' ], // NOTE: fix filename
+  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.18.0-linux-arm64.tar.gz'.trim(), '6b4484c2190274175df9aa8f28e2d758a819cb1c1fe6ab481e2f95b463ab8508', 'node-@@@-arm64.tar.gz' ], // NOTE: fix filename
+  // update at 2026/07/01, check: `{ npm view npm@next-11; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
+  [ 'https://registry.npmjs.org/npm/-/npm-11.18.0.tgz         '.trim(), 'T67M4L5wNm0cZ7EBLErcEkY1SmzEW/WJ+SADBzsFUY1UdAPfFHXFQtZ6SEXiK0+vzXysCvAsepbMaBTwnrAD+w==:sha512:base64' ],
   [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.17.tgz '.trim(), 'xHPK1TEXbvTKyH1UafKZFWqSqZZaYEtTLZ6hVEvYasmm3sFSUPA0rbw/r1DPGRJ7QlLkdzCewS4t11C1B9l0DA==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
   [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.5.14.tgz   '.trim(), 'KWwHsqxHrOtuVNPTq2chms7bXsQnti05UXp7dQIWUGVqOC+nQs6uN1KlIRqwJXZ5eo2pZnNCjk+GQ3RcpEyfjg==:sha512:base64', 'dr-dev-@@@.tgz' ] // NOTE: fix filename
 ]
@@ -31,13 +31,13 @@ const RES_GO = [
   [ 'https://go.dev/dl/go1.26.4.linux-amd64.tar.gz', '1153d3d50e0ac764b447adfe05c2bcf08e889d42a02e0fe0259bd47f6733ad7f' ],
   [ 'https://go.dev/dl/go1.26.4.linux-arm64.tar.gz', 'ef758ae7c6cf9267c9c0ef080b8965f453d89ab2d25d9eb22de4405925238768' ]
 ]
-// update at 2026/03/04, check: ".github/check-layer-package-latest.js"
+// update at 2026/07/01, check: ".github/check-layer-package-latest.js"
 const RES_F_BIT_DEB13 = [
-  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_4.2.3_amd64.deb', '4e8a30a77137ec10c2a255f628334d1381b008d354973a2ff701520b6ebcfd59' ],
-  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_4.2.3_arm64.deb', '09df2f288a2ce5f36ce5f762d442e84f3038cebbf002da27580abf58c588f94f' ]
+  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_4.2.6_amd64.deb', 'a8ba3ff80bce13dbf67d597f4c7eafbe8857a5a89be8e258478534d88b92c7ef' ],
+  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_4.2.6_arm64.deb', '0b8e41dc4f63f3b361ef4108cbda9b29448d8c822c517e7b18226f27a6874c28' ]
 ]
-// update at 2025/03/20, from: https://www.ruby-lang.org/en/downloads/releases/
-const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.9.tar.gz', '7bb4d4f5e807cc27251d14d9d6086d182c5b25875191e44ab15b709cd7a7dd9c' ] ]
+// update at 2025/07/01, from: https://www.ruby-lang.org/en/downloads/releases/
+const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.10.tar.gz', 'ecee2d072a14f2d14347dd56dfd8fe5c3130abf5117bfaacbda0f4ef9cc429ec' ] ]
 
 // update at 2025/07/01, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
 const PPTR_VER = '24.43.1' // [ "v24.43.1", { "chrome": "148.0.7778.97", "firefox": "stable_150.0.2" } ]

@@ -28,8 +28,8 @@ const pickLatestPkg = (pkgList, pkgName = '') => pkgList
   .filter((v) => v[ 'Package' ] === pkgName) // filter out other pkg
   .sort((a, b) => -compareStringWithNumber(a[ 'Version' ], b[ 'Version' ]))[ 0 ] // get biggest version // https://www.debian.org/doc/debian-policy/ch-controlfields.html#version
 
-// TODO: NOTE: to bypass fastly UA checking page, need copy from browser on page like https://packages.debian.org/trixie/apt
-const EXT_HDR_DEB = { cookie: '_fs_ch_cp_79..Qv=Ae ..{REPLACE-WITH-ACTUAL-COOKIE}.. Nw==' }
+// TODO: NOTE: to bypass bot-challenge page, need copy from browser on page like https://packages.debian.org/trixie/apt
+const EXT_HDR_DEB = { cookie: 'pow_challenge=012..0d; pow_nonce=191; pow_bypass=0xa3..50' }
 const getDebianDeb = async (dist = 'buster', pkg = '') => {
   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
   const textIndex = await getText(`https://packages.debian.org/${dist}/${pkg}`, EXT_HDR_DEB)
@@ -39,6 +39,7 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
   // dl-url   <th><a href="/bookworm/all/ca-certificates/download">all</a></th>
   //          <th><a href="/bookworm/amd64/libjemalloc2/download">amd64</a></th>
   //          <th><a href="/bookworm/arm64/libjemalloc2/download">arm64</a></th>
+  console.log(`https://packages.debian.org/${dist}/${pkg}`)
   const pkgName = /<h1>Package:\s*(.+)\s*(?:\n.+)?<\/h1>/.exec(textIndex)[ 1 ]
   for (const dlArch of [
     textIndex.includes(`/${dist}/all/${pkg}/download`) && 'all',
@@ -138,7 +139,7 @@ runKit(async (kit) => {
   kit.padLog('pkg-deb/trixie')
   log(await getDebianDeb('trixie', 'ca-certificates'))
   log(await getDebianDeb('trixie', 'openssl'))
-  log(await getDebianDeb('trixie', 'libssl3'))
+  log(await getDebianDeb('trixie', 'libssl3t64'))
   log(await getDebianDeb('trixie', 'libjemalloc2'))
 
   kit.padLog('fluent-bit/trixie')
