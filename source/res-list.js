@@ -59,6 +59,18 @@ const RES_MYSQL80 = [
   [ 'https://ports.ubuntu.com/////////////pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.46-0ubuntu0.24.04.3_arm64.deb', 'f5494dfa54ec788b322487dfdeaf70e59b611b9a4fea392564110db258780d29' ]
 ]
 
+// update at 2026/07/01, use official deb from postgresql.org
+const RES_PGSQL18 = [
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/libpq5_18.4-1.pgdg13+1_amd64.deb', '2f06798a11648e09deeef9e38ec3da942b11681965efb8e07f1137fe0d44db7c' ],
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/libpq5_18.4-1.pgdg13+1_arm64.deb', 'fe77ee455e25c66102aacd23ef0d5598ca2ab7394f8449d4ded5e826cb8eee4b' ],
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-common/postgresql-client-common_291.pgdg13+1_all.deb', '27cc5895b2265d17f5d53648f949c47104393ae0c43837581818a45566f30cda' ],
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-client-18_18.4-1.pgdg13+1_amd64.deb', '9c8e66b5a2ace8fa507290555c91559e3b740d2464b9645aba96632acef2b810' ],
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-client-18_18.4-1.pgdg13+1_arm64.deb', 'd1575e3193c2678e16a0cb9a8a00b8f899522a26d55803c262fff9a5643d28f5' ],
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-common/postgresql-common_291.pgdg13+1_all.deb', '3a596266586e73a16fc681432f5f3594b8ab8893d24fc3a51b1ca277316ba789' ],
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-18_18.4-1.pgdg13+1_amd64.deb', '2f40e14d05c475a9fd017fc03cd0aff6e4f9de2696a32bb665ed6146e26a8a49' ],
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-18_18.4-1.pgdg13+1_arm64.deb', 'b5fd367651fcc50a1a5a933c2b32b97ef0431c31c9e987118c1041b56ae97350' ]
+]
+
 // update at 2026/06/30, from: https://valkey.io/download/
 const RES_VALKEY9 = [
   [ 'https://download.valkey.io/releases/valkey-9.1.0-noble-arm64.tar.gz', '0f98ad7715cb74892795cf834b83ca7167367018a31b8fdedb60b1d8483830d0' ],
@@ -77,5 +89,5 @@ module.exports = {
 
   PPTR_VER, IMG_CHROMEDP, RES_FIREFOX,
 
-  RES_MYSQL80, RES_VALKEY9
+  RES_MYSQL80, RES_PGSQL18, RES_VALKEY9
 }

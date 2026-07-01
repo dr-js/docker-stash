@@ -41,6 +41,22 @@ const BUILD_FLAVOR_MAP = {
   F_SLM_MYCO: { NAME: 'slim-mysql80-ci-only', BASE_IMAGE: 'slim-mysql80', LAYER_SCRIPT: '9-1-slim-mysql80-ci-only.sh',
     LAYER_COMMAND_EXTRA: [ 'ENV MYSQL_ROOT_PASSWORD=""', 'ENV MYSQL_ALLOW_EMPTY_PASSWORD=yes' ] },
 
+  // match usage of: https://hub.docker.com/_/postgres
+  F_SLM_PGSQ: { NAME: 'slim-pgsql18', BASE_IMAGE: 'bin-common', LAYER_SCRIPT: '9-3-slim-pgsql18.sh', LAYER_SCRIPT_EXTRA: [ '9-3-slim-pgsql18/' ],
+    LAYER_COMMAND_EXTRA: [
+      'ENV PG_MAJOR=18',
+      'ENV PATH=$PATH:/usr/lib/postgresql/$PG_MAJOR/bin',
+      'ENV PGDATA=/var/lib/postgresql/18/docker',
+      'ENTRYPOINT [ "docker-entrypoint.sh" ]',
+      'STOPSIGNAL SIGINT',
+      'EXPOSE 5432',
+      'CMD [ "postgres" ]' ] },
+  F_SLM_PGCO: { NAME: 'slim-pgsql18-ci-only', BASE_IMAGE: 'slim-pgsql18', LAYER_SCRIPT: '9-4-slim-pgsql18-ci-only.sh',
+    LAYER_COMMAND_EXTRA: [
+      'ENV POSTGRES_PASSWORD=passwd',
+      'ENV POSTGRES_USER=postgres',
+      'CMD [ "postgres", "-c", "shared_buffers=64MB", "-c", "max_worker_processes=2", "-c", "max_parallel_workers=2", "-c", "synchronous_commit=off", "-c", "fsync=off" ]' ] },
+
   // match usage of: https://hub.docker.com/r/valkey/valkey
   F_SLM_VLKS: { NAME: 'slim-valkey9', BASE_IMAGE: 'bin-common', LAYER_SCRIPT: '9-2-slim-valkey9.sh', LAYER_SCRIPT_EXTRA: [ '9-2-slim-valkey9/' ],
     LAYER_COMMAND_EXTRA: [ 'EXPOSE 6379', 'CMD [ "valkey-server" ]', 'WORKDIR "/data"', 'ENTRYPOINT [ "docker-entrypoint.sh" ]' ] }

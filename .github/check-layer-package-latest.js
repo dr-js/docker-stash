@@ -1,11 +1,20 @@
+const { gunzipSync } = require('node:zlib')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 const { fetchWithJumpProxy } = require('@dr-js/core/library/node/module/Software/npm.js')
 const { compareStringWithNumber } = require('@dr-js/core/library/common/compare.js')
 
-const getText = async (url, extHdr = {}) => (await fetchWithJumpProxy(url, {
+const _fWJP = async (url, extHdr = {}) => fetchWithJumpProxy(url, {
   headers: { 'accept': '*/*', 'user-agent': 'docker-stash', ...extHdr }, // patch for sites require a UA, like GitHub
   jumpMax: 4, family: 4
-})).text()
+})
+const _wCA = (func, _cache = {}) => async (...argList) => { // withCacheAsync
+  const cacheK = JSON.stringify(argList)
+  let cacheV = _cache[ cacheK ]
+  if (cacheV === undefined) cacheV = _cache[ cacheK ] = await func(...argList)
+  return cacheV
+}
+const getText = _wCA(async (url, extHdr = {}) => (await _fWJP(url, extHdr)).text())
+const getTextGz = _wCA(async (url, extHdr = {}) => gunzipSync(await (await _fWJP(url, extHdr)).buffer()).toString())
 
 // Package: nodejs
 // Version: 20.19.2-1nodesource1
@@ -102,8 +111,8 @@ const getFluentBitDeb = async (dist = 'buster', pkgName = 'fluent-bit') => {
     'amd64',
     'arm64'
   ]) {
-    // https://packages.fluentbit.io/debian/bookworm/dists/bookworm/main/binary-amd64/Packages
-    const textDlPage = await getText(`https://packages.fluentbit.io/debian/${dist}/dists/${dist}/main/binary-${dlArch}/Packages`)
+    // https://packages.fluentbit.io/debian/bookworm/dists/bookworm/main/binary-amd64/Packages.gz
+    const textDlPage = await getTextGz(`https://packages.fluentbit.io/debian/${dist}/dists/${dist}/main/binary-${dlArch}/Packages.gz`)
     const pkg = pickLatestPkg(parseBinPkg(textDlPage).filter((v) => v[ 'Version' ].startsWith('4.')), pkgName) // TODO: use v4 for now
     const dlUrl = `https://packages.fluentbit.io/debian/${dist}/` + pkg[ 'Filename' ]
     const dlSha256 = pkg[ 'SHA256' ]
@@ -123,6 +132,24 @@ const getFirefoxDeb = async (pkgName = 'firefox') => {
     const pkg = pickLatestPkg(parseBinPkg(textDlPage), pkgName)
     const dlUrl = 'https://packages.mozilla.org/apt/' + pkg[ 'Filename' ]
     const dlSha256 = pkg[ 'SHA256' ]
+    pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
+  }
+  return pkgDlList
+}
+
+const getPg18Deb = async (dist = 'trixie', pkgName = 'postgresql-18') => { // https://www.postgresql.org/download/linux/debian/
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
+  for (const dlArch of [
+    'amd64',
+    'arm64'
+  ]) {
+    // https://ftp.postgresql.org/pub/repos/apt/dists/trixie-pgdg/main/binary-amd64/Packages.gz
+    const textDlPage = await getTextGz(`https://ftp.postgresql.org/pub/repos/apt/dists/${dist}-pgdg/main/binary-${dlArch}/Packages.gz`)
+    const pkg = pickLatestPkg(parseBinPkg(textDlPage), pkgName)
+    const dlUrl = 'https://ftp.postgresql.org/pub/repos/apt/' + pkg[ 'Filename' ]
+    const dlSha256 = pkg[ 'SHA256' ]
+    if (dlUrl.endsWith('_all.deb')) pkgDlList.push({ pkgName, dlArch: 'all', dlUrl, dlSha256 })
+    if (dlUrl.endsWith('_all.deb')) break
     pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
   }
   return pkgDlList
@@ -150,6 +177,13 @@ runKit(async (kit) => {
   // log(await getDebianDeb('trixie', 'chromium-common'))
   kit.padLog('browser:firefox')
   log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm/trixie
+
+  kit.padLog('pg18/trixe')
+  log(await getPg18Deb('trixie', 'libpq5'))
+  log(await getPg18Deb('trixie', 'postgresql-client-common'))
+  log(await getPg18Deb('trixie', 'postgresql-client-18'))
+  log(await getPg18Deb('trixie', 'postgresql-common'))
+  log(await getPg18Deb('trixie', 'postgresql-18'))
 
   kit.padLog('pkg-deb/noble')
   log(await getUbuntuDeb('noble-updates', 'mysql-client-core-8.0'))
