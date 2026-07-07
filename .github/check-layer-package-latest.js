@@ -48,7 +48,6 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
   // dl-url   <th><a href="/bookworm/all/ca-certificates/download">all</a></th>
   //          <th><a href="/bookworm/amd64/libjemalloc2/download">amd64</a></th>
   //          <th><a href="/bookworm/arm64/libjemalloc2/download">arm64</a></th>
-  console.log(`https://packages.debian.org/${dist}/${pkg}`)
   const pkgName = /<h1>Package:\s*(.+)\s*(?:\n.+)?<\/h1>/.exec(textIndex)[ 1 ]
   for (const dlArch of [
     textIndex.includes(`/${dist}/all/${pkg}/download`) && 'all',
