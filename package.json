@@ -22,7 +22,7 @@
     "docker-prune": "node source/docker-prune.js",
     "docker-ls": "node source/docker-ls.js",
     "// tooling ================": "",
-    "lint": "biome lint",
+    "lint": "oxlint",
     "// ========================": "",
     "fix-script-filemode": "bash -c '(shopt -s globstar && chmod --changes +x source/**/*.sh && ls -al source/**/*.sh)'",
     "prepack": "echo \"Error: do not pack this package\" && exit 1"
@@ -36,6 +36,6 @@
     "@dr-js/dev": "^0.5.14"
   },
   "optionalDependencies": {
-    "@biomejs/biome": "^2.4.7"
+    "oxlint": "^1.80.0"
   }
 }
