@@ -5,13 +5,11 @@ source ./0-1-base-apt.sh
 RES_LAYER=./9-0-slim-mysql80
 
 # MNT
-MNT_DEB_MYSQL_CMN="$(echo /mnt/build-layer-resource/mysql-common_*_all.deb)"
 MNT_DEB_MYSQL_CLI="$(echo /mnt/build-layer-resource/mysql-client-core-8.0_*_${DOCKER_BUILD_ARCH}.deb)"
 MNT_DEB_LIBICU="$(echo /mnt/build-layer-resource/libicu74_*_${DOCKER_BUILD_ARCH}.deb)"
 MNT_DEB_MYSQL_SVR="$(echo /mnt/build-layer-resource/mysql-server-core-8.0_*_${DOCKER_BUILD_ARCH}.deb)"
 
 apt-update
-  dpkg -i "${MNT_DEB_MYSQL_CMN}"
   dpkg -i "${MNT_DEB_MYSQL_CLI}" || apt-install --fix-broken # fix missing dependencies
   dpkg -i "${MNT_DEB_LIBICU}" || apt-install --fix-broken # fix missing dependencies
   dpkg -i "${MNT_DEB_MYSQL_SVR}" || apt-install --fix-broken # fix missing dependencies

@@ -36,23 +36,25 @@ debian:13-core (80M uncompressed)
 └─bin-common (35M)
   ├─bin-node (135M)
   | └─bin-sshd (10M)
-  |   └─bin-etc (3M)
+  |   └─bin-etc (5M)
   |     └─bin-git (35M)
   |       ├─bin-ruby3 (75M)
   |       | └─bin-java (210M)
   |       |   └─dep-libvips (90M)
-  |       |     ├─bin-go (210M)
+  |       |     ├─bin-go (235M)
   |       |     | └─bin-build (230M) ┈┈┬┈┈┈┈┈┈┈┈╮ used to build
   |       |     └─bin-nginx (2M) ⏴┈┈┈┈┈╯        ┊
   |       |       └─bin-fluent-bit (70M)        ┊
   |       └─dep-font (155M)                     ┊
   |         └─dep-pptr2603 (20M)                ┊
-  |           └─bin-chrome-hlsh (225M)          ┊
-  |             └─bin-firefox (390M)            ┊
+  |           └─bin-chrome-hlsh (265M)          ┊
+  |             └─bin-firefox (400M)            ┊
   ├─slim-nginx (2M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┤
   ├─slim-mysql80 (225M)                         ┊
   | └─slim-mysql80-ci-only (45M)                ┊
-  └─slim-redis6 (15M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈╯
+  ├─slim-pgsql18 (135M)                         ┊
+  | └─slim-pgsql18-ci-only (0M)                 ┊
+  └─slim-valkey9 (30M) ⏴┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈┈╯
 ```
 
 

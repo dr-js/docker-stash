@@ -2,6 +2,12 @@
 
 keep list of notable break & big code change
 
+- `0.5.8`
+  - ADD: layer: bin-etc: `socat`
+- `0.5.8-dev.1`
+  - ADD: layer: slim-pgsql18(-ci-only)
+- `0.5.8-dev.0`
+  - BREAK: layer: replace `valkey9 <- redis6`
 - `0.5.6.dev.1`
   - DEV-BREAK: layer: move `dep-font` under `bin-git`
   - DEV-BREAK: layer: rename `bin-chrome-hlsh <- bin-chrome-headless-shell`

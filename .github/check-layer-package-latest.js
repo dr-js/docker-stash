@@ -1,11 +1,20 @@
+const { gunzipSync } = require('node:zlib')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 const { fetchWithJumpProxy } = require('@dr-js/core/library/node/module/Software/npm.js')
 const { compareStringWithNumber } = require('@dr-js/core/library/common/compare.js')
 
-const getText = async (url, extHdr = {}) => (await fetchWithJumpProxy(url, {
+const _fWJP = async (url, extHdr = {}) => fetchWithJumpProxy(url, {
   headers: { 'accept': '*/*', 'user-agent': 'docker-stash', ...extHdr }, // patch for sites require a UA, like GitHub
   jumpMax: 4, family: 4
-})).text()
+})
+const _wCA = (func, _cache = {}) => async (...argList) => { // withCacheAsync
+  const cacheK = JSON.stringify(argList)
+  let cacheV = _cache[ cacheK ]
+  if (cacheV === undefined) cacheV = _cache[ cacheK ] = await func(...argList)
+  return cacheV
+}
+const getText = _wCA(async (url, extHdr = {}) => (await _fWJP(url, extHdr)).text())
+const getTextGz = _wCA(async (url, extHdr = {}) => gunzipSync(await (await _fWJP(url, extHdr)).buffer()).toString())
 
 // Package: nodejs
 // Version: 20.19.2-1nodesource1
@@ -28,8 +37,8 @@ const pickLatestPkg = (pkgList, pkgName = '') => pkgList
   .filter((v) => v[ 'Package' ] === pkgName) // filter out other pkg
   .sort((a, b) => -compareStringWithNumber(a[ 'Version' ], b[ 'Version' ]))[ 0 ] // get biggest version // https://www.debian.org/doc/debian-policy/ch-controlfields.html#version
 
-// TODO: NOTE: to bypass fastly UA checking page, need copy from browser on page like https://packages.debian.org/trixie/apt
-const EXT_HDR_DEB = { cookie: '_fs_ch_cp_79..Qv=Ae ..{REPLACE-WITH-ACTUAL-COOKIE}.. Nw==' }
+// TODO: NOTE: to bypass bot-challenge page, need copy from browser on page like https://packages.debian.org/trixie/apt
+const EXT_HDR_DEB = { cookie: 'pow_challenge=012..0d; pow_nonce=191; pow_bypass=0xa3..50' }
 const getDebianDeb = async (dist = 'buster', pkg = '') => {
   const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
   const textIndex = await getText(`https://packages.debian.org/${dist}/${pkg}`, EXT_HDR_DEB)
@@ -81,13 +90,13 @@ const getUbuntuDeb = async (dist = 'noble', pkg = '') => {
     // <tr><th>SHA256 checksum</th>\t<td><tt>0d1275c1004a55f7886bc23adefda950e5442be228799de8520776880dd84c82</tt></td>
     const uStub = /You can download the requested file from the <tt>(pool\/\S+)<\/tt> subdirectory at/.exec(textDlPage)[ 1 ]
     const uDeb = /More information on <kbd>(\S+\.deb)<\/kbd>:/.exec(textDlPage)[ 1 ]
-    // TODO: need map from:  https://mirrors.kernel.org/ubuntu/pool/main/m/mysql-8.0/ (with amd64.deb & all.deb)
-    //                  or: https://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/ (with amd64.deb & all.deb)
-    //                  to:           https://ports.ubuntu.com/pool/main/m/mysql-8.0/ (with arm64.deb & all.deb)
+    // TODO: need map from: https://kr.archive.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/ (with amd64.deb & all.deb)
+    //                  or:   https://security.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/ (with amd64.deb & all.deb)
+    //                  to:             https://ports.ubuntu.com/pool/main/m/mysql-8.0/ (with arm64.deb & all.deb)
     //       check: https://forum.odroid.com/viewtopic.php?t=32841
-    const uPfx = dlArch === 'arm64' ? 'ports.ubuntu.com/////////'
-      : textDlPage.includes('security.ubuntu.com') ? 'security.ubuntu.com/ubuntu'
-        : 'mirrors.kernel.org/ubuntu'
+    const uPfx = dlArch === 'arm64' ? 'ports.ubuntu.com////////////'
+      : textDlPage.includes('security.ubuntu.com') ? 'security.ubuntu.com/ubuntu//'
+        : 'kr.archive.ubuntu.com/ubuntu'
     const dlUrl = `https://${uPfx}/${uStub}${uDeb}`
     const dlSha256 = /SHA256 checksum<\/th>\s*<td><tt>(\w+)<\/tt>/.exec(textDlPage)[ 1 ]
     pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
@@ -101,8 +110,8 @@ const getFluentBitDeb = async (dist = 'buster', pkgName = 'fluent-bit') => {
     'amd64',
     'arm64'
   ]) {
-    // https://packages.fluentbit.io/debian/bookworm/dists/bookworm/main/binary-amd64/Packages
-    const textDlPage = await getText(`https://packages.fluentbit.io/debian/${dist}/dists/${dist}/main/binary-${dlArch}/Packages`)
+    // https://packages.fluentbit.io/debian/bookworm/dists/bookworm/main/binary-amd64/Packages.gz
+    const textDlPage = await getTextGz(`https://packages.fluentbit.io/debian/${dist}/dists/${dist}/main/binary-${dlArch}/Packages.gz`)
     const pkg = pickLatestPkg(parseBinPkg(textDlPage).filter((v) => v[ 'Version' ].startsWith('4.')), pkgName) // TODO: use v4 for now
     const dlUrl = `https://packages.fluentbit.io/debian/${dist}/` + pkg[ 'Filename' ]
     const dlSha256 = pkg[ 'SHA256' ]
@@ -127,6 +136,24 @@ const getFirefoxDeb = async (pkgName = 'firefox') => {
   return pkgDlList
 }
 
+const getPg18Deb = async (dist = 'trixie', pkgName = 'postgresql-18') => { // https://www.postgresql.org/download/linux/debian/
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
+  for (const dlArch of [
+    'amd64',
+    'arm64'
+  ]) {
+    // https://ftp.postgresql.org/pub/repos/apt/dists/trixie-pgdg/main/binary-amd64/Packages.gz
+    const textDlPage = await getTextGz(`https://ftp.postgresql.org/pub/repos/apt/dists/${dist}-pgdg/main/binary-${dlArch}/Packages.gz`)
+    const pkg = pickLatestPkg(parseBinPkg(textDlPage), pkgName)
+    const dlUrl = 'https://ftp.postgresql.org/pub/repos/apt/' + pkg[ 'Filename' ]
+    const dlSha256 = pkg[ 'SHA256' ]
+    if (dlUrl.endsWith('_all.deb')) pkgDlList.push({ pkgName, dlArch: 'all', dlUrl, dlSha256 })
+    if (dlUrl.endsWith('_all.deb')) break
+    pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
+  }
+  return pkgDlList
+}
+
 const log = (pkgDlList) => {
   for (const { pkgName, dlArch, dlUrl, dlSha256 } of pkgDlList) {
     console.log(`  // <${dlArch}> ${pkgName}`)
@@ -138,7 +165,7 @@ runKit(async (kit) => {
   kit.padLog('pkg-deb/trixie')
   log(await getDebianDeb('trixie', 'ca-certificates'))
   log(await getDebianDeb('trixie', 'openssl'))
-  log(await getDebianDeb('trixie', 'libssl3'))
+  log(await getDebianDeb('trixie', 'libssl3t64'))
   log(await getDebianDeb('trixie', 'libjemalloc2'))
 
   kit.padLog('fluent-bit/trixie')
@@ -150,8 +177,14 @@ runKit(async (kit) => {
   kit.padLog('browser:firefox')
   log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm/trixie
 
+  kit.padLog('pg18/trixe')
+  log(await getPg18Deb('trixie', 'libpq5'))
+  log(await getPg18Deb('trixie', 'postgresql-client-common'))
+  log(await getPg18Deb('trixie', 'postgresql-client-18'))
+  log(await getPg18Deb('trixie', 'postgresql-common'))
+  log(await getPg18Deb('trixie', 'postgresql-18'))
+
   kit.padLog('pkg-deb/noble')
-  log(await getUbuntuDeb('noble', 'mysql-common'))
   log(await getUbuntuDeb('noble-updates', 'mysql-client-core-8.0'))
   log(await getUbuntuDeb('noble-updates', 'libicu74')) // needed by `mysql-server-core-8.0` but debian/trixie use `libicu76`
   log(await getUbuntuDeb('noble-updates', 'mysql-server-core-8.0'))
