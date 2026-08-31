@@ -188,4 +188,4 @@ runKit(async (kit) => {
   log(await getUbuntuDeb('noble-updates', 'mysql-client-core-8.0'))
   log(await getUbuntuDeb('noble-updates', 'libicu74')) // needed by `mysql-server-core-8.0` but debian/trixie use `libicu76`
   log(await getUbuntuDeb('noble-updates', 'mysql-server-core-8.0'))
-}, { title: 'ci-patch' })
+}, { title: 'check-layer-package-latest' })

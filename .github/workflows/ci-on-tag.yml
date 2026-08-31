@@ -6,16 +6,15 @@ jobs:
     runs-on: "${{ matrix.OS }}"
     timeout-minutes: 45
     steps:
-      - { uses: "actions/checkout@v6" } # https://github.com/actions/checkout
-      - { uses: "actions/setup-node@v6", with: { node-version: "lts/*" } } # https://github.com/actions/setup-node
-      - run: |
-          bash .github/setup-docker.sh
-          echo "$PASSWORD" | dr-js --docker -- login --username drjs --password-stdin
-          echo "$GHCR_PASSWORD" | dr-js --docker -- login --username dr-js --password-stdin ghcr.io
-        env:
-          PASSWORD: ${{ secrets.DOCKER_HUB_DRJS_PASSWORD }}
-          GHCR_PASSWORD: ${{ secrets.GHCR_DRJS_PAT_PASSWORD }}
+      - { uses: "actions/checkout@v7" } # https://github.com/actions/checkout
+      - { uses: "actions/setup-node@v7", with: { node-version: "lts/*" } } # https://github.com/actions/setup-node
       - run: npm ci --ignore-scripts
+      - run: |
+          docker --version # `ubuntu-24.04` should provide `docker@28` check: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md
+          echo '"drjs/debian"         ' > source/debian13/BUILD_REPO.json
+          echo '"ghcr.io/dr-js/debian"' > source/debian13/BUILD_REPO_GHCR.json
+          echo "${{ secrets.DOCKER_HUB_DRJS_PASSWORD }}" | ./node_modules/.bin/dr-js --docker -- login --username drjs --password-stdin
+          echo "${{ secrets.GHCR_DRJS_PAT_PASSWORD   }}" | ./node_modules/.bin/dr-js --docker -- login --username dr-js --password-stdin ghcr.io
       - run: npm run lint
       - run: npm run build-debian13
       - run: npm run push-debian13-all
@@ -25,14 +24,13 @@ jobs:
     runs-on: "ubuntu-24.04"
     timeout-minutes: 15
     steps:
-      - { uses: "actions/checkout@v6" } # https://github.com/actions/checkout
-      - { uses: "actions/setup-node@v6", with: { node-version: "lts/*" } } # https://github.com/actions/setup-node
-      - run: |
-          bash .github/setup-docker.sh
-          echo "$PASSWORD" | dr-js --docker -- login --username drjs --password-stdin
-          echo "$GHCR_PASSWORD" | dr-js --docker -- login --username dr-js --password-stdin ghcr.io
-        env:
-          PASSWORD: ${{ secrets.DOCKER_HUB_DRJS_PASSWORD }}
-          GHCR_PASSWORD: ${{ secrets.GHCR_DRJS_PAT_PASSWORD }}
+      - { uses: "actions/checkout@v7" } # https://github.com/actions/checkout
+      - { uses: "actions/setup-node@v7", with: { node-version: "lts/*" } } # https://github.com/actions/setup-node
       - run: npm ci --ignore-scripts --omit=optional
+      - run: |
+          docker --version # `ubuntu-24.04` should provide `docker@28` check: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md
+          echo '"drjs/debian"         ' > source/debian13/BUILD_REPO.json
+          echo '"ghcr.io/dr-js/debian"' > source/debian13/BUILD_REPO_GHCR.json
+          echo "${{ secrets.DOCKER_HUB_DRJS_PASSWORD }}" | ./node_modules/.bin/dr-js --docker -- login --username drjs --password-stdin
+          echo "${{ secrets.GHCR_DRJS_PAT_PASSWORD   }}" | ./node_modules/.bin/dr-js --docker -- login --username dr-js --password-stdin ghcr.io
       - run: npm run push-debian13-manifest-all
