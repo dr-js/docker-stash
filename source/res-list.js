@@ -40,9 +40,11 @@ const RES_F_BIT_DEB13 = [
 const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.10.tar.gz', 'ecee2d072a14f2d14347dd56dfd8fe5c3130abf5117bfaacbda0f4ef9cc429ec' ] ]
 
 // update at 2025/08/31, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
-const PPTR_VER = '24.43.1' // TODO: hold-off major ver bump // [ "v25.6.0", { "chrome": "151.0.7922.77", "firefox": "stable_153.0.3" } ]
+const PPTR_VER = '24.43.1' // [ "v24.43.1", { "chrome": "148.0.7778.97", "firefox": "stable_150.0.2" } ] //  TODO: hold-off major ver bump // [ "v25.6.0", { "chrome": "151.0.7922.77", "firefox": "stable_153.0.3" } ]
 // update at 2025/08/31, default use "stable" version at: https://hub.docker.com/r/chromedp/headless-shell/tags
-const IMG_CHROMEDP = 'chromedp/headless-shell:151.0.7922.109'
+// TODO: hold & wait fix for: Failing to start after chromium 150 update: https://github.com/chromedp/chromedp/issues/1635
+//   or use chrome-headless-shell	linux64 & linux-arm64 at: https://googlechromelabs.github.io/chrome-for-testing/
+const IMG_CHROMEDP = 'chromedp/headless-shell:148.0.7778.97'
 // update at 2026/08/31, use official deb from mozilla
 const RES_FIREFOX = [
   [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_154.0~build1_amd64_102b8c637e035f0bf116d2832a2e8afb.deb', '5a8032d9ff8093004498f0b61035d19a58f81c7532fc45ecfe5ba06a28457f7d' ], // <amd64> firefox
