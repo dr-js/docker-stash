@@ -112,7 +112,7 @@ const getFluentBitDeb = async (dist = 'buster', pkgName = 'fluent-bit') => {
   ]) {
     // https://packages.fluentbit.io/debian/bookworm/dists/bookworm/main/binary-amd64/Packages.gz
     const textDlPage = await getTextGz(`https://packages.fluentbit.io/debian/${dist}/dists/${dist}/main/binary-${dlArch}/Packages.gz`)
-    const pkg = pickLatestPkg(parseBinPkg(textDlPage).filter((v) => v[ 'Version' ].startsWith('4.')), pkgName) // TODO: use v4 for now
+    const pkg = pickLatestPkg(parseBinPkg(textDlPage), pkgName)
     const dlUrl = `https://packages.fluentbit.io/debian/${dist}/` + pkg[ 'Filename' ]
     const dlSha256 = pkg[ 'SHA256' ]
     pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
@@ -156,8 +156,7 @@ const getPg18Deb = async (dist = 'trixie', pkgName = 'postgresql-18') => { // ht
 
 const log = (pkgDlList) => {
   for (const { pkgName, dlArch, dlUrl, dlSha256 } of pkgDlList) {
-    console.log(`  // <${dlArch}> ${pkgName}`)
-    console.log(`  [ '${dlUrl}', '${dlSha256}' ],`)
+    console.log(`  [ '${dlUrl}', '${dlSha256}' ], // <${dlArch}> ${pkgName}`)
   }
 }
 
