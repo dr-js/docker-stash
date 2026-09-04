@@ -24,7 +24,10 @@ const BUILD_FLAVOR_MAP = {
       'ENV PUPPETEER_BROWSER=chrome',
       'ENV HOME=/tmp' ] },
   F_BIN_C_HS: { NAME: 'bin-chrome-hlsh', BASE_IMAGE: 'dep-pptr2603', LAYER_SCRIPT: '8-4-bin-chrome-hlsh.sh' },
-  F_BIN_FRFX: { NAME: 'bin-firefox', BASE_IMAGE: 'bin-chrome-hlsh', LAYER_SCRIPT: '8-6-bin-firefox.sh' },
+  F_BIN_FRFX: { NAME: 'bin-firefox', BASE_IMAGE: 'bin-chrome-hlsh', LAYER_SCRIPT: '8-6-bin-firefox.sh',
+    LAYER_COMMAND_EXTRA: [
+      'ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/firefox',
+      'ENV PUPPETEER_BROWSER=firefox' ] },
 
   F_SLM_NGNX: { NAME: 'slim-nginx', BASE_IMAGE: 'bin-common', LAYER_SCRIPT: '6-0-bin-nginx.2-check.sh',
     BUILD_IMAGE: 'bin-nginx', BUILD_LAYER_SCRIPT: '6-0-bin-nginx.2-check.sh', BUILD_COPY_PATH: '/usr/local/bin/nginx' },
