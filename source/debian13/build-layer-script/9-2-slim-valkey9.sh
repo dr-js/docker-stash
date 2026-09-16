@@ -5,18 +5,12 @@ source ./0-0-base.sh
 RES_LAYER=./9-2-slim-valkey9
 
 # MNT
-MNT_TGZ_VLKY="$(echo /mnt/build-layer-resource/valkey-*-${DOCKER_BUILD_ARCH}.tar.gz)"
+MNT_TAR_VLKY="/mnt/build-layer-resource/valkey9.tar"
 
 # edited from Docker Image: https://github.com/valkey-io/valkey-container/blob/mainline/9.1/debian/
 # already has `tzdata libssl3t64` installed
 
-mkdir /tmp/unpack/
-( cd /tmp/unpack/
-  tar -xf "${MNT_TGZ_VLKY}"
-  mv ./valkey-*/bin/valkey-cli    /usr/local/bin/valkey-cli
-  mv ./valkey-*/bin/valkey-server /usr/local/bin/valkey-server
-)
-rm -r /tmp/unpack/
+tar -xf "${MNT_TAR_VLKY}" -C /usr/local/bin/
 
 cp -r "${RES_LAYER}"/* /
 chmod +x /usr/local/bin/docker-entrypoint.sh

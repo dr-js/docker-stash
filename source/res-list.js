@@ -73,11 +73,8 @@ const RES_PGSQL18 = [
   [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-18_18.6-1.pgdg13+2_arm64.deb', '16d1f20450bfdc13118c317a86745ca1a0d56fe192c3d8f8091a7f2d9868c4d9' ], // <arm64> postgresql-18
 ]
 
-// update at 2026/06/30, from: https://valkey.io/download/
-const RES_VALKEY9 = [
-  [ 'https://download.valkey.io/releases/valkey-9.1.1-noble-arm64.tar.gz '.trim(), 'f1477b12c36832dcb8e3e2f83c1a1554a18ab94b204d017e1d8443bff1dade21' ],
-  [ 'https://download.valkey.io/releases/valkey-9.1.1-noble-x86_64.tar.gz'.trim(), '41f5eb5dc88111c5d117821c120c5a9fbcf2bcc3316953f811c04444046ecb28', 'valkey-9.1.1-noble-amd64.tar.gz' ]
-]
+// update at 2026/09/16, from: https://hub.docker.com/r/valkey/valkey/tags?name=9.1.2
+const IMG_VALKEY9 = 'valkey/valkey:9.1.2-trixie'
 
 module.exports = {
   RES_CORE_DEB13,
@@ -91,5 +88,5 @@ module.exports = {
 
   PPTR_VER, IMG_CHROMEDP, RES_FIREFOX,
 
-  RES_MYSQL80, RES_PGSQL18, RES_VALKEY9
+  RES_MYSQL80, RES_PGSQL18, IMG_VALKEY9,
 }

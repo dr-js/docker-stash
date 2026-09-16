@@ -4,7 +4,7 @@ const { modifyCopy } = require('@dr-js/core/library/node/fs/Modify.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
-const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB13, RES_RUBY3, PPTR_VER, RES_FIREFOX, RES_MYSQL80, RES_PGSQL18, RES_VALKEY9 } = require('../res-list.js')
+const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB13, RES_RUBY3, PPTR_VER, RES_FIREFOX, RES_MYSQL80, RES_PGSQL18 } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN13_BUILD_FLAVOR_MAP, verifyDebian13BuildArg,
@@ -12,6 +12,7 @@ const {
   TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
 } = require('../function.js')
 const { prepareChromeHeadlessShellWithLocalCache } = require('../function.chrome-headless-shell.js')
+const { prepareValkey9WithLocalCache } = require('../function.valkey9.js')
 
 const [
   , // node
@@ -63,13 +64,16 @@ runKit(async (kit) => {
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_GO__ ? RES_GO : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_MYSQ ? RES_MYSQL80 : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_PGSQ ? RES_PGSQL18 : []),
-    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_VLKS ? RES_VALKEY9 : [])
   ], {
     pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),
     pathCache: kit.fromTemp('debian13', 'layer-url')
   })
   BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_C_HS && await prepareChromeHeadlessShellWithLocalCache({
     fileOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/', 'chrome-headless-shell.tar'),
+    pathCache: kit.fromTemp('debian13', 'layer-file')
+  })
+  BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_VLKS && await prepareValkey9WithLocalCache({
+    fileOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/', 'valkey9.tar'),
     pathCache: kit.fromTemp('debian13', 'layer-file')
   })
 
