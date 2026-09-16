@@ -1,40 +1,40 @@
 const RES_CORE_DEB13 = [
   // update at 2026/08/31, start from: https://packages.debian.org/search?keywords=ca-certificates
   [ 'https://ftp.debian.org/debian/pool/main/c/ca-certificates/ca-certificates_20250419_all.deb', 'ef590f89563aa4b46c8260d49d1cea0fc1b181d19e8df3782694706adf05c184' ], // <all> ca-certificates (20250419)
-  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.5.7-1~deb13u2_amd64.deb', '4ff006f431d8c2e69fa736885a3b6e779f2448535f69dbde821d9f0ff87ad8ea' ], // <amd64> openssl (3.5.7-1~deb13u2)
-  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/openssl_3.5.7-1~deb13u2_arm64.deb', 'ff38f9e4fdbfef72d9cb31088e5e42f58c83c2fb1d1bbb4e4b4c9adc53c17100' ], // <arm64> openssl (3.5.7-1~deb13u2)
-  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl3t64_3.5.7-1~deb13u2_amd64.deb', '916f7f40b34a06e6ebfaefcdab331bff458328411da672598f126a760472467d' ], // <amd64> libssl3t64 (3.5.7-1~deb13u2)
-  [ 'https://security.debian.org/debian-security/pool/updates/main/o/openssl/libssl3t64_3.5.7-1~deb13u2_arm64.deb', 'ec131326aa9fa9ec934eca386bc7991f328fe383eaefd3e43bd8901a9199c5ae' ], // <arm64> libssl3t64 (3.5.7-1~deb13u2)
+  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.5.7-1~deb13u2_amd64.deb', '4ff006f431d8c2e69fa736885a3b6e779f2448535f69dbde821d9f0ff87ad8ea' ], // <amd64> openssl (3.5.7-1~deb13u2)
+  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/openssl_3.5.7-1~deb13u2_arm64.deb', 'ff38f9e4fdbfef72d9cb31088e5e42f58c83c2fb1d1bbb4e4b4c9adc53c17100' ], // <arm64> openssl (3.5.7-1~deb13u2)
+  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3t64_3.5.7-1~deb13u2_amd64.deb', '916f7f40b34a06e6ebfaefcdab331bff458328411da672598f126a760472467d' ], // <amd64> libssl3t64 (3.5.7-1~deb13u2)
+  [ 'https://ftp.debian.org/debian/pool/main/o/openssl/libssl3t64_3.5.7-1~deb13u2_arm64.deb', 'ec131326aa9fa9ec934eca386bc7991f328fe383eaefd3e43bd8901a9199c5ae' ], // <arm64> libssl3t64 (3.5.7-1~deb13u2)
   // update at 2026/03/04, check: https://packages.debian.org/search?keywords=libjemalloc2
   [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.3.0-3_amd64.deb', 'e7d64919e620e8ea46960104efe1e9c977d751e5b610a5d89b0b51aeae9530d7' ], // <amd64> libjemalloc2 (5.3.0-3)
   [ 'https://ftp.debian.org/debian/pool/main/j/jemalloc/libjemalloc2_5.3.0-3_arm64.deb', '437c48a6d591579bc812fc583ff0f28ac34a7d5c36b7d4e9f4f8809650430f3e' ], // <arm64> libjemalloc2 (5.3.0-3)
 ]
 
 const RES_NODE = [
-  // update at 2026/08/31, check: https://nodejs.org/download/release/latest-v24.x/SHASUMS256.txt
-  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.20.0-linux-x64.tar.gz  '.trim(), '855d581f8a4eb1a8117e3426de25fe02770592febcfb31369aee1ffbfee9e8ec', 'node-@@@-amd64.tar.gz' ], // NOTE: fix filename
-  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.20.0-linux-arm64.tar.gz'.trim(), '3515603e2487879a39bc75716f1a2affd027500c64ba50e845cf72cb33219013', 'node-@@@-arm64.tar.gz' ], // NOTE: fix filename
+  // update at 2026/09/16, check: https://nodejs.org/download/release/latest-v24.x/SHASUMS256.txt
+  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.21.0-linux-x64.tar.gz  '.trim(), '6e1db87ef58b8819e5d5402eff1536491b18edd8eb7bee5ef7897876e88dc5ff', 'node-@@@-amd64.tar.gz' ], // NOTE: fix filename
+  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.21.0-linux-arm64.tar.gz'.trim(), '724282c3b43aec998aa9527380465b45d229e021b58035f5f4f63095eabfe5d5', 'node-@@@-arm64.tar.gz' ], // NOTE: fix filename
   // update at 2026/08/31, check: `{ npm view npm@next-11; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
   [ 'https://registry.npmjs.org/npm/-/npm-11.19.1.tgz         '.trim(), 'ztsxKxt/kkIaAs+2i0GU6I+DRmUdrNasxTZKJe9TCdSjKxlhah/4r/hl5ygMD6XAg1qZ9c2TNomR4qgOydp10g==:sha512:base64' ],
   [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.17.tgz '.trim(), 'xHPK1TEXbvTKyH1UafKZFWqSqZZaYEtTLZ6hVEvYasmm3sFSUPA0rbw/r1DPGRJ7QlLkdzCewS4t11C1B9l0DA==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
   [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.5.14.tgz   '.trim(), 'KWwHsqxHrOtuVNPTq2chms7bXsQnti05UXp7dQIWUGVqOC+nQs6uN1KlIRqwJXZ5eo2pZnNCjk+GQ3RcpEyfjg==:sha512:base64', 'dr-dev-@@@.tgz' ] // NOTE: fix filename
 ]
 const RES_NGINX = [
-  // update at 2026/08/31, use Stable version, check: https://nginx.org/en/download.html
+  // update at 2026/09/16, use Stable version, check: https://nginx.org/en/download.html
   // and: https://github.com/google/ngx_brotli
-  [ 'https://nginx.org/download/nginx-1.30.4.tar.gz             '.trim(), '4261dc90e9e47c1c4041276e9aaa3d48ebe2e664f728e14fa95ae6c67d57a08b' ], // TODO: need to calc hash yourself
+  [ 'https://nginx.org/download/nginx-1.30.5.tar.gz             '.trim(), '6c20565aa2325cb82216ae804f4a4ff1875179014759a381c42ddc8e11c4906d' ], // TODO: need to calc hash yourself
   [ 'https://github.com/google/brotli/archive/ed738e84.zip      '.trim(), 'a68ec12a898abc9cf248f21362620562041b7aab4d623ecd736f39bedf5002a0', 'brotli.zip' ], // specify filename // TODO: need to calc hash yourself
   [ 'https://github.com/google/ngx_brotli/archive/a71f9312.zip  '.trim(), '96f23eb72488ffc570cbc474a928000b05b72f2682456ae357aeaf3ce71c626e', 'ngx-brotli.zip' ] // specify filename // TODO: need to calc hash yourself
 ]
 const RES_GO = [
-  // update at 2026/08/31, use 2nd-recent-minor version if latest version's patch version < 2, check: https://go.dev/dl/
-  [ 'https://go.dev/dl/go1.26.7.linux-amd64.tar.gz', 'ffb5f8de10c62550dfddab66b36b57030721e0a44a3218e9e1181d7b59f121ca' ],
-  [ 'https://go.dev/dl/go1.26.7.linux-arm64.tar.gz', '5a4ec883379d51ee9ce1040d5e87f8d35e20387574dd8c947feb01eabc3c1b37' ]
+  // update at 2026/09/16, use 2nd-recent-minor version if latest version's patch version < 2, check: https://go.dev/dl/
+  [ 'https://go.dev/dl/go1.26.8.linux-amd64.tar.gz', 'd0f743b33e8d8945e6b1f432edd15785c70507121d6e2a723b21285eddf8b57b' ],
+  [ 'https://go.dev/dl/go1.26.8.linux-arm64.tar.gz', '211ffced9dcb9633a55eac6364816ec0ddd951389a740e88fa8b3337971bdda0' ]
 ]
-// update at 2026/08/31, check: ".github/check-layer-package-latest.js"
+// update at 2026/09/16, check: ".github/check-layer-package-latest.js"
 const RES_F_BIT_DEB13 = [
-  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.1_amd64.deb', 'a7d06cb0687c66439ee2312e20e9bf05c0856a8089c164085c365577086b4321' ], // <amd64> fluent-bit
-  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.1_arm64.deb', '0c9dfe0092a4edfa607a8302e4cc09069d2720dee4c3cfcb64c1a6a6fcf5706d' ], // <arm64> fluent-bit
+  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.2_amd64.deb', '31e289d745637bb62f645822c1e2d83e0712147388ac001394dadf21908154b5' ], // <amd64> fluent-bit
+  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.2_arm64.deb', '62256ada63bd94aa4e88a3d9f981a2b6ae311016dfb40915d73a81e44ea0647a' ], // <arm64> fluent-bit
 ]
 // update at 2025/07/01, from: https://www.ruby-lang.org/en/downloads/releases/
 const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.10.tar.gz', 'ecee2d072a14f2d14347dd56dfd8fe5c3130abf5117bfaacbda0f4ef9cc429ec' ] ]
@@ -45,24 +45,24 @@ const PPTR_VER = '24.43.1' // [ "v24.43.1", { "chrome": "148.0.7778.97", "firefo
 // TODO: hold & wait fix for: Failing to start after chromium 150 update: https://github.com/chromedp/chromedp/issues/1635
 //   or use chrome-headless-shell	linux64 & linux-arm64 at: https://googlechromelabs.github.io/chrome-for-testing/
 const IMG_CHROMEDP = 'chromedp/headless-shell:148.0.7778.97'
-// update at 2026/08/31, use official deb from mozilla
+// update at 2026/09/16, use official deb from mozilla
 const RES_FIREFOX = [
-  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_154.0~build1_amd64_102b8c637e035f0bf116d2832a2e8afb.deb', '5a8032d9ff8093004498f0b61035d19a58f81c7532fc45ecfe5ba06a28457f7d' ], // <amd64> firefox
-  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_154.0~build1_arm64_2b9118399a9a57866b6ead6db0baedfc.deb', '9fe1800859d501469653b851efe6abc686daf5c83505b91ae6921d48353268db' ], // <arm64> firefox
+  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_156.0~build1_amd64_da0aa455eda997f3f3352727bc418f56.deb', 'd8ad512c86c64b2642a0154c19260adc41b7cf3c8001526652714dcf936bdbc2' ], // <amd64> firefox
+  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_156.0~build1_arm64_ab3b69f2023ff0855823664dc6ba7ba2.deb', 'd395877e8c1ecddd836b9ce25e2441a3cd74a47baf001fa6a342018ca4679a0d' ], // <arm64> firefox
 ]
 
-// update at 2026/07/01, use official deb from ubuntu
+// update at 2026/09/16, use official deb from ubuntu
 const RES_MYSQL80 = [
-  [ 'https://kr.archive.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/mysql-client-core-8.0_8.0.46-0ubuntu0.24.04.3_amd64.deb', '0e10465bf52210a80581bb0133d691c988548429d09e19a237ff338f9a8e9630' ], // <amd64> mysql-client-core-8.0 (8.0.46-0ubuntu0.24.04.3)
-  [ 'https://ports.ubuntu.com/////////////pool/main/m/mysql-8.0/mysql-client-core-8.0_8.0.46-0ubuntu0.24.04.3_arm64.deb', '7e3cf23b069fd965b84c042d8c910d1e191983327b5a5968b5d5dbe5a9c43e2f' ], // <arm64> mysql-client-core-8.0 (8.0.46-0ubuntu0.24.04.3)
+  [ 'https://kr.archive.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/mysql-client-core-8.0_8.0.46-0ubuntu0.24.04.4_amd64.deb', '0a83b500effa91ce7f7eb3f2c9c8b6e284c51230850dc0dd3b2b25dd54d624a5' ], // <amd64> mysql-client-core-8.0 (8.0.46-0ubuntu0.24.04.4)
+  [ 'https://ports.ubuntu.com/////////////pool/main/m/mysql-8.0/mysql-client-core-8.0_8.0.46-0ubuntu0.24.04.4_arm64.deb', '641eb958b07497de25a9e7a14fa3fbbdb193a3445d2fcd36686f5788e16639b3' ], // <arm64> mysql-client-core-8.0 (8.0.46-0ubuntu0.24.04.4)
   [ 'https://kr.archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu74_74.2-1ubuntu3.1_amd64.deb', 'c9a70989678660eed9a1e904c74fa043da8bec8e2036856fc16e31ced79b04f8' ], // <amd64> libicu74 (74.2-1ubuntu3.1)
   [ 'https://ports.ubuntu.com/////////////pool/main/i/icu/libicu74_74.2-1ubuntu3.1_arm64.deb', '48f93acf50dcf237a8d58ce366730a28438ce52d3f06d7a2a88b51261dd791f7' ], // <arm64> libicu74 (74.2-1ubuntu3.1)
-  [ 'https://kr.archive.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.46-0ubuntu0.24.04.3_amd64.deb', '44e30b8592dfbb9236f68ccec10840cc3a27ee42aced41f77b154bad5d3d0929' ], // <amd64> mysql-server-core-8.0 (8.0.46-0ubuntu0.24.04.3)
-  [ 'https://ports.ubuntu.com/////////////pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.46-0ubuntu0.24.04.3_arm64.deb', 'f5494dfa54ec788b322487dfdeaf70e59b611b9a4fea392564110db258780d29' ], // <arm64> mysql-server-core-8.0 (8.0.46-0ubuntu0.24.04.3)
+  [ 'https://kr.archive.ubuntu.com/ubuntu/pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.46-0ubuntu0.24.04.4_amd64.deb', 'a12f80479f2ba37b88670ecff246584fa8d27251104d2e5066777c4ea73d8d32' ], // <amd64> mysql-server-core-8.0 (8.0.46-0ubuntu0.24.04.4)
+  [ 'https://ports.ubuntu.com/////////////pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.46-0ubuntu0.24.04.4_arm64.deb', '802a8c487520066e2fe960f8691ecbdaaf98dce03494795e55dde8db4689ea8e' ], // <arm64> mysql-server-core-8.0 (8.0.46-0ubuntu0.24.04.4)
 ]
 
 // update at 2026/08/31, use official deb from postgresql.org
-const RES_PGSQL18 = [
+const RES_PGSQL18 = [  
   [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/libpq5_18.6-1.pgdg13+2_amd64.deb', 'c6cc459bb499db4697686533e50bf5943f7e7d6929c04ef55eec184d5436859b' ], // <amd64> libpq5
   [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/libpq5_18.6-1.pgdg13+2_arm64.deb', '26d0c9de6c3939432d94d4ad74db1bd2899c87698e1f96f3ee9396054f44d5dc' ], // <arm64> libpq5
   [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-common/postgresql-client-common_293.pgdg13+1_all.deb', '70da21264140dfb34680cfec52973c7f10b5c8e3c78699a52b04e870b3dee71b' ], // <all> postgresql-client-common
