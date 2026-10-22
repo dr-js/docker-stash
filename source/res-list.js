@@ -11,9 +11,9 @@ const RES_CORE_DEB13 = [
 ]
 
 const RES_NODE = [
-  // update at 2026/10/21, check: https://nodejs.org/download/release/latest-v24.x/SHASUMS256.txt
-  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.0-linux-x64.tar.gz  '.trim(), '28ea0a438de9a13bd7891fd758eee6c7819ee8af5442dfd8d45bd65e56d4228c', 'node-@@@-amd64.tar.gz' ], // NOTE: fix filename
-  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.0-linux-arm64.tar.gz'.trim(), 'b7e7991d5407815adfa74a2a9cd4db683552c8ce32ff4a295c22e972849c3f5d', 'node-@@@-arm64.tar.gz' ], // NOTE: fix filename
+  // update at 2026/10/22, check: https://nodejs.org/download/release/latest-v24.x/SHASUMS256.txt
+  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.1-linux-x64.tar.gz  '.trim(), 'eb6728e77c576a35162c122c45ccadf224d89ff00abc8dae46cc2897c6002d7c', 'node-@@@-amd64.tar.gz' ], // NOTE: fix filename
+  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.1-linux-arm64.tar.gz'.trim(), '33c37be234ba8bee041961047b19160f4d7d0f164e8e246f78bdd10feff148b3', 'node-@@@-arm64.tar.gz' ], // NOTE: fix filename
   // update at 2026/10/21, check: `{ npm view npm@next-11; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
   [ 'https://registry.npmjs.org/npm/-/npm-11.21.1.tgz         '.trim(), 'YTzL6QBEJXyHcTu0JiUc7RKMp+mzlJtl7rGLmERaXUQeFHIMc9atdr6G9M9C8vDWbv40epoTQAzNL2/PtZVDhQ==:sha512:base64' ],
   [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.17.tgz '.trim(), 'xHPK1TEXbvTKyH1UafKZFWqSqZZaYEtTLZ6hVEvYasmm3sFSUPA0rbw/r1DPGRJ7QlLkdzCewS4t11C1B9l0DA==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
@@ -31,10 +31,10 @@ const RES_GO = [
   [ 'https://go.dev/dl/go1.27.3.linux-amd64.tar.gz', '65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40' ],
   [ 'https://go.dev/dl/go1.27.3.linux-arm64.tar.gz', 'a06e99309dbcbdca1a8ccd2282c3ee146e55930886e26b4f1193269587165f49' ],
 ]
-// update at 2026/10/21, check: ".github/check-layer-package-latest.js"
+// update at 2026/10/22, check: ".github/check-layer-package-latest.js"
 const RES_F_BIT_DEB13 = [
-  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.4_amd64.deb', '899979e2360edf5cdb0fbf50b262d1ce1c0ec12fe498caaee07e4fd591f08fd9' ], // <amd64> fluent-bit
-  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.4_arm64.deb', '101120cd850dcef6436b74c7da227e79155064cad8c358d363f92f4ab7f22197' ], // <arm64> fluent-bit
+  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.5_amd64.deb', '870b20feea2b4f4bf35066b06d031d5c0547bb4ad2f5cc5829619d86f97bbbb0' ], // <amd64> fluent-bit
+  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.5_arm64.deb', '4397e7f68cc023d09f31e91f3a87218159f0b78bd9b5d3c318a464bbfb11a63a' ], // <arm64> fluent-bit
 ]
 // update at 2026/10/21, from: https://www.ruby-lang.org/en/downloads/releases/
 const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.11.tar.gz', '5c22be44524312b3d433d68739bcc530633b1da5ef8ba0afa0a37680da17d3de' ] ]
