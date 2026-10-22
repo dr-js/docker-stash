@@ -36,6 +36,6 @@
     "@dr-js/dev": "^0.5.14"
   },
   "optionalDependencies": {
-    "oxlint": "^1.80.0"
+    "oxlint": "^1.89.0"
   }
 }

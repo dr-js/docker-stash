@@ -3,7 +3,7 @@ on: { push: { tags: [ 'v*' ] } } # use `v0.0.0` tag pattern # https://docs.githu
 jobs:
   "build-by-arch": # job id
     strategy: { matrix: { OS: [ "ubuntu-24.04", "ubuntu-24.04-arm" ] } }
-    runs-on: "${{ matrix.OS }}"
+    runs-on: "${{ matrix.OS }}" # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idruns-on
     timeout-minutes: 45
     steps:
       - { uses: "actions/checkout@v7" } # https://github.com/actions/checkout
@@ -20,7 +20,7 @@ jobs:
       - run: npm run push-debian13-all
 
   "push-manifest": # job id
-    needs: [ "build-by-arch" ] # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idneeds
+    needs: [ "build-by-arch" ] # https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#jobsjob_idneeds
     runs-on: "ubuntu-24.04"
     timeout-minutes: 15
     steps:
