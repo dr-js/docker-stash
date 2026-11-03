@@ -11,9 +11,9 @@ const RES_CORE_DEB13 = [
 ]
 
 const RES_NODE = [
-  // update at 2026/10/22, check: https://nodejs.org/download/release/latest-v24.x/SHASUMS256.txt
-  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.1-linux-x64.tar.gz  '.trim(), 'eb6728e77c576a35162c122c45ccadf224d89ff00abc8dae46cc2897c6002d7c', 'node-@@@-amd64.tar.gz' ], // NOTE: fix filename
-  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.1-linux-arm64.tar.gz'.trim(), '33c37be234ba8bee041961047b19160f4d7d0f164e8e246f78bdd10feff148b3', 'node-@@@-arm64.tar.gz' ], // NOTE: fix filename
+  // update at 2026/11/03, check: https://nodejs.org/download/release/latest-v24.x/SHASUMS256.txt
+  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.2-linux-x64.tar.gz  '.trim(), '361718c444e49af2ca5a110c83ba6a8901143f23ab285ebbef0341f391f482a9', 'node-@@@-amd64.tar.gz' ], // NOTE: fix filename
+  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.2-linux-arm64.tar.gz'.trim(), '95c264150aceb7f3437a29fd6984924f5f8d1511ea3cbd6c508b83f6c555dae2', 'node-@@@-arm64.tar.gz' ], // NOTE: fix filename
   // update at 2026/10/21, check: `{ npm view npm@next-11; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
   [ 'https://registry.npmjs.org/npm/-/npm-11.21.1.tgz         '.trim(), 'YTzL6QBEJXyHcTu0JiUc7RKMp+mzlJtl7rGLmERaXUQeFHIMc9atdr6G9M9C8vDWbv40epoTQAzNL2/PtZVDhQ==:sha512:base64' ],
   [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.17.tgz '.trim(), 'xHPK1TEXbvTKyH1UafKZFWqSqZZaYEtTLZ6hVEvYasmm3sFSUPA0rbw/r1DPGRJ7QlLkdzCewS4t11C1B9l0DA==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
@@ -36,8 +36,8 @@ const RES_F_BIT_DEB13 = [
   [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.5_amd64.deb', '870b20feea2b4f4bf35066b06d031d5c0547bb4ad2f5cc5829619d86f97bbbb0' ], // <amd64> fluent-bit
   [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.5_arm64.deb', '4397e7f68cc023d09f31e91f3a87218159f0b78bd9b5d3c318a464bbfb11a63a' ], // <arm64> fluent-bit
 ]
-// update at 2026/10/21, from: https://www.ruby-lang.org/en/downloads/releases/
-const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.11.tar.gz', '5c22be44524312b3d433d68739bcc530633b1da5ef8ba0afa0a37680da17d3de' ] ]
+// update at 2026/11/03, from: https://www.ruby-lang.org/en/downloads/releases/
+const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.12.tar.gz', '5e5d85ad93b0adcccbad47733680f4892bd0078e3342437f7babce01c1872479' ] ]
 
 // update at 2025/08/31, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
 const PPTR_VER = '24.43.1' // [ "v24.43.1", { "chrome": "148.0.7778.97", "firefox": "stable_150.0.2" } ] //  TODO: hold-off major ver bump // [ "v25.6.0", { "chrome": "151.0.7922.77", "firefox": "stable_153.0.3" } ]
@@ -45,10 +45,10 @@ const PPTR_VER = '24.43.1' // [ "v24.43.1", { "chrome": "148.0.7778.97", "firefo
 // TODO: hold & wait fix for: Failing to start after chromium 150 update: https://github.com/chromedp/chromedp/issues/1635
 //   or use chrome-headless-shell	linux64 & linux-arm64 at: https://googlechromelabs.github.io/chrome-for-testing/
 const IMG_CHROMEDP = 'chromedp/headless-shell:148.0.7778.97'
-// update at 2026/10/21, use official deb from mozilla
+// update at 2026/11/03, use official deb from mozilla
 const RES_FIREFOX = [
-  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_158.0~build2_amd64_b6746f479be064a80282c8df25632748.deb', '06a608dd092b0ba2c7cb436df259025ffd006b16126bf1c0ab8121e869fdbebc' ], // <amd64> firefox
-  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_158.0~build2_arm64_cf523f4276139ced54b205479820b0aa.deb', 'd579b53ce7c31c624eb61079b8a0b4e9db3d97a8457257c42cac434064ee9726' ], // <arm64> firefox
+  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_159.0~build1_amd64_cdf784e7ebd39f07bf4c6011c1378048.deb', '6c29655bbb6eecc3741061f0440f2b2b806970e2369a3fd78eed0cf578023713' ], // <amd64> firefox
+  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_159.0~build1_arm64_203fe002a4f853bee4390b15338b96e8.deb', 'b95e877ec3aa5bf0025dcb4c67bc65aa0de76079a80db0d7a2e90b88c75ce4d8' ], // <arm64> firefox
 ]
 
 // update at 2026/09/16, use official deb from ubuntu
@@ -73,8 +73,8 @@ const RES_PGSQL18 = [
   [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-18_18.6-1.pgdg13+2_arm64.deb', '16d1f20450bfdc13118c317a86745ca1a0d56fe192c3d8f8091a7f2d9868c4d9' ], // <arm64> postgresql-18
 ]
 
-// update at 2026/09/16, from: https://hub.docker.com/r/valkey/valkey/tags?name=9.1.2
-const IMG_VALKEY9 = 'valkey/valkey:9.1.2-trixie'
+// update at 2026/11/03, from: https://hub.docker.com/r/valkey/valkey/tags?name=9.1.3
+const IMG_VALKEY9 = 'valkey/valkey:9.1.3-trixie'
 
 module.exports = {
   RES_CORE_DEB13,
