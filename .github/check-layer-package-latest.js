@@ -40,7 +40,7 @@ const pickLatestPkg = (pkgList, pkgName = '') => pkgList
 // TODO: NOTE: to bypass bot-challenge page, need copy from browser on page like https://packages.debian.org/trixie/apt
 const EXT_HDR_DEB = { cookie: 'pow_challenge=012..0d; pow_nonce=191; pow_bypass=0xa3..50' }
 const getDebianDeb = async (dist = 'buster', pkg = '') => {
-  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlHash }
   const textIndex = await getText(`https://packages.debian.org/${dist}/${pkg}`, EXT_HDR_DEB)
   // name     <h1>Package: ca-certificates (20211016)\n</h1>
   //          <h1>Package: libjemalloc2 (5.2.1-5)\n</h1>
@@ -62,14 +62,14 @@ const getDebianDeb = async (dist = 'buster', pkg = '') => {
     // <tr><th>SHA256 checksum</th>\t<td><tt>d67bb6da8256863c85866059c8c2b93f1571ed7e2574b007241de35a2f0120d9</tt></td>
     // <ul><li><a href="http://security.debian.org/debian-security/pool/updates/main/c/chromium/chromium_118.0.5993.70-1~deb11u1_amd64.deb">security.debian.org/debian-security</a></li></ul>
     const dlUrl = 'https://' + /:\/\/((?:ftp|security)\.debian\.org\/debian(?:-security)?\/pool\/.*\.deb)">/.exec(textDlPage)[ 1 ]
-    const dlSha256 = /SHA256 checksum<\/th>\s*<td><tt>(\w+)<\/tt>/.exec(textDlPage)[ 1 ]
-    pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
+    const dlHash = /SHA256 checksum<\/th>\s*<td><tt>(\w+)<\/tt>/.exec(textDlPage)[ 1 ]
+    pkgDlList.push({ pkgName, dlArch, dlUrl, dlHash })
   }
   return pkgDlList
 }
 
 const getUbuntuDeb = async (dist = 'noble', pkg = '') => {
-  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlHash }
   const textIndex = await getText(`https://packages.ubuntu.com/${dist}/${pkg}`)
   // name     <h1>Package: mysql-common (5.8+1.1.0build1)\n</h1>
   // name     <h1>Package: mysql-client-8.0 (8.0.45-0ubuntu0.24.04.1 and others)\n [<strong class="pmarker" >security</strong>] </h1>
@@ -98,14 +98,14 @@ const getUbuntuDeb = async (dist = 'noble', pkg = '') => {
       : textDlPage.includes('security.ubuntu.com') ? 'security.ubuntu.com/ubuntu//'
         : 'kr.archive.ubuntu.com/ubuntu'
     const dlUrl = `https://${uPfx}/${uStub}${uDeb}`
-    const dlSha256 = /SHA256 checksum<\/th>\s*<td><tt>(\w+)<\/tt>/.exec(textDlPage)[ 1 ]
-    pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
+    const dlHash = /SHA256 checksum<\/th>\s*<td><tt>(\w+)<\/tt>/.exec(textDlPage)[ 1 ]
+    pkgDlList.push({ pkgName, dlArch, dlUrl, dlHash })
   }
   return pkgDlList
 }
 
 const getFluentBitDeb = async (dist = 'buster', pkgName = 'fluent-bit') => {
-  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlHash }
   for (const dlArch of [
     'amd64',
     'arm64'
@@ -114,14 +114,14 @@ const getFluentBitDeb = async (dist = 'buster', pkgName = 'fluent-bit') => {
     const textDlPage = await getTextGz(`https://packages.fluentbit.io/debian/${dist}/dists/${dist}/main/binary-${dlArch}/Packages.gz`)
     const pkg = pickLatestPkg(parseBinPkg(textDlPage), pkgName)
     const dlUrl = `https://packages.fluentbit.io/debian/${dist}/` + pkg[ 'Filename' ]
-    const dlSha256 = pkg[ 'SHA256' ]
-    pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
+    const dlHash = pkg[ 'SHA256' ]
+    pkgDlList.push({ pkgName, dlArch, dlUrl, dlHash })
   }
   return pkgDlList
 }
 
 const getFirefoxDeb = async (pkgName = 'firefox') => {
-  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlHash }
   for (const dlArch of [
     'amd64',
     'arm64'
@@ -130,14 +130,14 @@ const getFirefoxDeb = async (pkgName = 'firefox') => {
     const textDlPage = await getText(`https://packages.mozilla.org/apt/dists/mozilla/main/binary-${dlArch}/Packages`)
     const pkg = pickLatestPkg(parseBinPkg(textDlPage), pkgName)
     const dlUrl = 'https://packages.mozilla.org/apt/' + pkg[ 'Filename' ]
-    const dlSha256 = pkg[ 'SHA256' ]
-    pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
+    const dlHash = pkg[ 'SHA256' ]
+    pkgDlList.push({ pkgName, dlArch, dlUrl, dlHash })
   }
   return pkgDlList
 }
 
 const getPg18Deb = async (dist = 'trixie', pkgName = 'postgresql-18') => { // https://www.postgresql.org/download/linux/debian/
-  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlSha256 }
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlHash }
   for (const dlArch of [
     'amd64',
     'arm64'
@@ -146,18 +146,34 @@ const getPg18Deb = async (dist = 'trixie', pkgName = 'postgresql-18') => { // ht
     const textDlPage = await getTextGz(`https://ftp.postgresql.org/pub/repos/apt/dists/${dist}-pgdg/main/binary-${dlArch}/Packages.gz`)
     const pkg = pickLatestPkg(parseBinPkg(textDlPage), pkgName)
     const dlUrl = 'https://ftp.postgresql.org/pub/repos/apt/' + pkg[ 'Filename' ]
-    const dlSha256 = pkg[ 'SHA256' ]
-    if (dlUrl.endsWith('_all.deb')) pkgDlList.push({ pkgName, dlArch: 'all', dlUrl, dlSha256 })
+    const dlHash = pkg[ 'SHA256' ]
+    if (dlUrl.endsWith('_all.deb')) pkgDlList.push({ pkgName, dlArch: 'all', dlUrl, dlHash })
     if (dlUrl.endsWith('_all.deb')) break
-    pkgDlList.push({ pkgName, dlArch, dlUrl, dlSha256 })
+    pkgDlList.push({ pkgName, dlArch, dlUrl, dlHash })
   }
   return pkgDlList
 }
 
 const log = (pkgDlList) => {
-  for (const { pkgName, dlArch, dlUrl, dlSha256 } of pkgDlList) {
-    console.log(`  [ '${dlUrl}', '${dlSha256}' ], // <${dlArch}> ${pkgName}`)
+  for (const { pkgName, dlArch, dlUrl, dlHash, dlFile = '' } of pkgDlList) {
+    console.log(dlFile
+      ? `  [ '${dlUrl}', '${dlHash}', '${dlFile}' ], // <${dlArch}> ${pkgName}`
+      : `  [ '${dlUrl}', '${dlHash}' ], // <${dlArch}> ${pkgName}`
+    )
   }
+}
+
+const getChromeHLSH = async () => { // https://github.com/GoogleChromeLabs/chrome-for-testing
+  const getDlMd5B64 = async (url) => (await _fWJP(url)).headers[ 'x-goog-hash' ] // "crc32c=xNw1zg==, md5=35VRj0kejR/euFBBs5nLNw=="
+    .split(',').find((v) => v.includes('md5=')).trim().replace('md5=', '')
+  const dlJson = JSON.parse(await getText('https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json'))
+  const dlList = dlJson[ 'channels' ][ 'Stable' ][ 'downloads' ][ 'chrome-headless-shell' ]
+  const urlAmd64 = dlList.find((v) => v.platform === 'linux64').url
+  const urlArm64 = dlList.find((v) => v.platform === 'linux-arm64').url
+  const pkgDlList = [] // { pkgName, dlArch, dlUrl, dlHash, dlFile }
+  pkgDlList.push({ pkgName: 'chrome-headless-shell', dlArch: 'amd64', dlUrl: urlAmd64, dlHash: `${await getDlMd5B64(urlAmd64)}:md5:base64`, dlFile: 'chrome-hlsh-amd64.zip' })
+  pkgDlList.push({ pkgName: 'chrome-headless-shell', dlArch: 'arm64', dlUrl: urlArm64, dlHash: `${await getDlMd5B64(urlArm64)}:md5:base64`, dlFile: 'chrome-hlsh-arm64.zip' })
+  return pkgDlList
 }
 
 runKit(async (kit) => {
@@ -173,6 +189,8 @@ runKit(async (kit) => {
   // kit.padLog('browser:chromium')
   // log(await getDebianDeb('trixie', 'chromium'))
   // log(await getDebianDeb('trixie', 'chromium-common'))
+  kit.padLog('browser/chrome-hlsh')
+  log(await getChromeHLSH())
   kit.padLog('browser:firefox')
   log(await getFirefoxDeb()) // NOTE: same deb for bullseye/bookworm/trixie
 

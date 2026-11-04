@@ -4,14 +4,13 @@ const { modifyCopy } = require('@dr-js/core/library/node/fs/Modify.js')
 const { runKit } = require('@dr-js/core/library/node/kit.js')
 
 const { runDockerWithTee } = require('@dr-js/dev/library/docker.js')
-const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB13, RES_RUBY3, PPTR_VER, RES_FIREFOX, RES_MYSQL80, RES_PGSQL18 } = require('../res-list.js')
+const { RES_NODE, RES_NGINX, RES_GO, RES_F_BIT_DEB13, RES_RUBY3, PPTR_VER, RES_CHROME_HLSH, RES_FIREFOX, RES_MYSQL80, RES_PGSQL18 } = require('../res-list.js')
 const {
   BUILDKIT_SYNTAX, DOCKER_BUILD_ARCH_INFO_LIST,
   DEBIAN13_BUILD_FLAVOR_MAP, verifyDebian13BuildArg,
   fetchFileListWithLocalCache,
   TAG_LAYER_CACHE, TAG_LAYER_MAIN_CACHE
 } = require('../function.js')
-const { prepareChromeHeadlessShellWithLocalCache } = require('../function.chrome-headless-shell.js')
 const { prepareValkey9WithLocalCache } = require('../function.valkey9.js')
 
 const [
@@ -59,6 +58,7 @@ runKit(async (kit) => {
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_NODE ? RES_NODE : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_NGNX ? RES_NGINX : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_FBIT ? RES_F_BIT_DEB13 : []),
+    ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_C_HS ? RES_CHROME_HLSH : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_FRFX ? RES_FIREFOX : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_RBY3 ? RES_RUBY3 : []),
     ...(BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_GO__ ? RES_GO : []),
@@ -67,10 +67,6 @@ runKit(async (kit) => {
   ], {
     pathOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/'),
     pathCache: kit.fromTemp('debian13', 'layer-url')
-  })
-  BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_BIN_C_HS && await prepareChromeHeadlessShellWithLocalCache({
-    fileOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/', 'chrome-headless-shell.tar'),
-    pathCache: kit.fromTemp('debian13', 'layer-file')
   })
   BUILD_FLAVOR === DEBIAN13_BUILD_FLAVOR_MAP.F_SLM_VLKS && await prepareValkey9WithLocalCache({
     fileOutput: kit.fromOutput(PATH_BUILD, 'build-layer-resource/', 'valkey9.tar'),

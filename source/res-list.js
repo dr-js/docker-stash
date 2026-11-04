@@ -39,12 +39,12 @@ const RES_F_BIT_DEB13 = [
 // update at 2026/11/03, from: https://www.ruby-lang.org/en/downloads/releases/
 const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.12.tar.gz', '5e5d85ad93b0adcccbad47733680f4892bd0078e3342437f7babce01c1872479' ] ]
 
-// update at 2025/08/31, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
-const PPTR_VER = '24.43.1' // [ "v24.43.1", { "chrome": "148.0.7778.97", "firefox": "stable_150.0.2" } ] //  TODO: hold-off major ver bump // [ "v25.6.0", { "chrome": "151.0.7922.77", "firefox": "stable_153.0.3" } ]
-// update at 2025/08/31, default use "stable" version at: https://hub.docker.com/r/chromedp/headless-shell/tags
-// TODO: hold & wait fix for: Failing to start after chromium 150 update: https://github.com/chromedp/chromedp/issues/1635
-//   or use chrome-headless-shell	linux64 & linux-arm64 at: https://googlechromelabs.github.io/chrome-for-testing/
-const IMG_CHROMEDP = 'chromedp/headless-shell:148.0.7778.97'
+// update at 2026/11/04, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
+const PPTR_VER = '25.16.0' // [ "v25.16.0", { "chrome": "156.0.8078.47", "firefox": "stable_158.0.1" } ] 
+const RES_CHROME_HLSH = [ // `chrome-headless-shell` is smaller, faster, and need much less lib than `chromium`, check https://developer.chrome.com/blog/chrome-headless-shell
+  [ 'https://storage.googleapis.com/chrome-for-testing-public/157.0.8103.38/linux64/chrome-headless-shell-linux64.zip', 'AURWj4OI5ySOlRYkXSMtTA==:md5:base64', 'chrome-hlsh-amd64.zip' ], // <amd64> chrome-headless-shell
+  [ 'https://storage.googleapis.com/chrome-for-testing-public/157.0.8103.38/linux-arm64/chrome-headless-shell-linux-arm64.zip', 'wdTao4GZfETjkOdRlGljYw==:md5:base64', 'chrome-hlsh-arm64.zip' ], // <arm64> chrome-headless-shell
+]
 // update at 2026/11/03, use official deb from mozilla
 const RES_FIREFOX = [
   [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_159.0~build1_amd64_cdf784e7ebd39f07bf4c6011c1378048.deb', '6c29655bbb6eecc3741061f0440f2b2b806970e2369a3fd78eed0cf578023713' ], // <amd64> firefox
@@ -86,7 +86,7 @@ module.exports = {
 
   RES_RUBY3,
 
-  PPTR_VER, IMG_CHROMEDP, RES_FIREFOX,
+  PPTR_VER, RES_CHROME_HLSH, RES_FIREFOX,
 
   RES_MYSQL80, RES_PGSQL18, IMG_VALKEY9,
 }
