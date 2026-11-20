@@ -11,44 +11,44 @@ const RES_CORE_DEB13 = [
 ]
 
 const RES_NODE = [
-  // update at 2026/11/03, check: https://nodejs.org/download/release/latest-v24.x/SHASUMS256.txt
-  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.2-linux-x64.tar.gz  '.trim(), '361718c444e49af2ca5a110c83ba6a8901143f23ab285ebbef0341f391f482a9', 'node-@@@-amd64.tar.gz' ], // NOTE: fix filename
-  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.2-linux-arm64.tar.gz'.trim(), '95c264150aceb7f3437a29fd6984924f5f8d1511ea3cbd6c508b83f6c555dae2', 'node-@@@-arm64.tar.gz' ], // NOTE: fix filename
-  // update at 2026/10/21, check: `{ npm view npm@next-11; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
-  [ 'https://registry.npmjs.org/npm/-/npm-11.21.1.tgz         '.trim(), 'YTzL6QBEJXyHcTu0JiUc7RKMp+mzlJtl7rGLmERaXUQeFHIMc9atdr6G9M9C8vDWbv40epoTQAzNL2/PtZVDhQ==:sha512:base64' ],
+  // update at 2026/11/20, check: https://nodejs.org/download/release/latest-v24.x/SHASUMS256.txt
+  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.3-linux-x64.tar.gz  '.trim(), '061ec3e3062115705b56b51fa9cc330ab50d34b6969387d4e4b1a50c6809acc2', 'node-@@@-amd64.tar.gz' ], // NOTE: fix filename
+  [ 'https://nodejs.org/download/release/latest-v24.x/node-v24.22.3-linux-arm64.tar.gz'.trim(), '261af2af250dfd7e9f25cf151d1b2713a0adf8f10a9ad116c4947f68627affe8', 'node-@@@-arm64.tar.gz' ], // NOTE: fix filename
+  // update at 2026/11/20, check: `{ npm view npm@next-11; npm view @dr-js/core@latest; npm view @dr-js/dev@latest; } | grep -e tarball -e integrity`
+  [ 'https://registry.npmjs.org/npm/-/npm-11.21.3.tgz         '.trim(), '5Cf+jE+XctbhH/zjOOqXC+ity7eec/Tkk4Ql38tf6w+1htp2wYPHmE4c1R1Es3DY227Ac14+SLrlYJwkBicbTg==:sha512:base64' ],
   [ 'https://registry.npmjs.org/@dr-js/core/-/core-0.5.17.tgz '.trim(), 'xHPK1TEXbvTKyH1UafKZFWqSqZZaYEtTLZ6hVEvYasmm3sFSUPA0rbw/r1DPGRJ7QlLkdzCewS4t11C1B9l0DA==:sha512:base64', 'dr-js-@@@.tgz' ], // NOTE: fix filename
   [ 'https://registry.npmjs.org/@dr-js/dev/-/dev-0.5.14.tgz   '.trim(), 'KWwHsqxHrOtuVNPTq2chms7bXsQnti05UXp7dQIWUGVqOC+nQs6uN1KlIRqwJXZ5eo2pZnNCjk+GQ3RcpEyfjg==:sha512:base64', 'dr-dev-@@@.tgz' ], // NOTE: fix filename
 ]
 const RES_NGINX = [
-  // update at 2026/10/21, use Stable version, check: https://nginx.org/en/download.html
+  // update at 2026/11/20, use Stable version, check: https://nginx.org/en/download.html
   // and: https://github.com/google/ngx_brotli
-  [ 'https://nginx.org/download/nginx-1.30.6.tar.gz             '.trim(), '3cf46f5ed7504d460125866b7bea99fb357f31d887e2e63b35503310e9b8b6c8' ], // TODO: need to calc hash yourself
+  [ 'https://nginx.org/download/nginx-1.30.7.tar.gz             '.trim(), '2565b5c837050e958f70fb0f73c48e2bca4542ad349fd356f46fb0c72610bc6e' ], // TODO: need to calc hash yourself
   [ 'https://github.com/google/brotli/archive/ed738e84.zip      '.trim(), 'a68ec12a898abc9cf248f21362620562041b7aab4d623ecd736f39bedf5002a0', 'brotli.zip' ], // specify filename // TODO: need to calc hash yourself
   [ 'https://github.com/google/ngx_brotli/archive/a71f9312.zip  '.trim(), '96f23eb72488ffc570cbc474a928000b05b72f2682456ae357aeaf3ce71c626e', 'ngx-brotli.zip' ], // specify filename // TODO: need to calc hash yourself
 ]
 const RES_GO = [
-  // update at 2026/10/21, use 2nd-recent-minor version if latest version's patch version < 2, check: https://go.dev/dl/
-  [ 'https://go.dev/dl/go1.27.3.linux-amd64.tar.gz', '65efbc80fdc1fa2cd2631cad5b481777a68e8725f34e89f50fc6ac714e379b40' ],
-  [ 'https://go.dev/dl/go1.27.3.linux-arm64.tar.gz', 'a06e99309dbcbdca1a8ccd2282c3ee146e55930886e26b4f1193269587165f49' ],
+  // update at 2026/11/20, use 2nd-recent-minor version if latest version's patch version < 2, check: https://go.dev/dl/
+  [ 'https://go.dev/dl/go1.27.4.linux-amd64.tar.gz', '7226736c2339719cda28fbf3a54d71aa63bcefe376e98cef00034268dab24840' ],
+  [ 'https://go.dev/dl/go1.27.4.linux-arm64.tar.gz', '3392582988a273a87ab5043ee1b2c9c17a2c3c00580bf9326c47a2e0aaaeac92' ],
 ]
-// update at 2026/10/22, check: ".github/check-layer-package-latest.js"
+// update at 2026/11/20, check: ".github/check-layer-package-latest.js"
 const RES_F_BIT_DEB13 = [
-  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.5_amd64.deb', '870b20feea2b4f4bf35066b06d031d5c0547bb4ad2f5cc5829619d86f97bbbb0' ], // <amd64> fluent-bit
-  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.1.5_arm64.deb', '4397e7f68cc023d09f31e91f3a87218159f0b78bd9b5d3c318a464bbfb11a63a' ], // <arm64> fluent-bit
+  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.2.0_amd64.deb', '7e41079b9ded60d5714057b54e608c89046b4764b72a3e7c1d760c6929cf4b2f' ], // <amd64> fluent-bit
+  [ 'https://packages.fluentbit.io/debian/trixie/pool/main/f/fluent-bit/fluent-bit_5.2.0_arm64.deb', '96de921a56c9040dab00a52215d86cc33fbe423972e2477dedfd89d0ae18ba10' ], // <arm64> fluent-bit
 ]
-// update at 2026/11/03, from: https://www.ruby-lang.org/en/downloads/releases/
-const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.12.tar.gz', '5e5d85ad93b0adcccbad47733680f4892bd0078e3342437f7babce01c1872479' ] ]
+// update at 2026/11/20, from: https://www.ruby-lang.org/en/downloads/releases/
+const RES_RUBY3 = [ [ 'https://cache.ruby-lang.org/pub/ruby/3.4/ruby-3.4.13.tar.gz', 'd0d3bf3dd8c224a3c3b7ecd816a0f1b2cbcf4f87b5afcbdbe91d3fef177f351a' ] ]
 
-// update at 2026/11/04, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
-const PPTR_VER = '25.16.0' // [ "v25.16.0", { "chrome": "156.0.8078.47", "firefox": "stable_158.0.1" } ] 
+// update at 2026/11/20, for `puppeteer-core`, check browser version mapping at: https://github.com/puppeteer/puppeteer/blob/main/versions.json
+const PPTR_VER = '25.18.0' // [ "v25.18.0", { "chrome": "157.0.8103.78", "firefox": "stable_160.0" } ] 
 const RES_CHROME_HLSH = [ // `chrome-headless-shell` is smaller, faster, and need much less lib than `chromium`, check https://developer.chrome.com/blog/chrome-headless-shell
-  [ 'https://storage.googleapis.com/chrome-for-testing-public/157.0.8103.38/linux64/chrome-headless-shell-linux64.zip', 'AURWj4OI5ySOlRYkXSMtTA==:md5:base64', 'chrome-hlsh-amd64.zip' ], // <amd64> chrome-headless-shell
-  [ 'https://storage.googleapis.com/chrome-for-testing-public/157.0.8103.38/linux-arm64/chrome-headless-shell-linux-arm64.zip', 'wdTao4GZfETjkOdRlGljYw==:md5:base64', 'chrome-hlsh-arm64.zip' ], // <arm64> chrome-headless-shell
+  [ 'https://storage.googleapis.com/chrome-for-testing-public/158.0.8127.36/linux64/chrome-headless-shell-linux64.zip', 'I+KTzx+V+qWQSTfi0zLn0w==:md5:base64', 'chrome-hlsh-amd64.zip' ], // <amd64> chrome-headless-shell
+  [ 'https://storage.googleapis.com/chrome-for-testing-public/158.0.8127.36/linux-arm64/chrome-headless-shell-linux-arm64.zip', 'bc3ui1NTVjLReNyTsdTW9A==:md5:base64', 'chrome-hlsh-arm64.zip' ], // <arm64> chrome-headless-shell
 ]
-// update at 2026/11/03, use official deb from mozilla
+// update at 2026/11/20, use official deb from mozilla
 const RES_FIREFOX = [
-  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_159.0~build1_amd64_cdf784e7ebd39f07bf4c6011c1378048.deb', '6c29655bbb6eecc3741061f0440f2b2b806970e2369a3fd78eed0cf578023713' ], // <amd64> firefox
-  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_159.0~build1_arm64_203fe002a4f853bee4390b15338b96e8.deb', 'b95e877ec3aa5bf0025dcb4c67bc65aa0de76079a80db0d7a2e90b88c75ce4d8' ], // <arm64> firefox
+  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_160.0~build1_amd64_3cb999f6d19c84ab5cde987ef431ecb8.deb', 'aab3c9795fa34d07bf1d675cdb326b1c2c16634ac41ed5c5dde171a6625fc580' ], // <amd64> firefox
+  [ 'https://packages.mozilla.org/apt/pool/mozilla/firefox_160.0~build1_arm64_54941e6f566d404ddf8ec8ad6f4469a3.deb', 'd56aac0662a4ec87b5aab1734d9fbd1c24a566ee5153c12199def1563ab7d9b4' ], // <arm64> firefox
 ]
 
 // update at 2026/09/16, use official deb from ubuntu
@@ -61,20 +61,20 @@ const RES_MYSQL80 = [
   [ 'https://ports.ubuntu.com/////////////pool/main/m/mysql-8.0/mysql-server-core-8.0_8.0.46-0ubuntu0.24.04.4_arm64.deb', '802a8c487520066e2fe960f8691ecbdaaf98dce03494795e55dde8db4689ea8e' ], // <arm64> mysql-server-core-8.0 (8.0.46-0ubuntu0.24.04.4)
 ]
 
-// update at 2026/08/31, use official deb from postgresql.org
+// update at 2026/11/20, use official deb from postgresql.org
 const RES_PGSQL18 = [
-  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/libpq5_18.6-1.pgdg13+2_amd64.deb', 'c6cc459bb499db4697686533e50bf5943f7e7d6929c04ef55eec184d5436859b' ], // <amd64> libpq5
-  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/libpq5_18.6-1.pgdg13+2_arm64.deb', '26d0c9de6c3939432d94d4ad74db1bd2899c87698e1f96f3ee9396054f44d5dc' ], // <arm64> libpq5
-  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-common/postgresql-client-common_293.pgdg13+1_all.deb', '70da21264140dfb34680cfec52973c7f10b5c8e3c78699a52b04e870b3dee71b' ], // <all> postgresql-client-common
-  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-client-18_18.6-1.pgdg13+2_amd64.deb', '9af40c99f7074f8ff3798155af2f07f1a4e1e3bd4edce44ef928c1e03aea620e' ], // <amd64> postgresql-client-18
-  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-client-18_18.6-1.pgdg13+2_arm64.deb', '098492efc9f576ffee23e1871d31682b332a3c6582072d3ef8f99b6b72573bc7' ], // <arm64> postgresql-client-18
-  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-common/postgresql-common_293.pgdg13+1_all.deb', 'c34ec06f618ed4bec388104d0183c7678876659dfa973e7a852046167288ac8c' ], // <all> postgresql-common
-  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-18_18.6-1.pgdg13+2_amd64.deb', 'bf4062a44757c3f7a207a1b9e20c2bf93f9847257516c2ce0befc1257d3dcf8e' ], // <amd64> postgresql-18
-  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-18_18.6-1.pgdg13+2_arm64.deb', '16d1f20450bfdc13118c317a86745ca1a0d56fe192c3d8f8091a7f2d9868c4d9' ], // <arm64> postgresql-18
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-19/libpq5_19.0-1.pgdg13+1_amd64.deb', '4ce01150bf7ac1f77a9ab556a252a89f8d95dcd84779dc356f077cccc9bde8b1' ], // <amd64> libpq5
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-19/libpq5_19.0-1.pgdg13+1_arm64.deb', '5cb5f7376d79748c8ba1178bbd60a4777ef31720e3c799db4516d24263618680' ], // <arm64> libpq5
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-common/postgresql-client-common_297.pgdg13+1_all.deb', '450b72119c9169656a4043daca9a80c31eea60e4921f42b4657d68c3886a3d4a' ], // <all> postgresql-client-common
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-client-18_18.7-1.pgdg13+5_amd64.deb', '7fe43472fc8eb12f7d3f376fcb2c809f659c3d5722e4d13dd8834066cd6a289b' ], // <amd64> postgresql-client-18
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-client-18_18.7-1.pgdg13+5_arm64.deb', '8f563ae7befe5075bab5599d46b6528b816c8f9aba3cae08dea29385348ee38a' ], // <arm64> postgresql-client-18
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-common/postgresql-common_297.pgdg13+1_all.deb', '4a0a08e28828a1dd2545b7484ec814e656e032ff4eea6c82881f903a0cee68a7' ], // <all> postgresql-common
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-18_18.7-1.pgdg13+5_amd64.deb', 'c3c67b3eff04872768ba8f001dfd1c71486ec0f0c77d67afc0fe7943930ce3c7' ], // <amd64> postgresql-18
+  [ 'https://ftp.postgresql.org/pub/repos/apt/pool/main/p/postgresql-18/postgresql-18_18.7-1.pgdg13+5_arm64.deb', '79d0ac26c6fdf39e1bb16d746109e8a94e78e09f4b8039beec596e27ab41652b' ], // <arm64> postgresql-18
 ]
 
-// update at 2026/11/03, from: https://hub.docker.com/r/valkey/valkey/tags?name=9.1.3
-const IMG_VALKEY9 = 'valkey/valkey:9.1.3-trixie'
+// update at 2026/11/20, from: https://hub.docker.com/r/valkey/valkey/tags?name=9.1.4
+const IMG_VALKEY9 = 'valkey/valkey:9.1.4-trixie'
 
 module.exports = {
   RES_CORE_DEB13,
