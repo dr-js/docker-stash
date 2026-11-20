@@ -6,8 +6,8 @@ const BUILD_FLAVOR_MAP = {
 
   F_BIN_GIT_: { NAME: 'bin-git', BASE_IMAGE: 'bin-etc', LAYER_SCRIPT: '4-0-bin-git.sh' },
   F_BIN_RBY3: { NAME: 'bin-ruby3', BASE_IMAGE: 'bin-git', LAYER_SCRIPT: '4-2-bin-ruby3.sh', LAYER_SCRIPT_EXTRA: [ '0-3-base-ruby.sh' ] },
-  F_BIN_JAVA: { NAME: 'bin-java', BASE_IMAGE: 'bin-ruby3', LAYER_SCRIPT: '4-4-bin-java.sh' },
-  F_BIN_VIPS: { NAME: 'bin-vips', BASE_IMAGE: 'bin-java', LAYER_SCRIPT: '4-5-bin-vips.sh' },
+  F_BIN_JAVA: { NAME: 'bin-java', BASE_IMAGE: 'bin-git', LAYER_SCRIPT: '4-4-bin-java.sh' },
+  F_BIN_VIPS: { NAME: 'bin-vips', BASE_IMAGE: 'bin-ruby3', LAYER_SCRIPT: '4-5-bin-vips.sh' },
   F_BIN_GO__: { NAME: 'bin-go', BASE_IMAGE: 'bin-vips', LAYER_SCRIPT: '4-6-bin-go.sh' },
   F_BIN_BULD: { NAME: 'bin-build', BASE_IMAGE: 'bin-go', LAYER_SCRIPT: '4-8-bin-build.sh' },
 
