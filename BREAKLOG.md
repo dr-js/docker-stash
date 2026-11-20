@@ -2,6 +2,9 @@
 
 keep list of notable break & big code change
 
+- `0.6.0-pre`
+  - BREAK: layer: split out bin-java
+  - DEV-BREAK: layer: use pptr@25 & use official chrome-hlsh
 - `0.5.8`
   - ADD: layer: bin-etc: `socat`
 - `0.5.8-dev.1`
